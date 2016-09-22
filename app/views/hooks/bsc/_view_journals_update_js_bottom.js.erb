@@ -1,0 +1,3 @@
+<% if @journal.journalized_type == 'BscCheckpoint' %>
+$("#journal-<%= @journal.id %>-notes").replaceWith('<%= escape_javascript(render_notes(BscCheckpoint.find(@journal.journalized_id), @journal, :reply_links => false)) %>');
+<% end %>

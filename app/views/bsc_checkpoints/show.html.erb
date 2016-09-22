@@ -1,0 +1,76 @@
+<h2><%=l(:"bsc.label_checkpoints")%></h2>
+<%= render_project_bsc_tab('checkpoints') %>
+
+<div class="contextual">
+  <%= link_to_if_authorized(l(:button_update), {:action => 'edit'}, :onclick => 'showAndScrollTo("update", "notes"); return false;', :class => 'icon icon-edit', :accesskey => accesskey(:edit)) %>
+  <%= link_to_if_authorized l(:button_delete), {:action => 'destroy'}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %>
+</div>
+<div style="clear:both; height:5px"></div>
+
+<div class="issue details">
+  <%= avatar(@checkpoint.author, :size => "50") %>
+
+  <div class="subject">
+    <h3><%= @checkpoint.checkpoint_date %></h3>
+  </div>
+
+  <p class="author">
+    <%= authoring @checkpoint.created_at, @checkpoint.author %>.
+    <% if @checkpoint.created_at != @checkpoint.updated_at %>
+      <%= l(:label_updated_time, time_tag(@checkpoint.updated_at)).html_safe %>.
+    <% end %>
+  </p>
+  
+  <table class="attributes">
+    <tr>
+      <th><%=l(:field_scheduled_finish_date)%>:</th><td><%= format_date(@checkpoint.scheduled_finish_date) %></td>
+      <th><%=l(:field_base_line) if @checkpoint.base_line %></th>
+    </tr>
+    <tr>
+      <th><%=l(:field_scheduled_qa_meetings)%>:</th><td><%= @checkpoint.held_qa_meetings %></td>
+      <th><%=l(:field_target_margin)%>:</th><td><%= @checkpoint.target_margin %> %</td>
+    </tr>
+    <% @profiles.each_slice(2) do |profiles| %>
+      <tr>
+        <th><%=l(:"bsc.label_scheduled_profile_effort", :profile => profiles[0].name) %></th>
+        <td><%= @checkpoint.scheduled_profile_effort(profiles[0].id) %></td>
+        <% unless profiles[1].nil? %>
+          <th><%=l(:"bsc.label_scheduled_profile_effort", :profile => profiles[1].name) %></th>
+          <td><%= @checkpoint.scheduled_profile_effort(profiles[1].id) %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+
+  <% if @checkpoint.description? -%>
+    <hr />
+    <div class="contextual">
+      <%= link_to_if_authorized(l(:button_quote), { :url => {:action => 'new_journal', :id => @checkpoint} }, :class => 'icon icon-comment', :remote => true) %>
+    </div>
+
+    <p><strong><%=l(:field_description)%></strong></p>
+    <div class="wiki">
+      <%= textilizable @checkpoint, :description %>
+    </div>
+  <% end %>
+</div>
+
+<% if @journals.present? %>
+  <div id="history">
+    <h3><%=l(:label_history)%></h3>
+    <%= render :partial => 'history', :locals => { :checkpoint => @checkpoint, :journals => @journals } %>
+  </div>
+<% end %>
+
+<div class="contextual">
+  <%= link_to_if_authorized(l(:button_update), {:action => 'edit'}, :onclick => 'showAndScrollTo("update", "notes"); return false;', :class => 'icon icon-edit', :accesskey => accesskey(:edit)) %>
+  <%= link_to_if_authorized l(:button_delete), {:action => 'destroy'}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del' %>
+</div>
+
+<div style="clear: both;"></div>
+<% if authorize_for('checkpoints', 'edit') %>
+  <div id="update" style="display:none;">
+    <h3><%= l(:button_update) %></h3>
+    <%= render :partial => 'edit' %>
+  </div>
+<% end %>

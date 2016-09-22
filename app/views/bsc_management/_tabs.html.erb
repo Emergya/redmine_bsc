@@ -1,0 +1,9 @@
+<div class="tabs">
+  <ul>
+  	<% tabs.each do |t| %>
+	  	<li>
+	  		<%= link_to t[:label], t[:url], :class => (selected == t[:name]) ? "selected" : "" %>
+	    </li>
+	  <% end %>
+  </ul>
+</div>

@@ -1,0 +1,14 @@
+<fieldset>
+	<legend><%= l(:"bsc.title_plugins_integration") %></legend>
+	<div>
+    	<%= l(:"bsc.text_plugins_integration") %>
+    </div>
+	<p>
+		<label><%=l(:"bsc.label_plugin_hr")%></label>
+    	<%= check_box_tag 'settings[plugin_hr]', true, @settings['plugin_hr'].present? %>
+	</p>
+	<p>
+		<label><%=l(:"bsc.label_plugin_ie")%></label>
+    	<%= check_box_tag 'settings[plugin_ie]', true, @settings['plugin_ie'].present? %>
+	</p>
+</fieldset>

@@ -1,0 +1,41 @@
+<h2><%=l(:"bsc.label_checkpoints")%></h2>
+<%= render_project_bsc_tab('checkpoints') %>
+
+<% if @checkpoints.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+  <div class="autoscroll">
+  <table class="list issues">
+    <thead>
+      <tr>
+        <%= sort_header_tag('checkpoint_date', :caption => t(:label_date), :default_order => 'desc') %>
+        <%= content_tag('th', t(:"bsc.label_effort")) %>
+        <%= content_tag('th', t(:field_scheduled_finish_date)) %>
+        <%= content_tag('th', t(:field_held_qa_meetings)) %>
+        <%= content_tag('th', t(:field_target_margin)) %>
+        <%= content_tag('th', t(:field_base_line)) %>
+      </tr>
+    </thead>
+    <tbody>
+    <% @checkpoints.each do |checkpoint| -%>
+      <tr id="checkpoint-<%= checkpoint.id %>" class="<%= cycle('odd', 'even') %> issue">
+        <td><%= link_to checkpoint.checkpoint_date, checkpoint_path(@project, checkpoint) %></td>
+        <%= content_tag 'td', checkpoint.bsc_checkpoint_efforts.reduce(0.0){ |sum, effort| sum += effort.scheduled_effort } %>
+        <%= content_tag 'td', checkpoint.scheduled_finish_date %>
+        <%= content_tag 'td', checkpoint.held_qa_meetings %>
+        <%= content_tag 'td', checkpoint.target_margin.to_s+'%' %>
+        <%= content_tag 'td', if checkpoint.base_line 
+                                image_tag 'toggle_check.png' 
+                              end
+                          %>
+      </tr>
+    <% end -%>
+    </tbody>
+  </table>
+  </div>
+  <p class="pagination splitcontentleft"><%= pagination_links_full @pages, @count %></p>
+<% end %>
+
+<div class="contextual">
+  <%= link_to_if_authorized l(:label_new), {:action => 'new'}, :class => 'icon icon-add' %>
+</div>

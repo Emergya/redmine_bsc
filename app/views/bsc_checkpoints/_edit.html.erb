@@ -1,0 +1,24 @@
+<%= labelled_form_for :checkpoint, @checkpoint,
+                             :url => {:action => 'update', :id => @checkpoint},
+                             :html => {:id => 'checkpoint-form',
+                                       :class => nil,
+                                       :method => :put} do |f| %>
+    <%= error_messages_for 'checkpoint' %>
+    <div class="box">
+      <fieldset class="tabular">
+        <legend><%= l(:label_change_properties) %></legend>
+        <%= render :partial => 'form', :locals => {:f => f} %>
+      </fieldset>
+
+    <fieldset><legend><%= l(:field_notes) %></legend>
+    <%= text_area_tag 'notes', @notes, :cols => 60, :rows => 10, :class => 'wiki-edit' %>
+    <%= wikitoolbar_for 'notes' %>
+
+    </fieldset>
+    </div>
+
+    <%= submit_tag l(:button_submit) %>
+    <%= preview_link preview_checkpoints_path(:project_id => @project, :id => @checkpoint), 'checkpoint-form' %>
+<% end %>
+
+<div id="preview" class="wiki"></div>

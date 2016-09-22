@@ -1,0 +1,37 @@
+# Spanish strings go here
+es:
+  field_actual_start_date: Fecha de comienzo real
+  field_scheduled_start_date: Fecha de comienzo planificada
+  field_scheduled_finish_date: Fecha de fin planificada
+  field_scheduled_qa_meetings: Revisiones de calidad planificadas
+  field_guarantee: Meses de garantía
+
+  field_checkpoint_date: Fecha de control
+  field_held_qa_meetings: Revisiones de calidad realizadas
+  field_base_line: Linea base
+  field_target_margin: Margen objetivo
+
+  field_scheduled_effort: Esfuerzo previsto
+
+
+  # Campos bsc_checkpoint_efforts
+
+  bsc:
+    plugin_name: Balanced Score Card
+    plugin_description: Cuadro de mando integral para Redmine
+
+    # settings
+    title_plugins_integration: Integración con otros plugins
+    text_plugins_integration: Activa las siguientes opciones únicamente si tienes correctamente instalado y configurado el plugin indicado.
+    label_plugin_hr: Plugin HR (Human Resources)
+    label_plugin_ie: Plugin IE (Income&Expenses)
+
+    # tabs
+    label_info: Información base
+    label_checkpoints: Puntos de control
+    label_metrics: Metricas
+
+    # checkpoints
+    label_new_checkpoint: Nuevo punto de control
+    label_effort: Esfuerzo
+    label_scheduled_profile_effort: "Esfuerzo previsto %{profile}"

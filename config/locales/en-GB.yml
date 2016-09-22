@@ -1,0 +1,37 @@
+# British english strings go here
+en-GB:
+  field_actual_start_date: Actual start date
+  field_scheduled_start_date: Scheduled start_date
+  field_scheduled_finish_date: Scheduled finish date
+  field_scheduled_qa_meetings: Scheduled QA meetings
+  field_guarantee: Month guarantee
+
+  field_checkpoint_date: Checkpoint date
+  field_held_qa_meetings: Held QA meetings
+  field_base_line: Base line
+  field_target_margin: Target margin
+
+  field_scheduled_effort: Scheduled effort
+
+
+  # Campos bsc_checkpoint_efforts
+
+  bsc:
+    plugin_name: Balanced Score Card
+    plugin_description: Balanced score card for Redmine
+
+    # settings
+    title_plugins_integration: Other plugins integration
+    text_plugins_integration: Enable the following options only if the selected plugin is properly installed and configured.
+    label_plugin_hr: HR plugin (Human Resources)
+    label_plugin_ie: IE plugin (Income&Expenses)
+
+    # tabs
+    label_info: Basic info
+    label_checkpoints: Checkpoints
+    label_metrics: Metrics
+
+    # checkpoints
+    label_new_checkpoint: New checkpoint
+    label_effort: Effort
+    label_scheduled_profile_effort: "%{profile} scheduled effort"
