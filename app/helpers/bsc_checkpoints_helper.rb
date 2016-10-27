@@ -190,4 +190,10 @@ module BscCheckpointsHelper
     end
   end
 
+  def render_checkpoint_effort_info(effort, number)
+    (number > 0) ? 
+      effort.to_s+" ("+number.to_s+" perfiles)" :
+      effort
+  end
+
 end

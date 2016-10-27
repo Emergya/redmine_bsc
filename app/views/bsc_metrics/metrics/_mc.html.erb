@@ -1,0 +1,101 @@
+<div id="scheduled_margin" class="highlight_field blue_field">
+	<div class="highlight_field_header"><%=l(:"bsc.label_scheduled_margin")%></div>
+	<div class="highlight_field_content"><%=percent(@scheduled_margin)%></div>
+</div>
+<div id="target_margin" class="highlight_field grey_field">
+	<div class="highlight_field_header"><%=l(:"bsc.label_target_margin")%></div>
+	<div class="highlight_field_content"><%=percent(@target_margin)%></div>
+</div>
+<style>
+
+</style>
+
+<table class="list" id="mc_table">
+	<theader>
+		<tr>
+			<th rowspan="2"><%=l(:"label_date")%></th>
+			<th rowspan="2"><%=l(:"bsc.label_mc")%></th>
+			<th colspan="<%=@incomes_trackers.length%>"><%=l(:"bsc.label_incomes")%></th>
+			<th colspan="<%=@expenses_trackers.length + 1%>"><%=l(:"bsc.label_expenses")%></th>
+		</tr>
+		<tr>
+			<%@incomes_trackers.map(&:name).each do |name|%>
+				<th><%=name%></th>
+			<% end %>
+			<%@expenses_trackers.map(&:name).each do |name|%>
+				<th><%=name%></th>
+			<% end %>
+			<th><%=@hhrr_name%></th>
+		</tr>
+	</theader>
+	<tbody>
+		<% @table_data.each_with_index do |data,index| %>
+			<tr id="<%='row_'+(@table_data.length - index - 1).to_s%>" class="row <%='hidden_row' if index>=5%>">
+				<th><%=data[:date]%></th>
+				<td><%=percent(data[:mc])%></td>
+				<%@incomes_trackers.each do |tracker|%>
+					<% if data[:total_income_details].keys.include?(tracker[:name]) %>
+						<td><%=currency(data[:total_income_details][tracker[:name]])%></td>
+					<% else %>
+						<td><%=currency(0.0)%></td>
+					<% end %>
+				<% end %>
+				<%@expenses_trackers.map(&:name).each do |name|%>
+					<% if data[:total_expenses_details].keys.include?(name) %>
+						<td><%=currency(data[:total_expenses_details][name])%></td>
+					<% else %>
+						<td><%=currency(0.0)%></td>
+					<% end %>
+				<% end %>
+				<% if data[:total_expenses_details].keys.include?(@hhrr_name) %>
+					<td><%=currency(data[:total_expenses_details][@hhrr_name])%></td>
+				<% else %>
+					<td><%=currency(0.0)%></td>
+				<% end %>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<% if @table_data.length >= 5 %>
+	<a href="#" class="show_hide_rows" data-table="mc_table"><%=l(:"bsc.label_show_more")%></a>
+<% end %>
+
+<div id="myfirstchart" style="height: 400px; width:100%;"></div>
+<script>
+	new Morris.Line({
+		element: 'myfirstchart',
+		data: <%=@chart_data.html_safe%>,
+		hoverCallback: function(index, options, content) {
+	  		text = "";
+	  		for (key in options.data[index]['income_details']){
+	  			if (options.data[index]['income_details'][key] > 1){
+	  				text += key+": "+currency(options.data[index]['income_details'][key])+'</br>';
+	  			}
+	  		}
+	  		for (key in options.data[index]['expenses_details']){
+	  			if (options.data[index]['expenses_details'][key] > 1){
+	  				text += key+": "+currency(options.data[index]['expenses_details'][key])+'</br>';
+	  			}
+	  		}
+
+	  		$('tr.active').removeClass('active');
+	  		$('tr#row_'+index).addClass('active');
+	  		// type = 'Tipo: '+options.data[index]['type']+'</br>';
+	  		// incomes = 'Ingresos: '+JSON.stringify(options.data[index]['income_details'])+'</br>';
+	  		// expenses = 'Gastos: '+JSON.stringify(options.data[index]['expenses_details'])+'</br>';
+	  		//checkpoints = 'Checkpoints: '+options.data[index]['checkpoints']+'</br>';
+	  		total_incomes = '<span style="color:green;">Total Ingresos: '+currency(options.data[index]['total_income'])+'</span></br>';
+	  		total_expenses = '<span style="color:red;">Total Gastos: '+currency(options.data[index]['total_expenses'])+'</span></br>';
+
+	        return(content+total_incomes+total_expenses+text);
+	    },
+	  	xkey: 'date',
+	  	ykeys: ['mc'],
+	  	labels: ['MC'],
+	  	smooth: false,
+	  	yLabelFormat: function(value){
+	  		return percent(value)
+	  	}
+	});
+</script>

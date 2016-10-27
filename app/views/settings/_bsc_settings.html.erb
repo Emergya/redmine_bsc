@@ -12,3 +12,17 @@
     	<%= check_box_tag 'settings[plugin_ie]', true, @settings['plugin_ie'].present? %>
 	</p>
 </fieldset>
+
+<fieldset>
+	<legend><%= l(:"bsc.title_deliverables") %></legend>
+	<p>
+		<label><%=l(:"label_tracker")%></label>
+    	<%= select_tag 'settings[deliverables_tracker]',
+          ('<option></option>' +
+            options_from_collection_for_select(Tracker.all, :id, :name, @settings['deliverables_tracker'])).html_safe %>
+	</p>
+	<p>
+		<label><%=l(:"bsc.label_delivery_date")%></label>
+    	<%= check_box_tag 'settings[plugin_ie]', true, @settings['plugin_ie'].present? %>
+	</p>
+</fieldset>

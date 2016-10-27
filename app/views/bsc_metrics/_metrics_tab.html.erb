@@ -1,0 +1,10 @@
+<div id="metric_headers">
+	<% @metric_options.each do |metric_option| %>
+		<span id="<%=metric_option%>_header" class="metric_option <%='selected' if @metric_selected == metric_option%>" onclick="change_metric('<%=metric_option%>');">
+			<%= render :partial => "bsc_metrics/metrics/headers/"+metric_option %>
+		</span>
+	<% end %>
+</div>
+<div id="metric_content">
+	<%= render :partial => "bsc_metrics/metrics/"+@metric_selected %>
+</div>

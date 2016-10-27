@@ -1,0 +1,88 @@
+<table class="list" id="efforts_table">
+	<theader>
+		<tr>
+			<th><%=l(:"bsc.label_profile")%></th>
+			<th><%=l(:"bsc.label_profiles_number")%></th>
+			<th><%=l(:"bsc.label_scheduled_effort")%></th>
+			<th><%=l(:"bsc.label_incurred_effort")%></th>
+			<th><%=l(:"bsc.label_remaining_effort")%></th>
+			<th><%=l(:"bsc.label_ideal_capacity")%></th>
+		</tr>
+	</theader>
+	<tbody>
+		<% @table_data.each do |data| %>
+			<tr>
+				<th><%=data[:name]%></th>
+				<td><%=data[:number]%></td>
+				<td><%=decimal(data[:scheduled])%></td>
+				<td><%=decimal(data[:incurred])%></td>
+				<td><%=decimal(data[:remaining])%></td>
+				<% tips = data[:ideal_capacity_details].present? %>
+				<td class="<%='alert' if tips%>" title="<%=data[:ideal_capacity_details] if tips%>" ><%= (data[:ideal_capacity].to_f < 0) ? l(:"bsc.label_error") : data[:ideal_capacity] %></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<div style="display:inline-block; width:75%">
+<div id="myfirstchart" style="height: 400px; width:100%;"></div>
+<script>
+	new Morris.Line({
+	  element: 'myfirstchart',
+	  data: <%=@chart_data.to_json.html_safe%>,
+	  hoverCallback: function(index, options, content) {
+	  		text = "";
+	  		for (key in options.data[index]['scheduled_hours_details']){
+	  			text += key+": "+hours(options.data[index]['scheduled_hours_details'][key])+'</br>';
+	  		}
+
+	  		$('tr.active').removeClass('active');
+	  		$('tr#row_'+index).addClass('active');
+	  		// for (key in options.data[index]['incurred_hours_details']){
+	  		// 	text += key+": "+options.data[index]['incurred_hours_details'][key]+'</br>';
+	  		// }
+
+	  		hours_remaining = 'Restante: '+hours(options.data[index]['scheduled_hours']-options.data[index]['incurred_hours'])+'</br>';
+	  		//checkpoint_id = 'Checkpoint: '+options.data[index]['id']+'</br>';
+	        return(content+hours_remaining);
+	    },
+	  xkey: 'date',
+	  ykeys: ['incurred_hours','scheduled_hours'],
+	  labels: ['Horas incurridas', 'Horas estimadas'],
+	  yLabelFormat: function(value){
+	  	return hours(value)
+	  }
+	});
+</script>
+</div>
+
+<div style="float:right; width:24%; overflow:hidden;">
+	<h2><%=l(:"bsc.label_checkpoints")%></h2>
+	<table id="effort_chart_table" class="list">
+		<theader>
+			<tr>
+				<th><%=l(:"label_date")%></th>
+				<th><%=l(:"bsc.label_scheduled_effort")%></th>
+				<th><%=l(:"bsc.label_scheduled_finish_date")%></th>
+			</tr>
+		</theader>
+		<tbody>
+			<% @chart_data.each_with_index do |data, index| %>
+				<tr id="<%='row_'+(@chart_data.length - index - 1).to_s%>" class="row <%='hidden_row' if index>=8%>">
+					<th><%=data[:date]%></th>
+					<td><%=decimal(data[:scheduled_hours])%></td>
+					<td><%=data[:scheduled_finish_date]%></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+	<% if @table_data.length >= 8 %>
+		<a href="#" class="show_hide_rows" data-table="effort_chart_table"><%=l(:"bsc.label_show_more")%></a>
+	<% end %>
+</div>
+
+<script>
+	$( function() {
+	    $( "td.alert" ).tooltip({ show: false, hide:false });
+	  } );
+</script>

@@ -19,7 +19,7 @@ class CreateBscCheckpoints < ActiveRecord::Migration
       t.float :scheduled_effort, :null => false, :default => 0
       t.timestamps
     end
-    add_index :bsc_checkpoint_efforts, [:bsc_checkpoint_id, :hr_profile_id], :unique => true
+    add_index :bsc_checkpoint_efforts, [:bsc_checkpoint_id, :hr_profile_id], :unique => true, :name => 'index_efforts_by_checkpoint_id_and_profile_id'
   end
 
   def self.down

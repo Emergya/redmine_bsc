@@ -1,0 +1,10 @@
+<div class="metric_content <%=@effort_header[:type]%>">
+	<span class="header_title">
+		<h2><%=l(:"bsc.title_effort").upcase%></h2>
+	</span>
+	<span class="glyphicon glyphicon-tasks"></span>
+	<span class="header_text">
+		<%#=@effort_header[:text].html_safe%>
+		<%=render_effort_header_text(@effort_header[:result])%>
+	</span>
+</div>

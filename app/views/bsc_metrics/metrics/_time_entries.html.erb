@@ -1,0 +1,53 @@
+
+<table class="list" id="members_table">
+	<theader>
+		<tr>
+			<th><%=l(:"label_user")%></th>
+			<th><%=l(:"bsc.label_last_entry")%></th>
+			<th><%=l(:"bsc.label_days_passed")%></th>
+			<th><%=l(:"bsc.label_entry_hours")%></th>
+		</tr>
+	</theader>
+	<tbody>
+		<% @table_members.each_with_index do |data, index| %>
+			<tr class="<%='alert' if data[:days] > BscTimeEntry::MAX_DAYS%> <%='hidden_row' if index >= 5%>">
+				<th><%=link_to(data[:user], project_time_entries_path(@project, :user_id => data[:id]))%></th>
+				<td><%=data[:last_entry]%></td>
+				<td><%=data[:days]%></td>
+				<td><%=decimal(data[:hours])%></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<% if @table_members.length >= 5 %>
+	<a href="#" class="show_hide_rows" data-table="members_table"><%=l(:"bsc.label_show_more")%></a>
+<% end %>
+
+<table class="list" id="profiles_table">
+	<theader>
+		<tr>
+			<th><%=l(:"label_date")%></th>
+			<% @profile_names.each do |profile| %>
+				<th><%=profile%></th>
+			<% end %>
+			<th><%=l(:"label_total")%></th>
+		</tr>
+	</theader>
+	<tbody>
+		<% @table_profiles.each_with_index do |(date, data), index| %>
+			<tr class="<%='hidden_row' if index >= 8%>">
+				<th><%=date%></th>
+				<% @profile_names.each do |profile| %>
+					<td><%=data[profile].present? ? decimal(data[profile]) : decimal(0.0)%></td>
+				<% end %>
+				<td><%=decimal(data.values.sum)%></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<% if @table_members.length >= 8 %>
+	<a href="#" class="show_hide_rows" data-table="profiles_table"><%=l(:"bsc.label_show_more")%></a>
+<% end %>
+

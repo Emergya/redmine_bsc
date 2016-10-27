@@ -64,6 +64,11 @@ class BscCheckpoint < ActiveRecord::Base
     []
   end
 
+  def scheduled_profile_number(profile_id)
+    effort = bsc_checkpoint_efforts.detect{ |effort| effort.hr_profile_id == profile_id }
+    effort.nil? ? 0.0 : effort.number
+  end
+
   def scheduled_profile_effort(profile_id)
     effort = bsc_checkpoint_efforts.detect{ |effort| effort.hr_profile_id == profile_id }
     effort.nil? ? 0.0 : effort.scheduled_effort
@@ -74,15 +79,13 @@ class BscCheckpoint < ActiveRecord::Base
     effort.nil? ? nil : effort.id
   end
 
-
-  private
-
   def scheduled_profile_effort_hash
     bsc_checkpoint_efforts.reduce({}) do |hash, effort|
       hash.merge! effort.hr_profile_id => effort.scheduled_effort
     end
   end
 
+  private
 
   # Saves the changes in a Journal
   # Called after_save

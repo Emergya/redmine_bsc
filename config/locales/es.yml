@@ -35,3 +35,36 @@ es:
     label_new_checkpoint: Nuevo punto de control
     label_effort: Esfuerzo
     label_scheduled_profile_effort: "Esfuerzo previsto %{profile}"
+    label_profile_plural: Perfiles
+
+    # metrics
+    label_show_more: Ver más
+    label_show_less: Ver menos
+    # time_entries
+    title_time_entries: Carga de horas
+    label_last_entry: Última carga
+    label_days_passed: Días transcurridos
+    label_entry_hours: Horas cargadas
+    # mc
+    title_mc: MC
+    label_scheduled_margin: Margen previsto
+    label_target_margin: Margen objetivo
+    label_mc: MC
+    label_incomes: Ingresos
+    label_expenses: Gastos
+    # income_expenses
+    title_income_expenses: Cobros y pagos
+    label_subject: Asunto
+    label_type: Tipo
+    label_amount: Importe
+    label_planned_date: Fecha planificada
+    # effort
+    title_effort: Esfuerzo
+    label_profile: Perfil
+    label_profiles_number: Número de perfiles
+    label_scheduled_effort: Esf Estimado
+    label_incurred_effort: Esf Incurrido
+    label_remaining_effort: Esf Restante
+    label_scheduled_finish_date: Fecha de fin planificada
+    label_ideal_capacity: Dedicación ideal
+    label_error: Error

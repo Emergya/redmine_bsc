@@ -33,10 +33,10 @@
     <% @profiles.each_slice(2) do |profiles| %>
       <tr>
         <th><%=l(:"bsc.label_scheduled_profile_effort", :profile => profiles[0].name) %></th>
-        <td><%= @checkpoint.scheduled_profile_effort(profiles[0].id) %></td>
+        <td><%= render_checkpoint_effort_info(@checkpoint.scheduled_profile_effort(profiles[0].id), @checkpoint.scheduled_profile_number(profiles[0].id)) %></td>
         <% unless profiles[1].nil? %>
           <th><%=l(:"bsc.label_scheduled_profile_effort", :profile => profiles[1].name) %></th>
-          <td><%= @checkpoint.scheduled_profile_effort(profiles[1].id) %></td>
+          <td><%= render_checkpoint_effort_info(@checkpoint.scheduled_profile_effort(profiles[1].id), @checkpoint.scheduled_profile_number(profiles[1].id)) %></td>
         <% end %>
       </tr>
     <% end %>

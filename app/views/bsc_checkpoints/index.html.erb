@@ -20,7 +20,7 @@
     <% @checkpoints.each do |checkpoint| -%>
       <tr id="checkpoint-<%= checkpoint.id %>" class="<%= cycle('odd', 'even') %> issue">
         <td><%= link_to checkpoint.checkpoint_date, checkpoint_path(@project, checkpoint) %></td>
-        <%= content_tag 'td', checkpoint.bsc_checkpoint_efforts.reduce(0.0){ |sum, effort| sum += effort.scheduled_effort } %>
+        <%= content_tag 'td', hours(checkpoint.bsc_checkpoint_efforts.reduce(0.0){ |sum, effort| sum += effort.scheduled_effort }) %>
         <%= content_tag 'td', checkpoint.scheduled_finish_date %>
         <%= content_tag 'td', checkpoint.held_qa_meetings %>
         <%= content_tag 'td', checkpoint.target_margin.to_s+'%' %>

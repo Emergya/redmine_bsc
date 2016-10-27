@@ -1,0 +1,125 @@
+
+<div class="splitcontentleft">
+	<h2><%=l(:"bsc.label_incomes")%></h2>
+	<table class="list" id="incomes_table">
+		<theader>
+			<tr>
+				<th><%=l(:"bsc.label_subject")%></th>
+				<th><%=l(:"bsc.label_subject")%></th>
+				<th><%=l(:"bsc.label_amount")%></th>
+				<th><%=l(:"bsc.label_planned_date")%></th>
+			</tr>
+		</theader>
+		<tbody>
+			<% @income_table.each_with_index do |data,index| %>
+				<tr class="income <%='hidden_row' if index>=5%> <%='alert' if Date.parse(data[:start])<Date.today%>">
+					<th><%=link_to(data[:title], issue_path(data[:id]))%></th>
+					<td><%=data[:type]%></td>
+					<td><%=currency(data[:amount])%></td>
+					<td><%=data[:start]%></td>
+			<% end %>
+		</tbody>
+	</table>
+
+	<% if @income_table.length >= 5 %>
+		<a href="#" class="show_hide_rows" data-table="incomes_table"><%=l(:"bsc.label_show_more")%></a>
+	<% end %>
+</div>
+
+<div class="splitcontentright">
+	<h2><%=l(:"bsc.label_expenses")%></h2>
+	<table class="list" id="expenses_table">
+		<theader>
+			<tr>
+				<th><%=l(:"bsc.label_subject")%></th>
+				<th><%=l(:"bsc.label_subject")%></th>
+				<th><%=l(:"bsc.label_amount")%></th>
+				<th><%=l(:"bsc.label_planned_date")%></th>
+			</tr>
+		</theader>
+		<tbody>
+			<% @expense_table.each_with_index do |data,index| %>
+				<tr class="expense <%='hidden_row' if index>=5%> <%='alert' if Date.parse(data[:start])<Date.today%>">
+					<th><%=link_to(data[:title], issue_path(data[:id]))%></th>
+					<td><%=data[:type]%></td>
+					<td><%=currency(data[:amount])%></td>
+					<td><%=data[:start]%></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+
+	<% if @expense_table.length >= 5 %>
+		<a href="#" class="show_hide_rows" data-table="expenses_table"><%=l(:"bsc.label_show_more")%></a>
+	<% end %>
+</div>
+
+<div style="clear:both;"></div>
+<hr/>
+<div id="calendar1" style="width:33%; display:inline-block;"></div>
+<div id="calendar2" style="width:33%; display:inline-block;"></div>
+<div id="calendar3" style="width:33%; display:inline-block;"></div>
+
+<script type="text/javascript">
+//var expense_table_json = <%#=@expense_table.to_json.html_safe%>;
+//var income_table_json = <%#=@income_table.to_json.html_safe%>;
+
+$(document).ready(function() {
+
+	expense_events = {
+	    events: 
+	        $.parseJSON('<%=@expense_table.to_json.html_safe%>')
+	    ,
+	    color: 'red',   // an option!
+	    textColor: 'black' // an option!
+	};
+
+	income_events = {	
+		events: 
+	        $.parseJSON('<%=@income_table.to_json.html_safe%>')
+	    ,
+	    color: 'yellow',   // an option!
+	    textColor: 'black' // an option!
+	};
+
+
+    // Options for calendars
+    calendar_options = {
+        // put your options and callbacks here
+        firstDay: 1,
+        contentHeight: 400,
+        header: {
+            left: '',
+            center: 'title',
+            right: ''
+        },
+	    defaultDate: moment(),
+	    theme: true,
+	    eventSources: [
+	    	expense_events,
+	    	income_events
+	    ],
+	    eventRender: function(event, element, view) {
+            element.attr('title', event.title);
+            if (event.start.month()+1 != view.start.month()+2) return false;
+        }
+    }
+
+    $('#calendar1').fullCalendar(
+    	calendar_options
+    )
+
+    calendar_options['defaultDate'] = moment().add(1, 'months');
+    $('#calendar2').fullCalendar(
+    	calendar_options
+    )
+
+    calendar_options['defaultDate'] = moment().add(2, 'months');
+    $('#calendar3').fullCalendar(
+    	calendar_options
+    )
+
+    $(".fc-title").tooltip();
+});
+
+</script>

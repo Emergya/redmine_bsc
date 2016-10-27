@@ -22,6 +22,8 @@
           <%= hidden_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][id]", @checkpoint.scheduled_profile_effort_id(profile.id) %>
           <%= hidden_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][hr_profile_id]", profile.id %>
           <%= text_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][scheduled_effort]", @checkpoint.scheduled_profile_effort(profile.id), :size => 10 %>
+          <%= l(:"bsc.label_profile_plural") %>
+          <%= text_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][number]", @checkpoint.scheduled_profile_number(profile.id), :size => 1 %>
         </p>
       <% end %>
     </div>

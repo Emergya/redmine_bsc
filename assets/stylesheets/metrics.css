@@ -1,0 +1,127 @@
+/* Metric headers */
+.metric_option{
+	/*display:inline-table;*/
+	display: inline-block;
+/*	text-align:center; */
+	height:120px;
+	cursor:pointer;
+}
+.metric_content{
+	height:100%;
+	border: black solid 1px;
+	overflow: hidden;
+	display: inline-block;
+	width: 100%;
+	opacity: 0.99;
+	text-align:center;
+}
+.header_title{
+	display:block;
+	margin-top:10px;
+	color:white;
+	text-align:center;
+	/*text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;*/
+}
+.header_text{
+	display:block;
+	margin-top:-100px;
+	color:black;
+	margin-left:10px;
+	margin-right:5px;
+}
+.glyphicon{
+	font-size:130px;
+	display:block;
+	text-align:right;
+	margin-right:5%;
+	margin-top:-40px;
+	z-index:-1;
+}
+.metric_content.success .glyphicon{
+	color:#484;
+}
+.metric_content.success{
+	background-color:#5A5;
+}
+.metric_content.alert .glyphicon{
+	color:#844;
+}
+.metric_content.alert{
+	background-color:#A55;
+}
+.metric_content.warn .glyphicon{
+	color:#CC6;
+}
+.metric_content.warn .header_title{
+	color:black;
+}
+.metric_content.warn{
+	background-color:#EE8;
+}
+.metric_option.selected div.metric_content {
+	/*height: 120%;*/
+	/*margin-bottom: -2%;*/
+	/*border: solid black 5px;*/
+	/*z-index: 5;*/
+	/*margin-left: -2px;*/
+
+	border: solid black 3px;
+	margin-left: -1.5px;
+	margin-bottom:-1px;
+}
+
+
+/* Tables styles */
+tr.hidden_row{ display:none; }
+tr.alert, td.alert{
+	background-color: #FFE3E3;
+}
+
+/*.center{
+	text-align: center
+}*/
+
+
+/* Highlight table when hover on chart */
+tr.active { background-color:#ffffdd;}
+
+/* Hide calendar events that starts on another month */
+.hiddenEvent{display: none;}
+.fc-other-month .fc-day-number { display:none;}
+td.fc-other-month .fc-day-number {
+	visibility: hidden;
+}
+
+/* Highlights fields */
+.highlight_field{
+	width:250px;
+	/*height:30px;*/
+	color:white;
+	display:inline-block;
+	/*border:solid 1px black;*/
+}
+.highlight_field_header{
+	width:100%;
+	height:25px;
+	text-align: center
+}
+.highlight_field_content{
+	width:100%;
+	height:90px;
+	font-size: 50px;
+	text-align:center;
+	padding-top:18px;
+	/*padding:30px;*/
+}
+.blue_field .highlight_field_header{
+	background-color:#57D;
+}
+.blue_field .highlight_field_content{
+	background-color:#35D;
+}
+.grey_field .highlight_field_header{
+	background-color:#999;
+}
+.grey_field .highlight_field_content{
+	background-color:#777;
+}
