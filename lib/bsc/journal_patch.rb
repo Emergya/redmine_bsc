@@ -6,7 +6,6 @@ module BSC
 
       # Same as typing in the class
       base.class_eval do
-        #alias_method_chain :send_notification, :bsc
         scope :visible, lambda {|*args|
           user = args.shift || User.current
           joins(:issue => :project).

@@ -13,18 +13,9 @@ es:
 
   field_scheduled_effort: Esfuerzo previsto
 
-
-  # Campos bsc_checkpoint_efforts
-
   bsc:
     plugin_name: Balanced Score Card
     plugin_description: Cuadro de mando integral para Redmine
-
-    # settings
-    title_plugins_integration: Integración con otros plugins
-    text_plugins_integration: Activa las siguientes opciones únicamente si tienes correctamente instalado y configurado el plugin indicado.
-    label_plugin_hr: Plugin HR (Human Resources)
-    label_plugin_ie: Plugin IE (Income&Expenses)
 
     # tabs
     label_info: Información base
@@ -45,8 +36,10 @@ es:
     label_last_entry: Última carga
     label_days_passed: Días transcurridos
     label_entry_hours: Horas cargadas
+    label_profile_hours: Horas por perfil
     # mc
     title_mc: MC
+    label_hhrr: RRHH
     label_scheduled_margin: Margen previsto
     label_target_margin: Margen objetivo
     label_mc: MC
@@ -60,6 +53,7 @@ es:
     label_planned_date: Fecha planificada
     # effort
     title_effort: Esfuerzo
+    label_remaining_days: Días restantes
     label_profile: Perfil
     label_profiles_number: Número de perfiles
     label_scheduled_effort: Esf Estimado
@@ -68,3 +62,25 @@ es:
     label_scheduled_finish_date: Fecha de fin planificada
     label_ideal_capacity: Dedicación ideal
     label_error: Error
+    text_increase_scheduled_time: Incrementar el tiempo estimado para este perfil
+    text_add_profiles: Añadir nuevos perfiles
+    text_decrease_scheduled_time: Decrementar el tiempo estimado para este perfil
+    text_delay_project_end_date: Retrasar la fecha de fin del proyecto
+    text_or: " o "
+    text_and: " y "
+    # deliverables
+    title_deliverables: Entregables
+    label_deliverables: Entregables
+    label_status: Estado
+    label_delivery_date: Fecha de entrega
+    label_assigned_to: Asignado a
+    label_done_ratio: "% Realizado"
+
+    # settings
+    title_plugins_integration: Integración con otros plugins
+    settings:
+      text_plugins_integration: Activa las siguientes opciones únicamente si tienes correctamente instalado y configurado el plugin indicado.
+      label_plugin_hr: Plugin HR (Human Resources)
+      label_plugin_ie: Plugin IE (Income&Expenses)
+      label_delivery_date: Campo - Fecha de entrega
+      label_delivery_status: Estado - Entregado

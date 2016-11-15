@@ -1,0 +1,45 @@
+<div>
+	<h2><%=l(:"bsc.label_deliverables")%></h2>
+	<table class="list" id="deliverables_table">
+		<theader>
+			<tr>
+				<th><%=l(:"bsc.label_subject")%></th>
+				<th><%=l(:"bsc.label_status")%></th>
+				<th><%=l(:"bsc.label_delivery_date")%></th>
+				<th><%=l(:"bsc.label_assigned_to")%></th>
+				<th><%=l(:"bsc.label_done_ratio")%></th>
+			</tr>
+		</theader>
+		<tbody>
+			<% @deliverables_table.each_with_index do |data,index| %>
+				<tr class="income <%='hidden_row' if index>=5%> <%='alert' if Date.parse(data[:start])<Date.today%>">
+					<th><%=link_to(data[:title], issue_path(data[:id]))%></th>
+					<td><%=data[:status]%></td>
+					<td><%=data[:start]%></td>
+					<td><%=data[:assigned_to]%></td>
+					<td><%=data[:done_ratio]%></td>
+			<% end %>
+		</tbody>
+	</table>
+
+	<% if @deliverables_table.length > 5 %>
+		<%=render_link_show_more('deliverables_table')%>
+	<% end %>
+</div>
+
+<hr/>
+<div id="calendar1" class="calendar"></div>
+<div id="calendar2" class="calendar"></div>
+<div id="calendar3" class="calendar"></div>
+
+<script type="text/javascript">
+var calendar_events = [{
+    events: 
+        $.parseJSON('<%=@deliverables_table.to_json.html_safe%>')
+    ,
+    color: 'red',
+    textColor: 'black'
+    //startParam: 'delivery_date'
+}];
+load_calendars(calendar_events);
+</script>

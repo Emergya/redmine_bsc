@@ -29,4 +29,8 @@ module BscHelper
     number_with_delimiter(n.round(2), locale: Setting.default_language)
     # number_with_delimiter(n, delimiter: '.', separator: ',')
   end
+
+  def date_es(date)
+    date.strftime('%d/%m/%Y')
+  end
 end

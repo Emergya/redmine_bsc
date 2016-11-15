@@ -1,10 +1,9 @@
 require 'bsc/project_patch'
 require 'bsc/journal_patch'
 require 'bsc/previews_controller_patch'
+require 'bsc/settings_controller_patch'
 require 'bsc/hooks'
 require 'bsc/integration'
-# require 'bsc/widgets'
-# require 'bsc/metrics'
 
 Redmine::Plugin.register :redmine_bsc do
   Rails.configuration.after_initialize do

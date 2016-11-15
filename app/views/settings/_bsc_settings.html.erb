@@ -1,14 +1,14 @@
 <fieldset>
 	<legend><%= l(:"bsc.title_plugins_integration") %></legend>
 	<div>
-    	<%= l(:"bsc.text_plugins_integration") %>
+    	<%= l(:"bsc.settings.text_plugins_integration") %>
     </div>
 	<p>
-		<label><%=l(:"bsc.label_plugin_hr")%></label>
+		<label><%=l(:"bsc.settings.label_plugin_hr")%></label>
     	<%= check_box_tag 'settings[plugin_hr]', true, @settings['plugin_hr'].present? %>
 	</p>
 	<p>
-		<label><%=l(:"bsc.label_plugin_ie")%></label>
+		<label><%=l(:"bsc.settings.label_plugin_ie")%></label>
     	<%= check_box_tag 'settings[plugin_ie]', true, @settings['plugin_ie'].present? %>
 	</p>
 </fieldset>
@@ -22,7 +22,31 @@
             options_from_collection_for_select(Tracker.all, :id, :name, @settings['deliverables_tracker'])).html_safe %>
 	</p>
 	<p>
-		<label><%=l(:"bsc.label_delivery_date")%></label>
-    	<%= check_box_tag 'settings[plugin_ie]', true, @settings['plugin_ie'].present? %>
+		<label><%=l(:"bsc.settings.label_delivery_date")%></label>
+		<%
+	       if Setting.plugin_redmine_bsc['deliverables_tracker'].present? 
+	         options = ('<option></option>'+options_from_collection_for_select(Tracker.find(Setting.plugin_redmine_bsc['deliverables_tracker']).custom_fields, :id, :name, @settings['delivery_date'].to_i)).html_safe
+	       else
+	         options = ('<option></option>').html_safe
+	       end
+	     %>
+		<%= select_tag 'settings[delivery_date]', options %>
 	</p>
+	<p>
+		<label><%=l(:"bsc.settings.label_delivery_status")%></label>
+		<%
+	       if Setting.plugin_redmine_bsc['deliverables_tracker'].present? 
+	         options = ('<option></option>'+options_from_collection_for_select(Tracker.find(Setting.plugin_redmine_bsc['deliverables_tracker']).issue_statuses, :id, :name, @settings['delivery_status'].to_i)).html_safe
+	       else
+	         options = ('<option></option>').html_safe
+	       end
+	     %>
+		<%= select_tag 'settings[delivery_status]', options %>
+	</p>
+	<script>
+	  $('#settings_deliverables_tracker').change(function(){
+		$('#settings_delivery_date').load('/settings/show_tracker_custom_fields', {tracker: $('#settings_deliverables_tracker').val()});
+	  	$('#settings_delivery_status').load('/settings/show_tracker_statuses', {tracker: $('#settings_deliverables_tracker').val()});
+	  });
+	</script>
 </fieldset>

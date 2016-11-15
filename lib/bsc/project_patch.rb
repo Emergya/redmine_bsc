@@ -1,5 +1,3 @@
-#require_dependency 'project'
-
 module BSC
   module ProjectPatch
     def self.included(base) # :nodoc:

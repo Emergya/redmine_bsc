@@ -8,3 +8,6 @@ scope '/projects/:project_id' do
     end
   end
 end
+
+match '/settings/show_tracker_custom_fields' => 'settings#show_tracker_custom_fields', :via => [:get, :post]
+match '/settings/show_tracker_statuses' => 'settings#show_tracker_statuses', :via => [:get, :post]

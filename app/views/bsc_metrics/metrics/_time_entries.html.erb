@@ -10,7 +10,7 @@
 	</theader>
 	<tbody>
 		<% @table_members.each_with_index do |data, index| %>
-			<tr class="<%='alert' if data[:days] > BscTimeEntry::MAX_DAYS%> <%='hidden_row' if index >= 5%>">
+			<tr class="<%= (data[:days] > BscTimeEntry::MAX_DAYS_ALERT) ? 'alert' : ((data[:days] > BscTimeEntry::MAX_DAYS_WARNING) ? 'warn' : '') %> <%='hidden_row' if index >= 5%>">
 				<th><%=link_to(data[:user], project_time_entries_path(@project, :user_id => data[:id]))%></th>
 				<td><%=data[:last_entry]%></td>
 				<td><%=data[:days]%></td>
@@ -20,10 +20,11 @@
 	</tbody>
 </table>
 
-<% if @table_members.length >= 5 %>
-	<a href="#" class="show_hide_rows" data-table="members_table"><%=l(:"bsc.label_show_more")%></a>
+<% if @table_members.length > 5 %>
+	<%=render_link_show_more('members_table')%>
 <% end %>
 
+<h2><%=l(:"bsc.label_profile_hours")%> (<%=render_time_entries_report_link.html_safe%>)</h2>
 <table class="list" id="profiles_table">
 	<theader>
 		<tr>
@@ -47,7 +48,7 @@
 	</tbody>
 </table>
 
-<% if @table_members.length >= 8 %>
-	<a href="#" class="show_hide_rows" data-table="profiles_table"><%=l(:"bsc.label_show_more")%></a>
+<% if @table_members.length > 8 %>
+	<%=render_link_show_more('profiles_table')%>
 <% end %>
 

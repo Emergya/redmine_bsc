@@ -13,18 +13,9 @@ en:
 
   field_scheduled_effort: Scheduled effort
 
-
-  # Campos bsc_checkpoint_efforts
-
   bsc:
     plugin_name: Balanced Score Card
     plugin_description: Balanced score card for Redmine
-
-    # settings
-    title_plugins_integration: Other plugins integration
-    text_plugins_integration: Enable the following options only if the selected plugin is properly installed and configured.
-    label_plugin_hr: HR plugin (Human Resources)
-    label_plugin_ie: IE plugin (Income&Expenses)
 
     # tabs
     label_info: Basic info
@@ -35,3 +26,61 @@ en:
     label_new_checkpoint: New checkpoint
     label_effort: Effort
     label_scheduled_profile_effort: "%{profile} scheduled effort"
+    label_profile_plural: Profiles
+
+    # metrics
+    label_show_more: Show more
+    label_show_less: Show less
+    # time_entries
+    title_time_entries: Time entries
+    label_last_entry: Last entry
+    label_days_passed: Days passed
+    label_entry_hours: Entry hours
+    label_profile_hours: Profile hours
+    # mc
+    title_mc: CM
+    label_hhrr: HHRR
+    label_scheduled_margin: Scheduled margin
+    label_target_margin: Target margin
+    label_mc: CM
+    label_incomes: Incomes
+    label_expenses: Expenses
+    # income_expenses
+    title_income_expenses: Income and expenses
+    label_subject: Subject
+    label_type: Type
+    label_amount: Amount
+    label_planned_date: Planned date
+    # effort
+    title_effort: Effort
+    label_remaining_days: Remaining days
+    label_profile: Profile
+    label_profiles_number: Profiles number
+    label_scheduled_effort: Scheduled effort
+    label_incurred_effort: Incurred effort
+    label_remaining_effort: Remaining effort
+    label_scheduled_finish_date: Scheduled finish date
+    label_ideal_capacity: Ideal capacity
+    label_error: Error
+    text_increase_scheduled_time: Increase scheduled time for this profile
+    text_add_profiles: Add new profiles
+    text_decrease_scheduled_time: Decrease scheduled time for this profile
+    text_delay_project_end_date: Delay the project end date
+    text_or: " or "
+    text_and: " and "
+    # deliverables
+    title_deliverables: Deliverables
+    label_deliverables: Deliverables
+    label_status: Status
+    label_delivery_date: Delivery date
+    label_assigned_to: Assigned to
+    label_done_ratio: "% Done"
+
+    # settings
+    title_plugins_integration: Other plugins integration
+    settings:
+      text_plugins_integration: Enable the following options only if the selected plugin is properly installed and configured.
+      label_plugin_hr: Plugin HR (Human Resources)
+      label_plugin_ie: Plugin IE (Income&Expenses)
+      label_delivery_date: Field - Delivery date
+      label_delivery_status: Status - Delivered

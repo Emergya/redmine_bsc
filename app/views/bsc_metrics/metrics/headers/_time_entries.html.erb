@@ -1,9 +1,9 @@
-<div class="metric_content warn">
+<div class="metric_content <%=@time_entries_header[:type]%>">
 	<span class="header_title">
 		<h2><%=l(:"bsc.title_time_entries").upcase%></h2>
 	</span>
 	<span class="glyphicon glyphicon-time"></span>
 	<span class="header_text">
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque accumsan convallis euismod. Maecenas imperdiet et lorem sit amet tempor. Nulla iaculis placerat tortor sed pellentesque.
+		<%= render_time_entries_header_text(@time_entries_header[:type], @time_entries_header[:number]) %>
 	</span>
 </div>

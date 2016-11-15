@@ -1,0 +1,3 @@
+<%=
+('<option></option>'+options_from_collection_for_select(Tracker.find(params[:tracker]).issue_statuses, :id, :name)).html_safe
+%>

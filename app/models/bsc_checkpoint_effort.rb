@@ -25,16 +25,4 @@ class BscCheckpointEffort < ActiveRecord::Base
   #   profiles_number = 1
   #   scheduled_effort - TimeEntry.where('project_id IN (?) AND spent_on <= ? AND hr_profile_id = ?', @projects.map(&:id), date, profile)
   # end
-
-
-
-
-
-
-
-
-  # def profiles_number
-  #   BigDecimal("0.1")
-  # end
-
 end
