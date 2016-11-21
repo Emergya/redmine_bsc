@@ -12,10 +12,10 @@ class BscMc < ActiveRecord::Base
 			data = get_date(project, date)
 			##
 			income_details = JSON.parse(data[:income_details])
-			expense_details = JSON.parse(data[:expense_details]).reject{|k,v| k == 'RRHH'}
+			expense_details = JSON.parse(data[:expenses_details]).reject{|k,v| k == 'RRHH'}
 			if income_details.merge(expense_details).detect{|k,v| v.abs > 0}
 				data.save
-			elsif (data[:income].abs + data[:expenses].abs) >= MC_MIN_VARIATION * data[:mc].to_f
+			elsif (data[:income].abs + data[:expenses].abs) >= (MC_MIN_VARIATION * data[:mc].to_f)
 				data.save
 			end
 			##

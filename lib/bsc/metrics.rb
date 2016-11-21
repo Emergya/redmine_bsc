@@ -28,21 +28,17 @@ module BSC
 
 		def hhrr_hours_scheduled_by_profile
 			@hhrr_hours_scheduled_by_profile ||= 
-			(begin
-				if @hr_plugin
-					result = Hash.new(0.0)
-					@projects.each do |project|
-						if (last_checkpoint = project.last_checkpoint(@date)).present?
-							last_checkpoint.scheduled_profile_effort_hash.each do |profile_id,hours|
-								result[profile_id] += hours
-							end
+			(if @hr_plugin
+				result = Hash.new(0.0)
+				@projects.each do |project|
+					if (last_checkpoint = project.last_checkpoint(@date)).present?
+						last_checkpoint.scheduled_profile_effort_hash.each do |profile_id,hours|
+							result[profile_id] += hours
 						end
 					end
-					result
-				else
-					{}
 				end
-			rescue
+				result
+			else
 				{}
 			end)
 		end
@@ -60,7 +56,7 @@ module BSC
 				end
 				result
 			else
-				0.0
+				{}
 			end)
 		end
 
@@ -78,6 +74,8 @@ module BSC
 					result[profile] = scheduled[profile] - incurred[profile]
 				end
 				result
+			else
+				{}
 			end)
 		end
 
@@ -120,7 +118,7 @@ module BSC
 				end
 				result
 			else
-				0.0
+				{}
 			end)
 		end
 
