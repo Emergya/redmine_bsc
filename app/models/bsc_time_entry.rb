@@ -24,7 +24,7 @@ class BscTimeEntry < ActiveRecord::Base
 		alert = users.select{|u| (Date.today - u.last_entry) > MAX_DAYS_ALERT }.count
 
 		data = {
-			:type => (alert > 0) ? 'alert' : ((warning > 0) ? 'warn' : 'success'),
+			:status => (alert > 0) ? 'metric_alert' : ((warning > 0) ? 'metric_warning' : 'metric_success'),
 			:number => (alert > 0) ? alert : warning
 		}
 	end

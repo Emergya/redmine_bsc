@@ -34,25 +34,25 @@
 	margin-top:-40px;
 	z-index:-1;
 }
-.metric_content.success .glyphicon{
+.metric_content.metric_success .glyphicon{
 	color:#484;
 }
-.metric_content.success{
+.metric_content.metric_success{
 	background-color:#5A5;
 }
-.metric_content.alert .glyphicon{
+.metric_content.metric_alert .glyphicon{
 	color:#844;
 }
-.metric_content.alert{
+.metric_content.metric_alert{
 	background-color:#A55;
 }
-.metric_content.warn .glyphicon{
+.metric_content.metric_warning .glyphicon{
 	color:#CC6;
 }
-.metric_content.warn .header_title{
+.metric_content.metric_warning .header_title{
 	color:black;
 }
-.metric_content.warn{
+.metric_content.metric_warning{
 	background-color:#EE8;
 }
 .metric_option.selected div.metric_content {

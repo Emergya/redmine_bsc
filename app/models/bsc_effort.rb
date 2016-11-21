@@ -118,7 +118,7 @@ class BscEffort < ActiveRecord::Base
 		end
 
 		data={
-			:type => (result > 0) ? 'alert' : 'success',
+			:status => (result > 0) ? 'metric_alert' : 'metric_success',
 			:result => result
 		}
 	end

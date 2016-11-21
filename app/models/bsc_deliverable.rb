@@ -30,7 +30,7 @@ class BscDeliverable < ActiveRecord::Base
 		warning = issues.select{|i| Date.parse(i.delivery_date) < (Date.today + DAYS_WARNING.days)}.count
 
 		data = {
-			:type => (alert > 0) ? 'alert' : ((warning > 0) ? 'warn' : 'success'),
+			:status => (alert > 0) ? 'metric_alert' : ((warning > 0) ? 'metric_warning' : 'metric_success'),
 			:number => (alert > 0) ? alert : warning
 		}
 	end

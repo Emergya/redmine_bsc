@@ -47,7 +47,7 @@ class BscIncomeExpense < ActiveRecord::Base
 
 	# Get income and expense header data
 	def self.get_header(project)
-		type = 'success'
+		status = 'metric_success'
 		alert = 0
 		warn = 0
 
@@ -63,15 +63,15 @@ class BscIncomeExpense < ActiveRecord::Base
 		end
 
 		if alert > 0
-			type = 'alert'
+			status = 'metric_alert'
 		elsif warn > 0
-			type = 'warn'
+			status = 'metric_warn'
 		else
-			type = 'success'
+			status = 'metric_success'
 		end
 
 		data = {
-			:type => type,
+			:status => status,
 			:number => (alert > 0) ? alert : warn
 		}
 	end

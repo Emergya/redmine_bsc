@@ -7,7 +7,7 @@ module BscMetricsHelper
  #      nil
  #    end
   # end
-  def render_mc_header_text(type, mc, mt)
+  def render_mc_header_text(status, mc, mt)
   	type_text = (mt > mc) ? "<b>#{percent(mt-mc)}</b> puntos por <b>debajo</b>" : "<b>#{percent(mc-mt)}</b> puntos por <b>encima</b>" 
   	text = "El margen previsto actual es de <b>#{percent(mc)}</b>, que está #{type_text} del objetivo"
   	text.html_safe
@@ -22,11 +22,11 @@ module BscMetricsHelper
   	text.html_safe
   end
 
-  def render_income_expenses_header_text(type, number)
-  	case type 
-  	when 'alert'
+  def render_income_expenses_header_text(status, number)
+  	case status 
+  	when 'metric_alert'
   		text = "Hay <b>#{number}</b> pagos o cobros atrasados"
-  	when 'warn'
+  	when 'metric_warning'
   		text = "Hay <b>#{number}</b> pagos o cobros pendientes para esta semana"
   	else
   		text = "<b>No</b> hay pagos o cobros pendientes para esta semana"
@@ -34,11 +34,11 @@ module BscMetricsHelper
   	text.html_safe
   end
 
-  def render_deliverables_header_text(type, number)
-    case type 
-    when 'alert'
+  def render_deliverables_header_text(status, number)
+    case status 
+    when 'metric_alert'
       text = "Hay <b>#{number}</b> entregables atrasados"
-    when 'warn'
+    when 'metric_warning'
       text = "Hay <b>#{number}</b> entregables pendientes para esta semana"
     else
       text = "<b>No</b> hay entregables pendientes para esta semana"
@@ -46,12 +46,12 @@ module BscMetricsHelper
     text.html_safe
   end
 
-  def render_time_entries_header_text(type, number)
-    case type
-    when 'alert'
-      text = "Hay <b>#{number}</b> usuarios que han participado en el proyecto y no cargan horas desde hace más de 14 días"
-    when 'warn'
-      text = "Hay <b>#{number}</b> usuarios que han participado en el proyecto y no cargan horas desde hace más de 7 días"
+  def render_time_entries_header_text(status, number)
+    case status
+    when 'metric_alert'
+      text = "Hay <b>#{number}</b> usuarios que han participado en el proyecto y no cargan horas desde hace más de <b>14 días</b>"
+    when 'metric_warning'
+      text = "Hay <b>#{number}</b> usuarios que han participado en el proyecto y no cargan horas desde hace más de <b>7 días</b>"
     else
       text = "Todos los usuarios que han participado en el proyecto realizan regularmente las imputaciones"
     end

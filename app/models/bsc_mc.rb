@@ -100,10 +100,10 @@ class BscMc < ActiveRecord::Base
 		mt = metrics.margin_target || 0.0
 		mc = total_income == 0 ? 0.0 : (100.0 * ((total_income - total_expenses) / total_income))
 
-		type = (mc > (mt + 1)) ? 'success' : (((mt - mc).abs <= 1) ? 'warn' : 'alert')
+		status = (mc > (mt + 1)) ? 'metric_success' : (((mt - mc).abs <= 1) ? 'metric_warning' : 'metric_alert')
 
 		data = {
-			:type => type,
+			:status => status,
 			:mc => mc,
 			:mt => mt
 		}
