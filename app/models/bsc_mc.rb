@@ -26,7 +26,7 @@ class BscMc < ActiveRecord::Base
 	# Get mc data for specific date
 	def self.get_date(project, date)
 		#projects = Project.find(project).self_and_descendants.map(&:id)
-		metrics = BSC::Metrics.new(project, date)
+		metrics = @metrics || BSC::Metrics.new(project, date)
 		last_entry = BscMc.where("project_id = ? AND date < ?", project, date).order("date DESC").first || BscMc.new
 		total_income = metrics.total_income_scheduled
 		total_expenses = metrics.total_expense_scheduled
@@ -85,7 +85,7 @@ class BscMc < ActiveRecord::Base
 			}
 		}
 
-		metrics = BSC::Metrics.new(project, date)
+		metrics = @metrics || BSC::Metrics.new(project, date)
 		data[:target_margin] = metrics.margin_target
 		data[:scheduled_margin] = data[:chart].first[:mc]
 
@@ -94,7 +94,7 @@ class BscMc < ActiveRecord::Base
 
 	# Get header mc data
 	def self.get_header(project)
-		metrics = BSC::Metrics.new(project, Date.today)
+		metrics = @metrics || BSC::Metrics.new(project, Date.today)
 		total_income = metrics.total_income_scheduled
 		total_expenses = metrics.total_expense_scheduled
 		mt = metrics.margin_target || 0.0

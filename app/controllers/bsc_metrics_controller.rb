@@ -1,8 +1,13 @@
 class BscMetricsController < ApplicationController
 	before_filter :find_project_by_project_id, :authorize
+	before_filter :load_metrics
 
 	menu_item :bsc
 	helper :bsc
+
+	def load_metrics
+		@metrics ||= BSC::Metrics.new(@project, Date.today)
+	end
 
 	def index
 		@metric_options = ['mc', 'effort', 'income_expenses', 'deliverables', 'time_entries']

@@ -18,7 +18,7 @@ class BscEffort < ActiveRecord::Base
 	# Get effort data for specific date
 	def self.get_date(project, date)
 		#projects = Project.find(project).self_and_descendants.map(&:id)
-		metrics = BSC::Metrics.new(project, date)
+		metrics = @metrics || BSC::Metrics.new(project, date)
 
 		BscEffort.new({
 			:project_id => project,
@@ -33,7 +33,7 @@ class BscEffort < ActiveRecord::Base
 
 	# Get effort content data
 	def self.get_data(project, date)
-		metrics = BSC::Metrics.new(project, date)
+		metrics = @metrics || BSC::Metrics.new(project, date)
 
 		data = {
 			:chart => get_chart_data(project, date),
@@ -62,7 +62,7 @@ class BscEffort < ActiveRecord::Base
 
 	# Get table effort data
 	def self.get_table_data(project, date)
-		metrics = BSC::Metrics.new(project, date)
+		metrics = @metrics || BSC::Metrics.new(project, date)
 		profiles_name = BSC::Integration.get_profiles.map{|p| {p.id => p.name}}.reduce(&:merge)
 		days_remaining = metrics.scheduled_finish_date.present? ? (metrics.scheduled_finish_date - date).to_i : 0
 
@@ -107,7 +107,7 @@ class BscEffort < ActiveRecord::Base
 	# Get header effort data
 	def self.get_header(project)
 		result = 0
-		metrics = BSC::Metrics.new(project, Date.today)
+		metrics = @metrics || BSC::Metrics.new(project, Date.today)
 
 		remaining = metrics.hhrr_hours_remaining_by_profile
 		num_profiles = get_profiles_number(project, Date.today)
