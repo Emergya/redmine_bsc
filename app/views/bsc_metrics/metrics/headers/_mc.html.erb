@@ -1,10 +1,10 @@
-<div class="metric_content <%=@mc_header[:status]%>">
-	<span class="header_title">
-		<h2><%=l(:"bsc.title_mc").upcase%></h2>
-	</span>
-	<span class="glyphicon glyphicon-stats"></span>
-	<span class="header_text">
-		<%#= @mc_header[:text].html_safe %>
-		<%= render_mc_header_text(@mc_header[:status], @mc_header[:mc], @mc_header[:mt]) %>
-	</span>
+<div class="metric_content">
+	<div class="header_title">
+		<div class="metric_status <%=@mc_header[:status]%>">
+			<h2><%=l(:"bsc.title_mc").upcase%></h2>
+		</div>
+	</div>
+	<div class="header_text">
+		<%=render_mc_header_text_reduced(@mc_header[:status], @mc_header[:mc], @mc_header[:mt])%>
+	</div>
 </div>

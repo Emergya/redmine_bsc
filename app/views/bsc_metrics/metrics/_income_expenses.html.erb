@@ -1,80 +1,113 @@
-
-<div class="splitcontentleft">
-	<h2><%=l(:"bsc.label_incomes")%></h2>
-	<table class="list" id="incomes_table">
-		<theader>
-			<tr>
-				<th><%=l(:"bsc.label_subject")%></th>
-				<th><%=l(:"bsc.label_type")%></th>
-				<th><%=l(:"bsc.label_amount")%></th>
-				<th><%=l(:"bsc.label_planned_date")%></th>
-			</tr>
-		</theader>
-		<tbody>
-			<% @income_table.each_with_index do |data,index| %>
-				<tr class="income <%='hidden_row' if index>=5%> <%='alert' if Date.parse(data[:start])<Date.today%>">
-					<th><%=link_to(data[:title], issue_path(data[:id]))%></th>
-					<td><%=render_tracker_query_link(data[:tracker])%></td>
-					<td><%=currency(data[:amount])%></td>
-					<td><%=data[:start]%></td>
-			<% end %>
-		</tbody>
-	</table>
-
-	<% if @income_table.length > 5 %>
-		<% render_link_show_more('incomes_table') %>
-	<% end %>
+<%= render_header_message('income_expenses') %>
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-default panel-table expandible">
+			<div class="panel-heading">
+				<div class="panel_name"><%=l(:"bsc.label_incoming_incomes")%></div>
+			</div>
+			<div class="panel-body">
+				<table class="list" id="incomes_table">
+					<thead>
+						<tr>
+							<th><%=l(:"bsc.label_subject")%></th>
+							<th><%=l(:"bsc.label_type")%></th>
+							<th><%=l(:"bsc.label_amount")%></th>
+							<th><%=l(:"bsc.label_planned_date")%></th>
+						</tr>
+					</thead>
+					<tbody>
+						<% @income_table.each_with_index do |data,index| %>
+							<tr class="income <%=income_expense_table_row_status(data[:start])%>">
+								<td><%=link_to(data[:title], issue_path(data[:id]))%></td>
+								<td><%=render_tracker_query_link(data[:tracker])%></td>
+								<td><%=currency(data[:amount])%></td>
+								<td><%=data[:start]%></td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+			<div class="gradiant_layer"></div>
+    	</div>
+    	<%=render_link_show_more('incomes_table')%>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default panel-table expandible">
+			<div class="panel-heading">
+				<div class="panel_name"><%=l(:"bsc.label_incoming_expenses")%></div>
+			</div>
+			<div class="panel-body">
+				<table class="list" id="expenses_table">
+					<thead>
+						<tr>
+							<th><%=l(:"bsc.label_subject")%></th>
+							<th><%=l(:"bsc.label_type")%></th>
+							<th><%=l(:"bsc.label_amount")%></th>
+							<th><%=l(:"bsc.label_planned_date")%></th>
+						</tr>
+					</thead>
+					<tbody>
+						<% @expense_table.each_with_index do |data,index| %>
+							<tr class="expense <%=income_expense_table_row_status(data[:start])%>">
+								<td><%=link_to(data[:title], issue_path(data[:id]))%></td>
+								<td><%=render_tracker_query_link(data[:tracker])%></td>
+								<td><%=currency(data[:amount])%></td>
+								<td><%=data[:start]%></td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+    		<div class="gradiant_layer"></div>
+    	</div>
+    	<%=render_link_show_more('expenses_table')%>
+	</div>
 </div>
 
-<div class="splitcontentright">
-	<h2><%=l(:"bsc.label_expenses")%></h2>
-	<table class="list" id="expenses_table">
-		<theader>
-			<tr>
-				<th><%=l(:"bsc.label_subject")%></th>
-				<th><%=l(:"bsc.label_type")%></th>
-				<th><%=l(:"bsc.label_amount")%></th>
-				<th><%=l(:"bsc.label_planned_date")%></th>
-			</tr>
-		</theader>
-		<tbody>
-			<% @expense_table.each_with_index do |data,index| %>
-				<tr class="expense <%='hidden_row' if index>=5%> <%='alert' if Date.parse(data[:start])<Date.today%>">
-					<th><%=link_to(data[:title], issue_path(data[:id]))%></th>
-					<td><%=render_tracker_query_link(data[:tracker])%></td>
-					<td><%=currency(data[:amount])%></td>
-					<td><%=data[:start]%></td>
-				</tr>
-			<% end %>
-		</tbody>
-	</table>
-
-	<% if @expense_table.length > 5 %>
-		<%=render_link_show_more('expenses_table')%>
-	<% end %>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default panel-calendar">
+			<div class="panel-heading">
+				<div class="panel_name"><%=l(:"bsc.label_income_expenses_calendar")%></div>
+			</div>
+			<div class="panel-body">
+				<div class="calendar_prev">
+				</div>
+				<div id="calendar_container_limit">
+      				<div class="calendar_legend">
+      					<span>
+      						<span class="point expenses">&#9679;</span>
+      						Cobros
+      					</span>
+      					<span>
+      						<span class="point incomes">&#9679;</span>
+      						Pagos
+      					</span>
+      				</div>
+					<hr/>
+					<div id="calendar_container">
+						<div id="calendar0" class="calendar calendar_hide"></div>
+						<div id="calendar1" class="calendar"></div>
+						<div id="calendar2" class="calendar"></div>
+						<div id="calendar3" class="calendar"></div>
+						<div id="calendar4" class="calendar calendar_hide"></div>
+					</div>
+				</div>
+				<div class="calendar_next">
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-<div style="clear:both;"></div>
-<hr/>
-<div id="calendar1" class="calendar"></div>
-<div id="calendar2" class="calendar"></div>
-<div id="calendar3" class="calendar"></div>
+
 
 <script type="text/javascript">
-var calendar_events = [
-{
-    events: 
-        $.parseJSON('<%=@expense_table.to_json.html_safe%>')
-    ,
-    color: 'red',
-    textColor: 'black'
-},
-{	
-	events: 
-        $.parseJSON('<%=@income_table.to_json.html_safe%>')
-    ,
-    color: 'yellow',
-    textColor: 'black'
+var calendar_events = [{
+    events: <%=@calendar_data.to_json.html_safe%>,
+    color: 'transparent'
 }];
-load_calendars(calendar_events);
 
+
+load_calendars(calendar_events);
+calendar_tooltips();
 </script>

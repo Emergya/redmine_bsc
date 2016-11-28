@@ -9,7 +9,7 @@ class BscTimeEntry < ActiveRecord::Base
 		projects = Array(Project.find(project).self_and_descendants).map(&:id)
 
 		data[:members] = get_members_time_entry_info(projects)
-		data[:profile_names] = TimeEntry.joins(:hr_profile).where("project_id IN (?)", projects).select("DISTINCT(hr_profiles.name) AS profile").map(&:profile)
+		data[:profile_names] = TimeEntry.joins(:hr_profile).where("project_id IN (?)", projects).select("DISTINCT(hr_profiles.name) AS profile").order("profile").map(&:profile)
 		data[:profiles] = get_hours_by_month_and_profile(projects)
 		
 		data
@@ -31,8 +31,14 @@ class BscTimeEntry < ActiveRecord::Base
 
 	private
 	def self.get_hours_by_month_and_profile(projects)
-		TimeEntry.joins(:hr_profile).where("project_id IN (?)", projects).
-			select("hr_profiles.name AS profile, CONCAT(time_entries.tyear,'-',time_entries.tmonth) AS date, SUM(time_entries.hours) AS hours").
+		result = {}
+
+		first_date = TimeEntry.where("project_id IN (?)", projects).minimum(:spent_on)
+		last_date = TimeEntry.where("project_id IN (?)", projects).maximum(:spent_on)
+		last_date.downto(first_date).each{|a| result[a.strftime("%Y-%m")] = {}}
+
+		data = TimeEntry.joins(:hr_profile).where("project_id IN (?)", projects).
+			select("hr_profiles.name AS profile, CONCAT(time_entries.tyear,'-',IF(time_entries.tmonth>9,time_entries.tmonth,CONCAT('0',time_entries.tmonth))) AS date, SUM(time_entries.hours) AS hours").
 			group("time_entries.hr_profile_id, time_entries.tyear, time_entries.tmonth").
 			order("time_entries.tyear DESC, time_entries.tmonth DESC").
 			group_by{|te| te[:date]}.
@@ -45,6 +51,8 @@ class BscTimeEntry < ActiveRecord::Base
 					}
 				)
 			}
+
+		result.merge(data)
 	end
 
 	def self.get_members_time_entry_info(projects)

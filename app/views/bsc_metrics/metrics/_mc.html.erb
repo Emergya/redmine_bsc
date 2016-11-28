@@ -1,92 +1,138 @@
-<div id="scheduled_margin" class="highlight_field blue_field">
-	<div class="highlight_field_header"><%=l(:"bsc.label_scheduled_margin")%></div>
-	<div class="highlight_field_content"><%=percent(@scheduled_margin)%></div>
+<%= render_header_message('mc') %>
+<div class="row">
+  <div class="col-md-3">
+  	<div class="panel panel-default panel-highlight">
+  		<div class="panel-heading">
+        <div class="panel_name"><%=l(:"bsc.label_margins")%></div>
+      </div>
+  		<div class="panel-body">
+        <div class="highlight_metric">
+          <div class="name"><%=l(:"bsc.label_scheduled_margin")%></div>
+          <div class="value"><%=percent(@scheduled_margin)%></div>
+        </div>
+        <hr>
+        <div class="highlight_metric">
+          <div class="name"><%=l(:"bsc.label_target_margin")%></div>
+          <div class="value"><%=percent(@target_margin)%></div>
+        </div>
+      </div>
+  	</div>
+  </div>
+
+  <div class="col-md-9">
+    <div class="panel panel-default panel-table expandible">
+		  <div class="panel-heading">
+        <div class="panel_name"><%=l(:"bsc.label_mc_evolution")%></div>
+      </div>
+		  <div class="panel-body">
+  			<table class="list" id="mc_table">
+  				<thead>
+            <tr>
+              <th colspan="2"></th>
+              <% if @incomes_trackers.length > 0 %>
+                <th colspan="<%=@incomes_trackers.length%>"><%=l(:"bsc.label_incomes")%></th>
+              <% end %>
+              <% if @incomes_trackers.length > 0 or BSC::Integration.hr_plugin_enabled? %>
+                <th colspan="<%=BSC::Integration.hr_plugin_enabled? ? @expenses_trackers.length + 1 : @expenses_trackers.length%>"><%=l(:"bsc.label_expenses")%></th>
+              <% end %>
+            </tr>
+  					<tr>
+  						<th><%=l(:"label_date")%></th>
+  						<th><%=l(:"bsc.label_mc")%></th>
+  						<%@incomes_trackers.each do |tracker|%>
+  							<th><%= render_tracker_query_link(tracker) %></th>
+  						<% end %>
+  						<%@expenses_trackers.each do |tracker|%>
+  							<th><%= render_tracker_query_link(tracker) %></th>
+  						<% end %>	
+  						<% if BSC::Integration.hr_plugin_enabled? %>
+  							<th><%=l(:"bsc.label_hhrr")%></th>
+  						<% end %>
+  					</tr>
+  				</thead>
+  				<tbody>
+  					<% @table_data.each_with_index do |data,index| %>
+  						<tr id="<%='row_'+(@table_data.length - index - 1).to_s%>" class="table_row">
+  							<td><%=data[:date]%></td>
+  							<td><%=percent(data[:mc])%></td>
+  							<%@incomes_trackers.each do |tracker|%>
+  								<td><%= render_mc_table_cell(data[:total_income_details], tracker) %></td>
+  							<% end %>
+  							<%@expenses_trackers.each do |tracker|%>
+  								<td><%= render_mc_table_cell(data[:total_expenses_details], tracker) %></td>
+  							<% end %>
+  							<% if data[:total_expenses_details].keys.include?('RRHH') %>
+  								<td><%=currency(data[:total_expenses_details]['RRHH'])%></td>
+  							<% else %>
+  								<td><%=currency(0.0)%></td>
+  							<% end %>
+  						</tr>
+  					<% end %>
+  				</tbody>
+  			</table>
+		  </div>
+      <div class="gradiant_layer"></div>
+    </div>
+    <%=render_link_show_more('mc_table')%>
+	</div>
 </div>
-<div id="target_margin" class="highlight_field grey_field">
-	<div class="highlight_field_header"><%=l(:"bsc.label_target_margin")%></div>
-	<div class="highlight_field_content"><%=percent(@target_margin)%></div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default panel-chart">
+      <div class="panel-heading">
+        <div class="panel_name"><%=l(:"bsc.label_mc_evolution")%></div>
+      </div>
+      <div class="panel-body">
+        <div id="mc_chart" class="chart"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<table class="list" id="mc_table">
-	<theader>
-		<tr>
-			<th rowspan="2"><%=l(:"label_date")%></th>
-			<th rowspan="2"><%=l(:"bsc.label_mc")%></th>
-			<% if @incomes_trackers.length > 0 %>
-				<th colspan="<%=@incomes_trackers.length%>"><%=l(:"bsc.label_incomes")%></th>
-			<% end %>
-			<% if @incomes_trackers.length > 0 or BSC::Integration.hr_plugin_enabled? %>
-				<th colspan="<%=BSC::Integration.hr_plugin_enabled? ? @expenses_trackers.length + 1 : @expenses_trackers.length%>"><%=l(:"bsc.label_expenses")%></th>
-			<% end %>
-		</tr>
-		<tr>
-			<%@incomes_trackers.each do |tracker|%>
-				<th><%= render_tracker_query_link(tracker) %></th>
-			<% end %>
-			<%@expenses_trackers.each do |tracker|%>
-				<th><%= render_tracker_query_link(tracker) %></th>
-			<% end %>	
-			<% if BSC::Integration.hr_plugin_enabled? %>
-				<th><%=l(:"bsc.label_hhrr")%></th>
-			<% end %>
-		</tr>
-	</theader>
-	<tbody>
-		<% @table_data.each_with_index do |data,index| %>
-			<tr id="<%='row_'+(@table_data.length - index - 1).to_s%>" class="row <%='hidden_row' if index>=5%>">
-				<th><%=data[:date]%></th>
-				<td><%=percent(data[:mc])%></td>
-				<%@incomes_trackers.each do |tracker|%>
-					<td><%= render_mc_table_cell(data[:total_income_details], tracker) %></td>
-				<% end %>
-				<%@expenses_trackers.each do |tracker|%>
-					<td><%= render_mc_table_cell(data[:total_expenses_details], tracker) %></td>
-				<% end %>
-				<% if data[:total_expenses_details].keys.include?('RRHH') %>
-					<td><%=currency(data[:total_expenses_details]['RRHH'])%></td>
-				<% else %>
-					<td><%=currency(0.0)%></td>
-				<% end %>
-			</tr>
-		<% end %>
-	</tbody>
-</table>
-
-<% if @table_data.length > 5 %>
-	<%=render_link_show_more('mc_table')%>
-<% end %>
-
-<div id="mc_chart" class="chart"></div>
 <script>
-	new Morris.Line({
+  m = Morris.Line({
 		element: "mc_chart",
+    	resize: true,
 		data: <%=@chart_data.html_safe%>,
 		hoverCallback: function(index, options, content) {
-	  		text = "Variaciones:</br>";
+        highlight_row($('tr#row_'+index));
+
+        date = "<div class='chart_data_title'>"+options.data[index]['date']+"</div>";
+
+        mc = '<div class="chart_data mc"><span class="chart_value">'+percent(options.data[index]['mc'])+'</span><span class="chart_label">MC:</span></div>';
+        total_incomes = '<div class="chart_data income_amount"><span class="chart_value">'+currency(options.data[index]['total_income'])+'</span><span class="chart_label"><%=l(:"bsc.label_total_incomes")%>:</span></div>';
+        total_expenses = '<div class="chart_data expense_amount"><span class="chart_value">'+currency(options.data[index]['total_expenses'])+'</span><span class="chart_label"><%=l(:"bsc.label_total_expenses")%>:</span></div>';
+
+        // text = "<span class='chart_data_subtitle'>Variaciones:</span>";
+	  		text = "<div class='variations'>";
 	  		for (key in options.data[index]['income_details']){
 	  			if (options.data[index]['income_details'][key] > 1 || options.data[index]['income_details'][key] < -1){
-	  				text += key+": "+currency(options.data[index]['income_details'][key])+'</br>';
+	  				text += "<div class='chart_data'><span class='chart_value'>"+currency(options.data[index]['income_details'][key])+"</span><span class='chart_label'>"+key+":</span></div>";
 	  			}
 	  		}
 	  		for (key in options.data[index]['expenses_details']){
 	  			if (options.data[index]['expenses_details'][key] > 1 || options.data[index]['expenses_details'][key] < -1){
-	  				text += key+": "+currency(options.data[index]['expenses_details'][key])+'</br>';
+            text += "<div class='chart_data'><span class='chart_value'>"+currency(options.data[index]['expenses_details'][key])+"</span><span class='chart_label'>"+key+":</span></div>";
 	  			}
 	  		}
+        text += "</div>"     
 
-	  		$('tr.active').removeClass('active');
-	  		$('tr#row_'+index).addClass('active');
-	  		total_incomes = '<span class="income_amount">Total Ingresos: '+currency(options.data[index]['total_income'])+'</span></br>';
-	  		total_expenses = '<span class="expense_amount">Total Gastos: '+currency(options.data[index]['total_expenses'])+'</span></br>';
-
-	        return(content+total_incomes+total_expenses+text);
+        return(date+mc+total_incomes+total_expenses+text);
 	    },
 	  	xkey: 'date',
 	  	ykeys: ['mc'],
 	  	labels: ['MC'],
-	  	smooth: false,
+      	lineColors: ['#9FCCF1'],
+      	pointFillColors: ['#459DE3'],
+      	smooth: false,
 	  	yLabelFormat: function(value){
 	  		return percent(value)
 	  	}
 	});
+
+  // Force to redraw for apply correct width to chart
+  $(document).ready(function(){
+    m.redraw();
+  });
 </script>

@@ -37,6 +37,7 @@ class BscMetricsController < ApplicationController
 		@metric_selected = params[:type] || @metric_options.first
 		case @metric_selected
 		when 'mc'
+			@mc_header ||= BscMc.get_header(@project)
 			data = BscMc.get_data(@project.id, Date.today)
 			@table_data = data[:chart]
 			@chart_data = data[:chart].reverse.to_json
@@ -45,18 +46,24 @@ class BscMetricsController < ApplicationController
 			@incomes_trackers = BSC::Integration.get_income_trackers
 			@expenses_trackers = BSC::Integration.get_expense_trackers
 		when 'effort'
+			@effort_header ||= BscEffort.get_header(@project)
 			data = BscEffort.get_data(@project.id, Date.today)
 			@chart_data = data[:chart].reverse
 			@table_data = data[:table]
 			@scheduled_finish_date = data[:scheduled_finish_date]
 		when 'income_expenses'
+			@income_expenses_header ||= BscIncomeExpense.get_header(@project)
 			data = BscIncomeExpense.get_data(@project.id)
 			@income_table = data[:incomes]
 			@expense_table = data[:expenses]
+			@calendar_data = data[:calendar]
 		when 'deliverables'
+			@deliverables_header ||= BscDeliverable.get_header(@project)
 			data = BscDeliverable.get_data(@project.id)
 			@deliverables_table = data[:deliverables]
+			@calendar_data = data[:calendar]
 		when 'time_entries'
+			@time_entries_header ||= BscTimeEntry.get_header(@project)
 			data = BscTimeEntry.get_data(@project.id)
 			@table_members = data[:members]
 			@table_profiles = data[:profiles]

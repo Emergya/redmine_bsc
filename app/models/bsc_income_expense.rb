@@ -19,7 +19,8 @@ class BscIncomeExpense < ActiveRecord::Base
 							:title => i.subject,
 							:tracker => i.tracker,
 							:amount => i.amount,
-							:start => i.custom_values.where(custom_field_id: ie.planned_end_date_field).first.value
+							:start => i.custom_values.where(custom_field_id: ie.planned_end_date_field).first.value,
+							:type => 'income'
 						}
 				end
 			end
@@ -33,7 +34,8 @@ class BscIncomeExpense < ActiveRecord::Base
 							:title => i.subject,
 							:tracker => i.tracker,
 							:amount => i.amount,
-							:start => i.custom_values.where(custom_field_id: ie.planned_end_date_field).first.value
+							:start => i.custom_values.where(custom_field_id: ie.planned_end_date_field).first.value,
+							:type => 'expense'
 						}
 				end
 			end
@@ -41,6 +43,16 @@ class BscIncomeExpense < ActiveRecord::Base
 
 		data[:incomes] = data[:incomes].sort_by{|i| i[:start]}
 		data[:expenses] = data[:expenses].sort_by{|i| i[:start]}
+
+		data[:calendar] = []
+		(data[:incomes]+data[:expenses]).group_by{|e| e[:start]}.each do |date, elements|
+			data[:calendar] << {
+				:start => date,
+				:content => "<span class='incomes'>"+"&#9679"*elements.count{|e| e[:type] == 'income'}+"</span><span class='expenses'>"+"&#9679"*elements.count{|e| e[:type] == 'expense'}+"</span>",
+				:tooltip => "<b>"+date+"</b><table class='tooltip_calendar_income_expenses'>"+elements.select{|e| e[:type] == 'income'}.map{|e| "<tr><td class='point incomes'>&#9679</td><td>"+e[:title]+"</td></tr>"}.join('')+elements.select{|e| e[:type] == 'expense'}.map{|e| "<tr><td class='point expenses'>&#9679</td><td>"+e[:title]+"</td></tr>"}.join('')+"</table>"
+			}
+		end
+
 
 		data
 	end

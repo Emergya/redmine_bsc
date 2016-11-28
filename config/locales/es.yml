@@ -31,12 +31,6 @@ es:
     # metrics
     label_show_more: Ver más
     label_show_less: Ver menos
-    # time_entries
-    title_time_entries: Carga de horas
-    label_last_entry: Última carga
-    label_days_passed: Días transcurridos
-    label_entry_hours: Horas cargadas
-    label_profile_hours: Horas por perfil
     # mc
     title_mc: MC
     label_hhrr: RRHH
@@ -45,17 +39,24 @@ es:
     label_mc: MC
     label_incomes: Ingresos
     label_expenses: Gastos
+    label_mc_evolution: Evolución del MC
+    label_margins: Márgenes
+    label_total_incomes: Total ingresos
+    label_total_expenses: Total gastos
     # income_expenses
     title_income_expenses: Cobros y pagos
     label_subject: Asunto
     label_type: Tipo
     label_amount: Importe
     label_planned_date: Fecha planificada
+    label_incoming_incomes: Próximos cobros
+    label_incoming_expenses: Próximos pagos
+    label_income_expenses_calendar: Calendario de cobros y pagos
     # effort
     title_effort: Esfuerzo
     label_remaining_days: Días restantes
     label_profile: Perfil
-    label_profiles_number: Número de perfiles
+    label_profiles_number: Núm Perfiles
     label_scheduled_effort: Esf Estimado
     label_incurred_effort: Esf Incurrido
     label_remaining_effort: Esf Restante
@@ -75,6 +76,14 @@ es:
     label_delivery_date: Fecha de entrega
     label_assigned_to: Asignado a
     label_done_ratio: "% Realizado"
+    label_deliverables_calendar: Calendario de entregables
+    # time_entries
+    title_time_entries: Carga de horas
+    label_last_entry: Última carga
+    label_days_passed: Días transcurridos
+    label_entry_hours: Horas cargadas
+    label_user_hours: Horas por usuario
+    label_profile_hours: Horas por perfil
 
     # settings
     title_plugins_integration: Integración con otros plugins

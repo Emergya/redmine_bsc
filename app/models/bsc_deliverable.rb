@@ -18,6 +18,15 @@ class BscDeliverable < ActiveRecord::Base
 			}
 		}
 
+		data[:calendar] = []
+		data[:deliverables].group_by{|e| e[:start]}.each do |date, elements|
+			data[:calendar] << {
+				:start => date,
+				:content => "<span class='deliverables'>"+"&#9679"*elements.count+"</span>",
+				:tooltip => "<b>"+date+"</b><table class='tooltip_calendar_deliverables'>"+elements.map{|e| "<tr><td class='point deliverables'>&#9679</td><td>"+e[:title]+"</td></tr>"}.join('')+"</table>"
+			}
+		end
+
 		data
 	end
 

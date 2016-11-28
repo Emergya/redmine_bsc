@@ -1,10 +1,10 @@
-<div class="metric_content <%=@income_expenses_header[:status]%>">
-	<span class="header_title">
-		<h2><%=l(:"bsc.title_income_expenses").upcase%></h2>
-	</span>
-	<span class="glyphicon glyphicon-piggy-bank"></span>
-	<span class="header_text">
-		<%#= @income_expenses_header[:text].html_safe %>
-		<%= render_income_expenses_header_text(@income_expenses_header[:status], @income_expenses_header[:number]) %>
-	</span>
+<div class="metric_content">
+	<div class="header_title">
+		<div class="metric_status <%=@income_expenses_header[:status]%>">
+			<h2><%=l(:"bsc.title_income_expenses").upcase%></h2>
+		</div>
+	</div>
+	<div class="header_text">
+		<%=render_income_expenses_header_text_reduced(@income_expenses_header[:status], @income_expenses_header[:number])%>
+	</div>
 </div>

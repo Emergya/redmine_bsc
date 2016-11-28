@@ -1,9 +1,10 @@
-<div class="metric_content <%=@time_entries_header[:status]%>">
-	<span class="header_title">
-		<h2><%=l(:"bsc.title_time_entries").upcase%></h2>
-	</span>
-	<span class="glyphicon glyphicon-time"></span>
-	<span class="header_text">
-		<%= render_time_entries_header_text(@time_entries_header[:status], @time_entries_header[:number]) %>
-	</span>
+<div class="metric_content">
+	<div class="header_title">
+		<div class="metric_status <%=@time_entries_header[:status]%>">
+			<h2><%=l(:"bsc.title_time_entries").upcase%></h2>
+		</div>
+	</div>
+	<div class="header_text">
+		<%=render_time_entries_header_text_reduced(@time_entries_header[:status], @time_entries_header[:number])%>
+	</div>
 </div>

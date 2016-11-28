@@ -1,9 +1,10 @@
-<div class="metric_content <%=@deliverables_header[:status]%>">
-	<span class="header_title">
-		<h2><%=l(:"bsc.title_deliverables").upcase%></h2>
-	</span>
-	<span class="glyphicon glyphicon-calendar"></span>
-	<span class="header_text">
-		<%= render_deliverables_header_text(@deliverables_header[:status], @deliverables_header[:number]) %>
-	</span>
+<div class="metric_content">
+	<div class="header_title">
+		<div class="metric_status <%=@deliverables_header[:status]%>">
+			<h2><%=l(:"bsc.title_deliverables").upcase%></h2>
+		</div>
+	</div>
+	<div class="header_text">
+		<%=render_deliverables_header_text_reduced(@deliverables_header[:status], @deliverables_header[:number])%>
+	</div>
 </div>

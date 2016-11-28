@@ -1,10 +1,27 @@
-<div id="metric_headers">
-	<% @metric_options.each do |metric_option| %>
-		<span id="<%=metric_option%>_header" class="metric_option <%='selected' if @metric_selected == metric_option%>" onclick="change_metric('<%=metric_option%>');">
-			<%= render :partial => "bsc_metrics/metrics/headers/"+metric_option %>
-		</span>
-	<% end %>
+<div id="global_metrics">
+	<div id="target_margin">
+		<div class="highlight_metric">
+			<div class="name"><%=l(:"bsc.label_scheduled_margin")%></div>
+	        <div class="value"><%=percent(@metrics.scheduled_margin)%></div>
+	    </div>
+	</div>
+	<div id="scheduled_finish_date">
+		<div class="highlight_metric">
+			<div class="name"><%=l(:"bsc.label_scheduled_finish_date")%></div>
+	        <div class="value"><%=@metrics.scheduled_finish_date.present? ? date_es(@metrics.scheduled_finish_date) : '-'%></div>
+	    </div>
+	</div>
 </div>
-<div id="metric_content">
-	<%= render :partial => "bsc_metrics/metrics/"+@metric_selected %>
+<div class="container-fluid">
+	<div id="metric_headers">
+		<ul class="nav nav-tabs">
+		<% @metric_options.each do |metric_option| %>
+			<li role="presentation" id="<%=metric_option%>_header" class="metric_option <%='active' if @metric_selected == metric_option%>" onclick="change_metric('<%=metric_option%>');">
+				<a href="#"><%= render :partial => "bsc_metrics/metrics/headers/"+metric_option %></a>
+			</li>
+		<% end %>
+	</div>
+	<div id="metric_contents">
+		<%= render :partial => "bsc_metrics/metrics/"+@metric_selected %>
+	</div>
 </div>

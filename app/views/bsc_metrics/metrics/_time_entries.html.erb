@@ -1,54 +1,70 @@
+<%= render_header_message('time_entries') %>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default panel-table expandible">
+			<div class="panel-heading">
+				<div class="panel_name"><%=l(:"bsc.label_user_hours")%></div>
+			</div>
+			<div class="panel-body">
+				<table class="list" id="members_table">
+					<thead>
+						<tr>
+							<th><%=l(:"label_user")%></th>
+							<th><%=l(:"bsc.label_last_entry")%></th>
+							<th><%=l(:"bsc.label_days_passed")%></th>
+							<th><%=l(:"bsc.label_entry_hours")%></th>
+						</tr>
+					</thead>
+					<tbody>
+						<% @table_members.each_with_index do |data, index| %>
+							<tr class="<%=time_entry_table_row_status(data[:days])%>">
+								<td><%=link_to(data[:user], project_time_entries_path(@project, :user_id => data[:id]))%></td>
+								<td><%=data[:last_entry]%></td>
+								<td><%=data[:days]%></td>
+								<td><%=decimal(data[:hours])%></td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+			<div class="gradiant_layer"></div>
+    	</div>
+    	<%=render_link_show_more('members_table')%>
+	</div>
+</div>
 
-<table class="list" id="members_table">
-	<theader>
-		<tr>
-			<th><%=l(:"label_user")%></th>
-			<th><%=l(:"bsc.label_last_entry")%></th>
-			<th><%=l(:"bsc.label_days_passed")%></th>
-			<th><%=l(:"bsc.label_entry_hours")%></th>
-		</tr>
-	</theader>
-	<tbody>
-		<% @table_members.each_with_index do |data, index| %>
-			<tr class="<%= (data[:days] > BscTimeEntry::MAX_DAYS_ALERT) ? 'alert' : ((data[:days] > BscTimeEntry::MAX_DAYS_WARNING) ? 'warn' : '') %> <%='hidden_row' if index >= 5%>">
-				<th><%=link_to(data[:user], project_time_entries_path(@project, :user_id => data[:id]))%></th>
-				<td><%=data[:last_entry]%></td>
-				<td><%=data[:days]%></td>
-				<td><%=decimal(data[:hours])%></td>
-			</tr>
-		<% end %>
-	</tbody>
-</table>
-
-<% if @table_members.length > 5 %>
-	<%=render_link_show_more('members_table')%>
-<% end %>
-
-<h2><%=l(:"bsc.label_profile_hours")%> (<%=render_time_entries_report_link.html_safe%>)</h2>
-<table class="list" id="profiles_table">
-	<theader>
-		<tr>
-			<th><%=l(:"label_date")%></th>
-			<% @profile_names.each do |profile| %>
-				<th><%=profile%></th>
-			<% end %>
-			<th><%=l(:"label_total")%></th>
-		</tr>
-	</theader>
-	<tbody>
-		<% @table_profiles.each_with_index do |(date, data), index| %>
-			<tr class="<%='hidden_row' if index >= 8%>">
-				<th><%=date%></th>
-				<% @profile_names.each do |profile| %>
-					<td><%=data[profile].present? ? decimal(data[profile]) : decimal(0.0)%></td>
-				<% end %>
-				<td><%=decimal(data.values.sum)%></td>
-			</tr>
-		<% end %>
-	</tbody>
-</table>
-
-<% if @table_members.length > 8 %>
-	<%=render_link_show_more('profiles_table')%>
-<% end %>
-
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default panel-table expandible">
+			<div class="panel-heading">
+				<div class="panel_name"><%=l(:"bsc.label_profile_hours")%><% report_link = render_time_entries_report_link %> <%= (' ('+report_link+')').html_safe if report_link.present? %></div>
+			</div>
+			<div class="panel-body">
+				<table class="list" id="profiles_table">
+					<thead>
+						<tr>
+							<th><%=l(:"label_date")%></th>
+							<% @profile_names.each do |profile| %>
+								<th><%=profile%></th>
+							<% end %>
+							<th><%=l(:"label_total")%></th>
+						</tr>
+					</thead>
+					<tbody>
+						<% @table_profiles.each_with_index do |(date, data), index| %>
+							<tr>
+								<td><b><%=date%></b></td>
+								<% @profile_names.each do |profile| %>
+									<td><%=data[profile].present? ? decimal(data[profile]) : decimal(0.0)%></td>
+								<% end %>
+								<td><%=decimal(data.values.sum)%></td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+			<div class="gradiant_layer"></div>
+    	</div>
+    	<%=render_link_show_more('profiles_table')%>
+	</div>
+</div>

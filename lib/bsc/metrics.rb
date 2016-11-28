@@ -163,8 +163,7 @@ module BSC
 		def variable_expense_scheduled
 			@variable_expense_scheduled ||=
 			BSC::Integration.get_variable_expenses.inject(0.0){|sum, ie|
-				sum += 
-					ie.issues_scheduled(@projects.map(&:id), @date).sum{|i| i.amount.to_f}
+				sum += ie.issues_scheduled(@projects.map(&:id), @date).sum{|i| i.amount.to_f}
 			}
 		end
 
@@ -266,10 +265,18 @@ module BSC
 
 		
 # Others
+		def scheduled_margin
+			@scheduled_target ||= 100.0 * (total_income_scheduled - total_expense_scheduled) / total_income_scheduled
+		end
+
 		def margin_target
 			@margin_target ||= 
 			(if @projects.count == 1
-				@projects.first.last_checkpoint(@date).target_margin
+				if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+					last_checkpoint.target_margin
+				else
+					0.0
+				end
 			else
 				projects = 0.0
 				result = 0.0

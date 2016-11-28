@@ -1,25 +1,20 @@
 class BscMc < ActiveRecord::Base
 	# Varíación absoluta minima para que se registre el punto, para evitar las minimas variaciones de coste en el esfuerzo diario
-	# MIN_VARIATION = 50
+	MIN_VARIATION = 50
 	MC_MIN_VARIATION = 0.3
 
 	# Generate historic mc data from start_date to end_date
 	def self.record_date(project, start_date, end_date)
-		# projects.each do |project|
-		# 	get_date(project, date).save
-		# end
 		(start_date..end_date).each do |date|
 			data = get_date(project, date)
-			##
+
 			income_details = JSON.parse(data[:income_details])
 			expense_details = JSON.parse(data[:expenses_details]).reject{|k,v| k == 'RRHH'}
 			if income_details.merge(expense_details).detect{|k,v| v.abs > 0}
 				data.save
-			elsif (data[:income].abs + data[:expenses].abs) >= (MC_MIN_VARIATION * data[:mc].to_f)
+			elsif (data[:income].abs + data[:expenses].abs) > [(MC_MIN_VARIATION * data[:mc].to_f.abs), MIN_VARIATION].max
 				data.save
 			end
-			##
-			# data.save if (data[:income].abs + data[:expenses].abs) >= MIN_VARIATION
 		end
 	end
 

@@ -4,24 +4,21 @@
   <%= stylesheet_link_tag "morris", :plugin => 'redmine_bsc' %>
   <%= javascript_include_tag 'moment.min', :plugin => 'redmine_bsc' %>
   <%= javascript_include_tag 'fullcalendar.min', :plugin => 'redmine_bsc' %>
+  <%= javascript_include_tag 'fullcalendar_locales/'+User.current.language, :plugin => 'redmine_bsc' %>
   <%= stylesheet_link_tag "fullcalendar", :plugin => 'redmine_bsc' %>
   <%= stylesheet_link_tag "glyphicons", :plugin => 'redmine_bsc' %>
   <%= javascript_include_tag 'metrics', :plugin => 'redmine_bsc' %>
   <%= stylesheet_link_tag "metrics", :plugin => 'redmine_bsc' %>  
+  <%= stylesheet_link_tag "bootstrap", :plugin => 'redmine_bsc' %>  
 <% end %>
 <style>
 .metric_option {
-	width:<%=(99.0/@metric_options.length).to_s%>%;
+	width:<%=(100.0/@metric_options.length).to_s%>%;
 }
 </style>
 
-<h2><%=l(:"bsc.label_metrics")%></h2>
-
 <%= render_project_bsc_tab('metrics') %>
 
-<%= render :partial => 'metrics_tab' %>
+<h2 style="display:inline-block;"><%=l(:"bsc.label_metrics")%></h2>
 
-<script>
-var show_more_label = '<%=l(:"bsc.label_show_more")%>';
-var show_less_label = '<%=l(:"bsc.label_show_less")%>';
-</script>
+<%= render :partial => 'metrics_tab' %>

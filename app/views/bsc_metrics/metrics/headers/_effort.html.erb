@@ -1,10 +1,10 @@
-<div class="metric_content <%=@effort_header[:status]%>">
-	<span class="header_title">
-		<h2><%=l(:"bsc.title_effort").upcase%></h2>
-	</span>
-	<span class="glyphicon glyphicon-tasks"></span>
-	<span class="header_text">
-		<%#=@effort_header[:text].html_safe%>
-		<%=render_effort_header_text(@effort_header[:result])%>
-	</span>
+<div class="metric_content">
+	<div class="header_title">
+		<div class="metric_status <%=@effort_header[:status]%>">
+			<h2><%=l(:"bsc.title_effort").upcase%></h2>
+		</div>
+	</div>
+	<div class="header_text">
+		<%=render_effort_header_text_reduced(@effort_header[:status], @effort_header[:result])%>
+	</div>
 </div>
