@@ -31,12 +31,6 @@ en:
     # metrics
     label_show_more: Show more
     label_show_less: Show less
-    # time_entries
-    title_time_entries: Time entries
-    label_last_entry: Last entry
-    label_days_passed: Days passed
-    label_entry_hours: Entry hours
-    label_profile_hours: Profile hours
     # mc
     title_mc: CM
     label_hhrr: HHRR
@@ -45,12 +39,19 @@ en:
     label_mc: CM
     label_incomes: Incomes
     label_expenses: Expenses
+    label_mc_evolution: MC Evolution
+    label_margins: Margins
+    label_total_incomes: Total incomes
+    label_total_expenses: Total expenses
     # income_expenses
     title_income_expenses: Income and expenses
     label_subject: Subject
     label_type: Type
     label_amount: Amount
     label_planned_date: Planned date
+    label_incoming_incomes: Incoming incomes
+    label_incoming_expenses: Incoming expenses
+    label_income_expenses_calendar: Income&Expenses calendar
     # effort
     title_effort: Effort
     label_remaining_days: Remaining days
@@ -75,6 +76,14 @@ en:
     label_delivery_date: Delivery date
     label_assigned_to: Assigned to
     label_done_ratio: "% Done"
+    label_deliverables_calendar: Deliverables Calendar
+    # time_entries
+    title_time_entries: Time entries
+    label_last_entry: Last entry
+    label_days_passed: Days passed
+    label_entry_hours: Entry hours
+    label_user_hours: Users entries
+    label_profile_hours: Profile hours
 
     # settings
     title_plugins_integration: Other plugins integration
