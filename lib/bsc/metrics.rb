@@ -7,7 +7,10 @@ module BSC
 			@hr_plugin = BSC::Integration.hr_plugin_enabled?
 			@ie_plugin = BSC::Integration.ie_plugin_enabled?
 			@date = date
-			@projects = args[:descendants] ? Array(Project.find(project).self_and_descendants) : Array(Project.find(project))
+			@projects = args[:descendants] ? Array(Project.find(project).self_and_descendants.active) : Array(Project.find(project))
+
+			@projects = @projects.select{|p| (args[:white_list]+[project]).include?(p.id)} if args[:white_list].present?
+			@projects = @projects.reject{|p| (args[:black_list]-[project]).include?(p.id)} if args[:black_list].present?
 		end
 
 # HHRR Hours
@@ -183,6 +186,15 @@ module BSC
 			}
 		end
 
+		def variable_expense_incurred_by_tracker
+			@variable_expense_incurred_by_tracker ||= 
+			BSC::Integration.get_variable_expenses.inject({}){|sum, ie|
+				sum.merge({ie.tracker.name => 
+					ie.issues_incurred(@projects.map(&:id), @date).sum{|i| i.amount.to_f}
+				})
+			}
+		end
+
 		def variable_expense_remaining
 			@variable_expense_remaining ||= variable_expense_scheduled - variable_expense_incurred
 		end
@@ -193,7 +205,7 @@ module BSC
 			@fixed_expense_scheduled ||=
 			BSC::Integration.get_fixed_expenses.inject(0.0){|sum, ie|
 				sum += 
-					ie.issues_scheduled(@projects.map(&:id), @date).sum{|i| i.amount.to_f}
+					ie.issues_scheduled(@projects.map(&:id), @date+20.years).sum{|i| i.amount.to_f}
 			}
 		end
 
@@ -201,7 +213,7 @@ module BSC
 			@fixed_expense_scheduled_by_tracker ||= 
 			BSC::Integration.get_fixed_expenses.inject({}){|sum, ie|
 				sum.merge({ie.tracker.name => 
-					ie.issues_scheduled(@projects.map(&:id), @date).sum{|i| i.amount.to_f}
+					ie.issues_scheduled(@projects.map(&:id), @date+20.years).sum{|i| i.amount.to_f}
 				})
 			}
 		end
@@ -211,13 +223,13 @@ module BSC
 			@fixed_expense_incurred ||=
 			(result = 0.0
 			BSC::Integration.get_fixed_expenses.each do |ie|
-				ie.issues_incurred(@projects.map(&:id), @date).each do |i|
+				ie.issues_scheduled(@projects.map(&:id), @date).each do |i|
 					start_date = i.historic_value(@date)['start_date']
 					end_date = i.historic_value(@date)['due_date']
 					incurred_end_date = [@date, end_date].min
 					amount = i[:amount].to_f
 
-					result += amount * (incurred_end_date - start_date).to_f / (end_date - start_date).to_f if incurred_end_date >= start_date
+					result += amount * (incurred_end_date - start_date + 1).to_f / (end_date - start_date + 1).to_f if incurred_end_date >= start_date
 				end
 			end
 			result)

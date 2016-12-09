@@ -9,7 +9,12 @@ module BSC
 
 # HHRR Hours
 		def hhrr_hours_scheduled
-			@hhrr_hours_scheduled ||= super * ([@end_date, scheduled_finish_date, Date.today].min - [@start_date, scheduled_start_date].max) / (scheduled_finish_date - scheduled_start_date)
+			@hhrr_hours_scheduled ||= 
+			(begin
+				super * ([@end_date, scheduled_finish_date, Date.today].min - [@start_date, scheduled_start_date].max) / (scheduled_finish_date - scheduled_start_date)
+			rescue
+				0.0
+			end)
 		end
 
 		def hhrr_hours_scheduled_by_profile
@@ -38,7 +43,7 @@ module BSC
 				end
 				result
 			else
-				0.0
+				Hash.new(0.0)
 			end)
 		end
 
@@ -62,7 +67,7 @@ module BSC
 				end
 				result
 			else
-				0.0
+				Hash.new(0.0)
 			end)
 		end
 
@@ -139,11 +144,11 @@ module BSC
 			@fixed_expense_scheduled ||= 
 			(result = 0.0
 			BSC::Integration.get_fixed_expenses.each do |ie|
-				ie.issues_incurred_interval(@projects.map(&:id), @start_date, @end_date+20.year).each do |i|
+				ie.issues_incurred_interval(@projects.map(&:id), @start_date, @end_date+20.years).each do |i|
 					start_date = [@start_date, i[:start_date]].max
 					end_date = [@end_date, i[:due_date]].min
-					amount = i[:amount].to_f
-					result += amount * (end_date - start_date).to_f / (i[:due_date] - i[:start_date]).to_f
+					amount = i[:amount].to_f	
+					result += amount * (end_date - start_date + 1).to_f / (i[:due_date] - i[:start_date] + 1).to_f
 				end
 			end
 			result)
@@ -157,14 +162,14 @@ module BSC
 			@fixed_expense_incurred ||=
 			(result = 0.0
 			BSC::Integration.get_fixed_expenses.each do |ie|
-				ie.issues_incurred(@projects.map(&:id), Date.today).each do |i|
+				ie.issues_scheduled(@projects.map(&:id), Date.today).each do |i|
 					start_date = i.historic_value(@date)['start_date']
 					end_date = i.historic_value(@date)['due_date']
 					incurred_start_date = [@start_date, start_date].max
-					incurred_end_date = [@end_date, end_date].min
+					incurred_end_date = [@end_date, end_date, Date.today].min
 					amount = i[:amount].to_f
 
-					result += amount * (incurred_end_date - incurred_start_date).to_f / (end_date - start_date).to_f if incurred_end_date >= incurred_start_date
+					result += amount * (incurred_end_date - incurred_start_date + 1).to_f / (end_date - start_date + 1).to_f if incurred_end_date >= incurred_start_date
 				end
 			end
 			result)

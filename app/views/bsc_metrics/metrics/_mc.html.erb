@@ -61,11 +61,13 @@
   							<%@expenses_trackers.each do |tracker|%>
   								<td><%= render_mc_table_cell(data[:total_expenses_details], tracker) %></td>
   							<% end %>
-  							<% if data[:total_expenses_details].keys.include?('RRHH') %>
-  								<td><%=currency(data[:total_expenses_details]['RRHH'])%></td>
-  							<% else %>
-  								<td><%=currency(0.0)%></td>
-  							<% end %>
+                <% if BSC::Integration.hr_plugin_enabled? %>
+    							<% if data[:total_expenses_details].keys.include?('RRHH') %>
+    								<td><%=currency(data[:total_expenses_details]['RRHH'])%></td>
+    							<% else %>
+    								<td><%=currency(0.0)%></td>
+    							<% end %>
+                <% end %>
   						</tr>
   					<% end %>
   				</tbody>

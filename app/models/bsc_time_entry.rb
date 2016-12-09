@@ -18,10 +18,9 @@ class BscTimeEntry < ActiveRecord::Base
 	# Get time entry header data
 	def self.get_header(project)
 		projects = Project.find(project).self_and_descendants.map(&:id)
-		users = TimeEntry.where("project_id IN (?)", projects).select("user_id, MAX(spent_on) AS last_entry").group('user_id')
-
-		warning = users.select{|u| (Date.today - u.last_entry) > MAX_DAYS_WARNING }.count
-		alert = users.select{|u| (Date.today - u.last_entry) > MAX_DAYS_ALERT }.count
+		users = get_members_time_entry_info(projects)
+		warning = users.select{|u| (Date.today - u[:last_entry]) > MAX_DAYS_WARNING }.count
+		alert = users.select{|u| (Date.today - u[:last_entry]) > MAX_DAYS_ALERT }.count
 
 		data = {
 			:status => (alert > 0) ? 'metric_alert' : ((warning > 0) ? 'metric_warning' : 'metric_success'),
