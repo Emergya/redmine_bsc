@@ -290,15 +290,7 @@ module BSC
 					0.0
 				end
 			else
-				projects = 0.0
-				result = 0.0
-				@projects.each do |project|
-					if (last_checkpoint = project.last_checkpoint(@date)).present?
-						projects += 1
-						result += last_checkpoint.target_margin
-					end
-				end
-				(result/projects)
+				0.0
 			end)
 		end
 
