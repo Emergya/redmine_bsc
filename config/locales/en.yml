@@ -1,5 +1,7 @@
 # American english strings go here
 en:
+  project_module_bscplugin: BSC
+
   field_actual_start_date: Actual start date
   field_scheduled_start_date: Scheduled start_date
   field_scheduled_finish_date: Scheduled finish date

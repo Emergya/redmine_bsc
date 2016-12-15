@@ -117,11 +117,11 @@ module BscMetricsHelper
   def render_time_entries_header_text(status, number)
     case status
     when 'metric_alert'
-      text = "Hay <b>#{number}</b> usuarios que han participado en el proyecto y no cargan horas desde hace más de <b>14 días</b>"
+      text = "Hay <b>#{number}</b> miembros en el proyecto que no cargan horas desde hace más de <b>14 días</b>"
     when 'metric_warning'
-      text = "Hay <b>#{number}</b> usuarios que han participado en el proyecto y no cargan horas desde hace más de <b>7 días</b>"
+      text = "Hay <b>#{number}</b> miembros en el proyecto que no cargan horas desde hace más de <b>7 días</b>"
     else
-      text = "Todos los usuarios que han participado en el proyecto realizan regularmente las imputaciones"
+      text = "Todos los miembros del proyecto realizan regularmente las imputaciones"
     end
     text.html_safe
   end
