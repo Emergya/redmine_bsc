@@ -106,7 +106,7 @@ namespace :bsc do
 				puts "Fecha de fin de proyecto"
 				# Previsto fin
 				if p.parent_id != ARCHIVADOS_PROJECT_ID or hours_incurred_year.reject{|k,v| k==nil}.present? 
-					result << metrics.scheduled_finish_date #(last_checkpoint.present? ? last_checkpoint.scheduled_finish_date : 0) || 0
+					result << (metrics.scheduled_finish_date.present? ? metrics.scheduled_finish_date : 0)
 				else
 					result << 0
 				end
@@ -166,9 +166,11 @@ namespace :bsc do
 				# BPO año
 				result << metrics_this_year.fixed_expense_scheduled
 				# Jefes de proyecto
-				result << User.joins(:members => :roles).where("members.project_id = ? AND roles.id= ?", p.id, ROLE_JP).map(&:login).join(" ")
+				jp = User.joins(:members => :roles).where("members.project_id = ? AND roles.id= ?", p.id, ROLE_JP).map(&:login).join(" ")
+                result << (jp.present? ? jp : "-")
 				# Gestores de cuentas 
-				result << User.joins(:members => :roles).where("members.project_id = ? AND roles.id= ?", p.id, ROLE_GC).map(&:login).join(" ")
+				gc = User.joins(:members => :roles).where("members.project_id = ? AND roles.id= ?", p.id, ROLE_GC).map(&:login).join(" ")
+                result << (gc.present? ? gc : "-")
 				# Region
 				result << CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_REGION_ID).first.value || 0
 				# Fecha fin inicial
@@ -210,7 +212,7 @@ namespace :bsc do
 			end
 		end
 
-		CSV.open("results.csv","w",:col_sep => ';') do |file|
+		CSV.open("public/results.csv","w",:col_sep => ';',:encoding=>'UTF-8') do |file|
 			results.each do |result|
 				file << result
 			end
