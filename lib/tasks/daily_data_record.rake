@@ -25,7 +25,7 @@ namespace :bsc do
 		projects.each do |project|
 			##
 			puts "Enable module"
-			project.enable_module!('bscplugin')
+			Project.find(project).enable_module!('bscplugin')
 			##
 			puts "Recording data for project with id = #{project}"
 			start_date = args[:start_date] || Project.find(project).created_on.to_date
