@@ -7,6 +7,10 @@ namespace :bsc do
 		BscEffort.where("project_id IN (?) AND date = ?", projects, Date.yesterday).destroy_all
 
 		projects.each do |project|
+            ##
+			puts "Enable module"
+			Project.find(project).enable_module!('bscplugin')
+			##
 			BscMc.record_date(project, Date.yesterday, Date.yesterday)
 			BscEffort.record_date(project, Date.yesterday, Date.yesterday)
 		end
