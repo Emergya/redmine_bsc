@@ -50,7 +50,7 @@ class BscCheckpointsController < ApplicationController
   def show
     @journals = @checkpoint.journals.includes(:user, :details).order("#{Journal.table_name}.created_on ASC")
     @journals.each_with_index {|j,i| j.indice = i+1}
-    @journals.reverse! if User.current.wants_comments_in_reverse_order?
+    @journals = @journals.reverse if User.current.wants_comments_in_reverse_order?
   end
 
   def edit
