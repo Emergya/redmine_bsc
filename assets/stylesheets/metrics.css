@@ -269,9 +269,14 @@ h1{
     width:100% !important;
   }
 
+  .morris-hover{
+    width:200px;
+    white-space:nowrap;
+  }
+
   .chart_data_title{
     display:block;
-    width:180px;
+    width:100%;
     font-size: 14px;
     font-weight: bold;
     text-align:left;
@@ -280,11 +285,12 @@ h1{
   .variations{
     border-top:solid 1px #DDD;
     float:left;
+    width:100%;
   }
 
   .chart_data{
     display:block;
-    width:180px;
+    width:100%;
   }
 
   .chart_label{

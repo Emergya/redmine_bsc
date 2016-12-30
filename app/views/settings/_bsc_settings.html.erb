@@ -11,6 +11,10 @@
 		<label><%=l(:"bsc.settings.label_plugin_ie")%></label>
     	<%= check_box_tag 'settings[plugin_ie]', true, @settings['plugin_ie'].present? %>
 	</p>
+    <p>
+		<label><%=l(:"bsc.settings.label_plugin_currency")%></label>
+    	<%= check_box_tag 'settings[plugin_currency]', true, @settings['plugin_currency'].present? %>
+	</p>
 </fieldset>
 
 <fieldset>

@@ -13,7 +13,12 @@ module BscHelper
   end
 
   def currency(n)
-    number_to_currency n, :locale => Setting.default_language
+    if @currency.present?
+      value = n.to_f * @currency.exchange
+      number_to_currency value, :unit => @currency.symbol, :separator => @currency.decimal_separator, :delimiter => @currency.thousands_separator, :precision => 2
+    else
+      number_to_currency n, :locale => Setting.default_language
+    end
   end
 
   def hours(n)

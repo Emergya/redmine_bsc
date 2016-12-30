@@ -93,5 +93,6 @@ en-GB:
       text_plugins_integration: Enable the following options only if the selected plugin is properly installed and configured.
       label_plugin_hr: Plugin HR (Human Resources)
       label_plugin_ie: Plugin IE (Income&Expenses)
+      label_plugin_currency: Plugin Currency
       label_delivery_date: Field - Delivery date
       label_delivery_status: Status - Delivered

@@ -85,6 +85,11 @@ $(document).ready(function(){
 			}
 		);
 	});
+
+	// Change currency
+	$(document).on('change', '#currency_select', function(e){
+		location.href = location.protocol + '//' + location.host + location.pathname + '?currency=' + $(this).val();
+	});
 });
 
 // Change highlight table row
@@ -183,10 +188,15 @@ function calendar_tooltips(){
 }
 
 // Change metric tab
-function change_metric(metric_option){
+function change_metric(metric_option, currency){
+	if (currency != 0){
+		data = {type: metric_option, currency: currency };
+	}else{
+		data = {type: metric_option};
+	}
 	$.ajax({
 		url: 'change_metric',
-		data: {type: metric_option },
+		data: data,
 		success: function(data){
 			$('#metric_contents').html(data['filter']);
 
@@ -199,8 +209,13 @@ function change_metric(metric_option){
 
 
 // Number formats
-function currency(number){
-	return parseFloat(number).toLocaleString('es-ES', {style: 'currency', currency: 'EUR', minimumFractionsDigits: 2, maximumFractionsDigits: 2})
+function currency(number, currency_json){
+	currency_obj = $.parseJSON(currency_json);
+	if ($.isEmptyObject(currency_obj)){
+		return parseFloat(number).toLocaleString('es-ES', {style: 'currency', currency: 'EUR', minimumFractionsDigits: 2, maximumFractionsDigits: 2})
+	}else{
+		return FormatMoney(number * currency_obj['exchange'], '', currency_obj['symbol'], currency_obj['decimal_separator'], currency_obj['thousands_separator'], 2, 2);
+	}
 }
 
 function hours(number){
