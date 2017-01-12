@@ -8,8 +8,8 @@ ROLES_REPLACEMENT = {
   'usuario_externo' => [33, 14, 22, 7, 5, 12, 16, 18, 8, 34, 24, 15, 13, 25]
 }
 # Array with trackers to delete
-# TRACKERS_TO_DELETE = [22,26,30,33,34,38,40,29,50,51,52,57,58,59]
-TRACKERS_TO_DELETE = [22,26,30,33,34,40,29,50,51,52,57,58,59]
+# TRACKERS_TO_DELETE = [22,26,29,30,33,34,38,40,50,51,52,57,58,59]
+TRACKERS_TO_DELETE = [22,26,30,33,34,40,50,51,52,57,58,59]
 # Hash with issue statuses replacement
 ISSUE_STATUSES_REPLACEMENT = {
   'facturable' => [14, 30]
