@@ -137,7 +137,7 @@ module BscMetricsHelper
   end
 
   def render_tracker_query_link(tracker)
-    ie = tracker.ie_income_expenses.first
+    ie = tracker.ie_income_expense
 
     amount_field = 'cf_'+ie[:amount_field_id].to_s
     start_field = (ie[:start_field_type] == 'cf') ? 'cf_'+ie[:start_date_field].to_s : ie[:start_date_field]

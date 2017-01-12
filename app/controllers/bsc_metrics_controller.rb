@@ -1,6 +1,7 @@
 class BscMetricsController < ApplicationController
 	before_filter :find_project_by_project_id, :authorize
 	before_filter :load_metrics
+	before_filter :load_currency
 
 	menu_item :bsc
 	helper :bsc
@@ -9,8 +10,17 @@ class BscMetricsController < ApplicationController
 		@metrics ||= BSC::Metrics.new(@project, Date.today)
 	end
 
+	def load_currency
+		if params[:currency].present?
+			@currency = BSC::Integration.get_currency(params[:currency])
+		else
+			@currency = BSC::Integration.get_prefered_currency
+		end
+	end
+
 	def index
 		@metric_options = ['mc', 'effort', 'income_expenses', 'deliverables', 'time_entries']
+		@currencies = BSC::Integration.get_currencies
 
 		load_headers
 		change_metric

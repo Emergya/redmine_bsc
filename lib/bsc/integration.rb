@@ -9,6 +9,10 @@ module BSC
 				Setting.plugin_redmine_bsc["plugin_ie"]
 			end
 
+			def currency_plugin_enabled?
+				Setting.plugin_redmine_bsc["plugin_currency"]
+			end
+
 			def get_profiles
 				self.hr_plugin_enabled? ? HrProfile.all : [] #.map(&:name) : []
 		  	end
@@ -43,6 +47,23 @@ module BSC
 
 		  	def get_hourly_cost_array(year = Date.today.year)
 		  		hr_plugin_enabled? ? HrProfilesCost.where(year: year).inject({}){|sum, pc| sum.merge({pc.hr_profile_id => pc.hourly_cost.to_f}) } : Hash.new(0.0)
+		  	end
+
+		  	# Currency plugin
+		   	def get_currencies
+		  		self.currency_plugin_enabled? ? Currency.all : []
+		  	end
+
+		  	def get_currency(currency)
+		  		self.currency_plugin_enabled? ? Currency.find(currency) : nil
+		  	end
+
+		  	def get_prefered_currency
+		  		begin
+		  			self.currency_plugin_enabled? ? Currency.default_currency : nil
+		  		rescue
+		  			nil
+		  		end
 		  	end
 		end
 	end
