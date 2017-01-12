@@ -14,7 +14,7 @@ class BscMetricsController < ApplicationController
 		if params[:currency].present?
 			@currency = BSC::Integration.get_currency(params[:currency])
 		else
-			@currency = BSC::Integration.get_default_currency
+			@currency = BSC::Integration.get_prefered_currency
 		end
 	end
 
