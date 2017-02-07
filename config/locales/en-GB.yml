@@ -63,7 +63,7 @@ en-GB:
     label_incurred_effort: Incurred effort
     label_remaining_effort: Remaining effort
     label_scheduled_finish_date: Scheduled finish date
-    label_ideal_capacity: Ideal capacity
+    label_ideal_capacity: Ideal capacity (hours / day)
     label_error: Error
     text_increase_scheduled_time: Increase scheduled time for this profile
     text_add_profiles: Add new profiles

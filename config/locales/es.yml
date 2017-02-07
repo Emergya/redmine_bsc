@@ -63,7 +63,7 @@ es:
     label_incurred_effort: Esf Incurrido
     label_remaining_effort: Esf Restante
     label_scheduled_finish_date: Fecha de fin planificada
-    label_ideal_capacity: Dedicación ideal
+    label_ideal_capacity: Dedicación ideal (horas / día)
     label_error: Error
     text_increase_scheduled_time: Incrementar el tiempo estimado para este perfil
     text_add_profiles: Añadir nuevos perfiles
