@@ -64,7 +64,9 @@ class BscEffort < ActiveRecord::Base
 	def self.get_table_data(project, date)
 		metrics = @metrics || BSC::Metrics.new(project, date)
 		profiles_name = BSC::Integration.get_profiles.map{|p| {p.id => p.name}}.reduce(&:merge)
-		days_remaining = metrics.scheduled_finish_date.present? ? (metrics.scheduled_finish_date - date).to_i : 0
+
+		start_date = metrics.scheduled_start_date.present? ? [metrics.scheduled_start_date, Date.today].max : Date.today
+		days_remaining = get_days_remaining(start_date, metrics.scheduled_finish_date)
 
 		scheduled = Hash.new(0.0).merge(metrics.hhrr_hours_scheduled_by_profile)
 		incurred = Hash.new(0.0).merge(metrics.hhrr_hours_incurred_by_profile)
@@ -111,7 +113,9 @@ class BscEffort < ActiveRecord::Base
 
 		remaining = metrics.hhrr_hours_remaining_by_profile
 		num_profiles = get_profiles_number(project, Date.today)
-		days_remaining = metrics.scheduled_finish_date.present? ? (metrics.scheduled_finish_date - Date.today).to_i : 0
+
+		start_date = metrics.scheduled_start_date.present? ? [metrics.scheduled_start_date, Date.today].max : Date.today
+		days_remaining = get_days_remaining(start_date, metrics.scheduled_finish_date)
 
 		remaining.keys.each do |profile|
 			result += 1 if get_ideal_capacity(remaining[profile], num_profiles[profile], days_remaining)[1].present?
@@ -160,5 +164,26 @@ class BscEffort < ActiveRecord::Base
 			num_profiles[eff.hr_profile_id] += eff.number
 		end
 		num_profiles
+	end
+
+	def self.get_days_remaining(start_date, finish_date)
+		if finish_date.present?
+			total_days = (finish_date - start_date).to_i
+			weeks = total_days/7
+			days_offset = total_days - (weeks*7)
+			weekdays = weeks*2
+			case start_date.wday
+			when 0
+				weekdays += 1
+			when 6
+				weekdays += (days_offset > 1) ? 2 : 1
+			else
+				weekdays += [[(start_date.wday + days_offset) - 5, 0].max, 2].min
+			end
+
+			return (total_days - weekdays)
+		else
+			return 0
+		end
 	end
 end
