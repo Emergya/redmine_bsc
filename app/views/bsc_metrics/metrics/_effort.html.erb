@@ -29,7 +29,7 @@
 								<td class="details" title="<%=data[:ideal_capacity_details] if tips%>">
 									<span>
 										<%value = (data[:ideal_capacity].to_f < 0) ? l(:"bsc.label_error") : data[:ideal_capacity]%>
-										<%=tips ? value+": "+data[:ideal_capacity_details] : value%>
+										<%=(tips and data[:ideal_capacity].to_f < 0) ? value.to_s+": "+data[:ideal_capacity_details] : value%>
 									</span>
 								</td>
 							</tr>
