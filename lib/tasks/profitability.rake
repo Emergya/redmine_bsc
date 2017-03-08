@@ -170,13 +170,13 @@ namespace :bsc do
 				# jp = User.joins(:members => :roles).where("members.project_id = ? AND roles.id= ?", p.id, ROLE_JP).map(&:login).join(" ")
                 # result << (jp.present? ? jp : "-")
                 # En lugar de Jefes de proyecto, mostramos el proyecto raiz
-                result << (p.ancestors.present? ? p.ancestors.first.name : "")
+                result << (p.ancestors.present? ? p.ancestors.first.name : "-")
 
 				# # Gestores de cuentas 
 				# gc = User.joins(:members => :roles).where("members.project_id = ? AND roles.id= ?", p.id, ROLE_GC).map(&:login).join(" ")
                 # result << (gc.present? ? gc : "-")
                 # En lugar de Gestores de cuentas, mostramos el proyecto padre de segunda generación
-                result << (p.ancestors.present? ? ((p.ancestors.length > 1) ? p.ancestors[1].name : p.name) : "")
+                result << (p.ancestors.present? ? ((p.ancestors.length > 1) ? p.ancestors[1].name : p.name) : "-")
 
 				# Region
 				result << CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_REGION_ID).first.value || 0
