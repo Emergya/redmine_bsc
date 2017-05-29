@@ -86,6 +86,8 @@ es:
     label_entry_hours: Horas cargadas
     label_user_hours: Horas por usuario
     label_profile_hours: Horas por perfil
+    # balance
+    title_balance: Balance
 
     # settings
     title_plugins_integration: Integración con otros plugins

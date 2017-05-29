@@ -19,7 +19,7 @@ class BscMetricsController < ApplicationController
 	end
 
 	def index
-		@metric_options = ['mc', 'effort', 'income_expenses', 'deliverables', 'time_entries']
+		@metric_options = ['mc', 'effort', 'income_expenses', 'deliverables', 'time_entries', 'balance']
 		@currencies = BSC::Integration.get_currencies
 
 		load_headers
@@ -39,6 +39,8 @@ class BscMetricsController < ApplicationController
 				@deliverables_header = BscDeliverable.get_header(@project)
 			when 'time_entries'
 				@time_entries_header = BscTimeEntry.get_header(@project)
+			when 'balance'
+				@balance_header = BscBalance.get_header(@project)
 			end
 		end
 	end
@@ -78,6 +80,9 @@ class BscMetricsController < ApplicationController
 			@table_members = data[:members]
 			@table_profiles = data[:profiles]
 			@profile_names = data[:profile_names]
+		when 'balance'
+			@balance_header ||= BscBalance.get_header(@project)
+			data = BscBalance.get_data(@project.id)
 		end
 
 		if request.xhr?

@@ -86,6 +86,8 @@ en-GB:
     label_entry_hours: Entry hours
     label_user_hours: Users entries
     label_profile_hours: Profile hours
+    # balance
+    title_balance: Balance
 
     # settings
     title_plugins_integration: Other plugins integration

@@ -16,6 +16,9 @@ module BscMetricsHelper
     when 'time_entries'
       data = @time_entries_header
       text = render_time_entries_header_text(data[:status], data[:number])
+    when 'balance'
+      data = @balance_header
+      text = render_balance_header_text(data[:status], data[:number])
     end
 
     ['metric_alert', 'metric_warning'].include?(data[:status]) ? ("<div class='status_message "+data[:status]+"'><span>"+text+"</span></div>").html_safe : ''
@@ -73,6 +76,11 @@ module BscMetricsHelper
     text.html_safe
   end
 
+  def render_balance_header_text_reduced(status, number)
+    text = "El cashflow es <b>#{number}</b>"
+    text.html_safe
+  end
+
 
 
   def render_mc_header_text(status, mc, mt)
@@ -125,6 +133,12 @@ module BscMetricsHelper
     end
     text.html_safe
   end
+
+  def render_balance_header_text(status, number)
+    text = "El cashflow es <b>#{number}</b>"
+    text.html_safe
+  end
+
 
   def render_link_show_more(table_name)
     ("<div class='show_more_rows'>"+
