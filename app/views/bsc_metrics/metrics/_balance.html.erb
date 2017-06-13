@@ -1,10 +1,146 @@
 <%= render_header_message('balance') %>
+
+<%= render_date_selector %>
+
 <div class="row">
-  	<div class="col-md-12">
-	  	<!-- <div class="panel panel-default panel-table">
-			<div class="panel-heading">
-	        	<div class="panel_name"><%#=l(:"bsc.label_balance")%></div>
-	      	</div>  
-    	</div> -->
+  <div class="col-md-3">
+  	<div class="panel panel-default panel-highlight">
+  		<div class="panel-heading">
+        <div class="panel_name"><%=l(:"bsc.label_margins")%></div>
+      </div>
+  		<div class="panel-body">
+        <div class="highlight_metric">
+          <div class="name"><%=l(:"bsc.label_scheduled_margin")%></div>
+          <div class="value"><%=percent(@scheduled_margin)%></div>
+        </div>
+      </div>
+  	</div>
+  </div>
+
+  <div class="col-md-9">
+    <div class="panel panel-default panel-table">
+		  <div class="panel-heading">
+        <div class="panel_name"><%=l(:"bsc.label_balance")%></div>
+      </div>
+		  <div class="panel-body">
+  			<table class="list" id="mc_table">
+  				<thead>
+            <tr>
+              <th colspan="2"></th>
+              <th colspan="1"><%=l(:"bsc.label_scheduled")%></th>
+              <th colspan="1"><%=l(:"bsc.label_incurred")%></th>
+              <th colspan="1"><%=l(:"bsc.label_remaining")%></th>
+            </tr>
+          </thead>
+          <tbody>
+  					<tr>
+  						<td colspan="2"><%=l(:"bsc.label_incomes")%></td>
+  						<td colspan="1"><%=currency(@table_data[:total_income][:scheduled])%></td>
+  						<td colspan="1"><%=currency(@table_data[:total_income][:incurred])%></td>
+  						<td colspan="1"><%=currency(@table_data[:total_income][:remaining])%></td>
+  					</tr>
+  					<% @table_data[:incomes].each do |name, i| %>
+  						<tr>
+  							<td colspan="1" style="border-right:0px !important;"></td>
+  							<td colspan="1" style="border-left:0px !important;"><%=name%></td>
+  							<td colspan="1"><%=currency(i[:scheduled])%></td>
+  							<td colspan="1"><%=currency(i[:incurred])%></td>
+  							<td colspan="1"><%=currency(i[:remaining])%></td>
+  						</tr>
+  					<% end %>
+  					<tr>
+  						<td colspan="2"><%=l(:"bsc.label_expenses")%></td>
+  						<td colspan="1"><%=currency(@table_data[:total_expense][:scheduled])%></td>
+  						<td colspan="1"><%=currency(@table_data[:total_expense][:incurred])%></td>
+  						<td colspan="1"><%=currency(@table_data[:total_expense][:remaining])%></td>
+  					</tr>
+  					<% @table_data[:expenses].each do |name, e| %>
+  						<tr>
+  							<td colspan="1" style="border-right:0px !important;"></td>
+  							<td colspan="1" style="border-left:0px !important;"><%=name%></td>
+  							<td colspan="1"><%=currency(e[:scheduled])%></td>
+  							<td colspan="1"><%=currency(e[:incurred])%></td>
+  							<td colspan="1"><%=currency(e[:remaining])%></td>
+  						</tr>
+  					<% end %>
+            <tr>
+              <td colspan="2"><%=l(:"bsc.label_balance")%></td>
+              <td colspan="1"><%=currency(@table_data[:total_income][:scheduled] - @table_data[:total_expense][:scheduled])%></td>
+              <td colspan="1"><%=currency(@table_data[:total_income][:incurred] - @table_data[:total_expense][:incurred])%></td>
+              <td colspan="1"><%=currency(@table_data[:total_income][:remaining] - @table_data[:total_expense][:remaining])%></td>
+            </tr>
+  				</tbody>
+  			</table>
+		  </div>
+    </div>
 	</div>
 </div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default panel-chart">
+      <div class="panel-heading">
+        <div class="panel_name"><%=l(:"bsc.label_income_expenses_evolution")%></div>
+      </div>
+      <div class="panel-body">
+      	<div class="chart_legend"></div>
+        <div id="balance_chart" class="chart"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+	chart = new Morris.Line({
+	  element: 'balance_chart',
+    resize: true,
+    data: <%=@chart_data.to_json.html_safe%>,
+	  hoverCallback: function(index, options, content) {
+      date = "<div class='chart_data_title'>"+options.data[index]['date']+"</div>";
+
+      balance = '<div class="chart_data balance"><span class="chart_value">'+currency(options.data[index]['incomes']-options.data[index]['expenses'], '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>')+'</span><span class="chart_label"><%=l(:"bsc.label_balance")%>:</span></div>';
+      incomes = '<div class="chart_data incomes"><span class="chart_value">'+currency(options.data[index]['incomes'], '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>')+'</span><span class="chart_label"><%=l(:"bsc.label_incomes")%>:</span></div>';
+      expenses = '<div class="chart_data expenses"><span class="chart_value">'+currency(options.data[index]['expenses'], '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>')+'</span><span class="chart_label"><%=l(:"bsc.label_expenses")%>:</span></div>';
+	  	
+	  	text = "<div class='variations'>";
+	  	for (key in options.data[index]['income_detail_changes']){
+	  		if (options.data[index]['income_detail_changes'][key] > 1 || options.data[index]['income_detail_changes'][key] < -1){
+	  			text += "<div class='chart_data'><span class='chart_value'>"+currency(options.data[index]['income_detail_changes'][key], '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>')+"</span><span class='chart_label'>"+key+":</span></div>";
+	  		}
+	  	}
+	  	for (key in options.data[index]['expense_detail_changes']){
+	  		if (options.data[index]['expense_detail_changes'][key] > 1 || options.data[index]['expense_detail_changes'][key] < -1){
+          text += "<div class='chart_data'><span class='chart_value'>"+currency(options.data[index]['expense_detail_changes'][key], '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>')+"</span><span class='chart_label'>"+key+":</span></div>";
+	  		}
+	  	}
+	  	text += "</div>";
+
+      return(date+balance+incomes+expenses+text);
+	  },
+	  xkey: 'date',
+	  ykeys: ['incomes','expenses'],
+	  labels: ['<%=l(:"bsc.label_incurred_incomes")%>', '<%=l(:"bsc.label_incurred_expenses")%>'],
+	  lineColors: ['#BCEAD4', '#FFB1AA'],
+    pointFillColors: ['#5DB85D', '#D95753'],
+	  smooth: false,
+    behaveLikeLine: true,
+	  yLabelFormat: function(value){
+	  	return currency(value, '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>')
+	  }
+	});
+
+	$("tr.alert").tooltip({ show: false, hide:false });
+
+	// Chart legend
+	chart.options.labels.forEach(function(label, i){
+    var legendItem = $('<span></span>').text(label).prepend('<span class="point">&#9679;</span>');
+    legendItem.find('.point').css('color', chart.options.pointFillColors[i]);
+    $('.chart_legend').append(legendItem)
+	})
+
+
+  // Código para mostrar el area del balance
+  // path_expense = $("#balance_chart svg path[fill='#fef6f5']").detach().prependTo("#balance_chart svg");
+  // path_income = $("#balance_chart svg path[fill='#f7fcfa']").detach().prependTo("#balance_chart svg");
+  // path_expense.css({fillOpacity: 1, fill: 'white'});
+</script>

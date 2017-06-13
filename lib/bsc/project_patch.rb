@@ -41,6 +41,22 @@ module BSC
          nil
         end
       end
+
+      def real_start_date
+        begin
+          [issues.minimum(:created_on), time_entries.minimum(:created_on)].min
+        rescue
+          nil
+        end
+      end
+
+      def real_end_date
+        begin
+          [issues.maximum(:created_on), time_entries.maximum(:created_on)].max
+        rescue
+          nil
+        end
+      end
     end
   end
 end

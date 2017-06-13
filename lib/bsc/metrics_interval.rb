@@ -49,6 +49,22 @@ module BSC
 
 
 # HHRR Cost
+		def hhrr_cost_scheduled
+			@hhrr_cost_scheduled ||=
+			(if @end_date < Date.today or scheduled_finish_date < Date.today
+				hhrr_cost_incurred
+			elsif scheduled_finish_date >= @start_date
+				scheduled_remaining = hhrr_cost_scheduled_remaining
+				if scheduled_remaining > 0
+					hhrr_cost_incurred + (scheduled_remaining * ([@end_date, scheduled_finish_date].min - [@start_date, Date.today].max + 1) / (scheduled_finish_date - Date.today + 1))
+				else
+					hhrr_cost_incurred
+				end
+			else
+				0.0
+			end)
+		end
+
 		def hhrr_cost_incurred
 			@hhrr_cost_incurred ||= 
 			(if @hr_plugin
@@ -144,17 +160,29 @@ module BSC
 			@fixed_expense_scheduled ||= 
 			(result = 0.0
 			BSC::Integration.get_fixed_expenses.each do |ie|
-				ie.issues_incurred_interval(@projects.map(&:id), @start_date, @end_date+20.years).each do |i|
+				ie.issues_scheduled_interval(@projects.map(&:id), @start_date, @end_date).each do |i|
 					start_date = [@start_date, i[:start_date]].max
 					end_date = [@end_date, i[:due_date]].min
 					amount = i[:amount].to_f	
-					result += amount * (end_date - start_date + 1).to_f / (i[:due_date] - i[:start_date] + 1).to_f
+					result += amount * (end_date - start_date + 1).to_f / (i[:due_date] - i[:start_date] + 1).to_f if start_date <= end_date
 				end
 			end
 			result)
 		end
 
 		def fixed_expense_scheduled_by_tracker
+			@fixed_expense_scheduled_by_tracker ||= 
+			(result = {}
+			BSC::Integration.get_fixed_expenses.each do |ie|
+				result[ie.tracker.name] = 0.0
+				ie.issues_scheduled_interval(@projects.map(&:id), @start_date, @end_date).each do |i|
+					start_date = [@start_date, i[:start_date]].max
+					end_date = [@end_date, i[:due_date]].min
+					amount = i[:amount].to_f	
+					result[ie.tracker.name] += amount * (end_date - start_date + 1).to_f / (i[:due_date] - i[:start_date] + 1).to_f if start_date <= end_date
+				end
+			end
+			result)
 		end
 
 		# solo para start_date y end_date de tipo 'attr'
@@ -162,14 +190,26 @@ module BSC
 			@fixed_expense_incurred ||=
 			(result = 0.0
 			BSC::Integration.get_fixed_expenses.each do |ie|
-				ie.issues_scheduled(@projects.map(&:id), Date.today).each do |i|
-					start_date = i.historic_value(@date)['start_date']
-					end_date = i.historic_value(@date)['due_date']
-					incurred_start_date = [@start_date, start_date].max
-					incurred_end_date = [@end_date, end_date, Date.today].min
-					amount = i[:amount].to_f
+				ie.issues_scheduled_interval(@projects.map(&:id), @start_date, @end_date).each do |i|
+					start_date = [@start_date, i[:start_date]].max
+					end_date = [@end_date, i[:due_date], Date.today].min
+					amount = i[:amount].to_f	
+					result += amount * (end_date - start_date + 1).to_f / (i[:due_date] - i[:start_date] + 1).to_f if start_date <= end_date
+				end
+			end
+			result)
+		end
 
-					result += amount * (incurred_end_date - incurred_start_date + 1).to_f / (end_date - start_date + 1).to_f if incurred_end_date >= incurred_start_date
+		def fixed_expense_incurred_by_tracker
+			@fixed_expense_incurred_by_tracker ||=
+			(result = {}
+			BSC::Integration.get_fixed_expenses.each do |ie|
+				result[ie.tracker.name] = 0.0
+				ie.issues_scheduled_interval(@projects.map(&:id), @start_date, @end_date).each do |i|
+					start_date = [@start_date, i[:start_date]].max
+					end_date = [@end_date, i[:due_date], Date.today].min
+					amount = i[:amount].to_f	
+					result[ie.tracker.name] += amount * (end_date - start_date + 1).to_f / (i[:due_date] - i[:start_date] + 1).to_f if start_date <= end_date
 				end
 			end
 			result)

@@ -1,0 +1,19 @@
+<div class="row">
+  <div>
+  	<div class="panel-body">
+	    <div class="col-md-4">
+	    	<label><h3><%=l(:"bsc.label_date_options")%>:</h3></label>
+	    	<%=select_tag('date_selector', options_for_select(options, selected_date))%>
+	    	<button onclick="change_metric('<%=@metric_selected%>', '<%=@currency.present? ? @currency.id : 0%>', $(date_selector).val());"><%=l(:button_view)%></button>
+	    </div>
+	    <!-- <div class="col-md-2" id="start_date_selector" data-value="1">
+	      <label><%#=l(:"bsc.label_start_date")%></label>: <select></select>
+	    </div>
+	    <div class="col-md-2" id="end_date_selector" data-value="2">
+	      <label><%#=l(:"bsc.label_end_date")%></label>: <select></select>
+	    </div> -->
+	    
+	    <div class="col-md-8"></div>
+	  </div>
+	</div>
+</div>

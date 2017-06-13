@@ -188,11 +188,11 @@ function calendar_tooltips(){
 }
 
 // Change metric tab
-function change_metric(metric_option, currency){
+function change_metric(metric_option, currency, date_option){
 	if (currency != 0){
-		data = {type: metric_option, currency: currency };
+		data = {type: metric_option, currency: currency, selected_date: date_option};
 	}else{
-		data = {type: metric_option};
+		data = {type: metric_option, selected_date: date_option};
 	}
 	$.ajax({
 		url: 'change_metric',

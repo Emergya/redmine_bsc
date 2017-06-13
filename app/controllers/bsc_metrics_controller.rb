@@ -82,7 +82,10 @@ class BscMetricsController < ApplicationController
 			@profile_names = data[:profile_names]
 		when 'balance'
 			@balance_header ||= BscBalance.get_header(@project)
-			data = BscBalance.get_data(@project.id)
+			data = BscBalance.get_data(@project.id, params[:selected_date])
+			@table_data = data[:table]
+			@chart_data = data[:chart]
+			@scheduled_margin = data[:scheduled_margin]
 		end
 
 		if request.xhr?

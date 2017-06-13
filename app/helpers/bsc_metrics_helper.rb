@@ -18,7 +18,7 @@ module BscMetricsHelper
       text = render_time_entries_header_text(data[:status], data[:number])
     when 'balance'
       data = @balance_header
-      text = render_balance_header_text(data[:status], data[:number])
+      text = render_balance_header_text(data[:status], data[:result])
     end
 
     ['metric_alert', 'metric_warning'].include?(data[:status]) ? ("<div class='status_message "+data[:status]+"'><span>"+text+"</span></div>").html_safe : ''
@@ -77,7 +77,7 @@ module BscMetricsHelper
   end
 
   def render_balance_header_text_reduced(status, number)
-    text = "El cashflow es <b>#{number}</b>"
+    text = "El cashflow es de <b>#{currency(number)}</b>"
     text.html_safe
   end
 
@@ -135,7 +135,7 @@ module BscMetricsHelper
   end
 
   def render_balance_header_text(status, number)
-    text = "El cashflow es <b>#{number}</b>"
+    text = "El cashflow es de <b>#{currency(number)}</b>"
     text.html_safe
   end
 
@@ -217,5 +217,17 @@ module BscMetricsHelper
     else
       return ''
     end
+  end
+
+  def render_date_selector
+    options = [[l(:"bsc.label_all_project"), '0']]
+
+    (@metrics.real_start_date.year..@metrics.real_finish_date.year).each do |year|
+      options << [year, year.to_s]
+    end
+
+    selected_date = (params.present? and params[:selected_date].present?) ? params[:selected_date] : nil
+    
+    render :partial => 'bsc_metrics/metrics/elements/date_selector', :locals => {:options => options, :selected_date => selected_date}
   end
 end

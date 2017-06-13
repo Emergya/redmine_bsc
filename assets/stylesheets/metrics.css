@@ -341,7 +341,19 @@ h1{
       font-weight:bold;
       color: #FF8000;
     }
-
+  /* Balance */
+    .balance .chart_value{
+      font-weight:bold;
+      color: #459DE3;
+    }
+    .incomes .chart_value{
+      font-weight:bold;
+      color: #5DB85D;
+    }
+    .expenses .chart_value{
+      font-weight:bold;
+      color: #D95753;
+    }
   /* Highlight table when hover on chart */
   tr.active { background-color:#ffffdd;}
 

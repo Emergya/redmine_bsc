@@ -83,20 +83,27 @@ module BSC
 		end
 
 # HHRR Cost
-		def hhrr_cost_scheduled
-			@hhrr_cost_scheduled ||= 
+		def hhrr_cost_scheduled_remaining
+			@hhrr_cost_scheduled_remaining ||=
 			(hourly_cost_by_profile = Hash.new(0.0).merge(BSC::Integration.get_hourly_cost_array(@date.year))
 			hours_incurred_by_profile = Hash.new(0.0).merge(hhrr_hours_incurred_by_profile)
-
-			total = hhrr_cost_incurred
-			subtotal = 0.0
+			total = 0.0
 			hhrr_hours_scheduled_by_profile.each do |profile, effort|
 				# Si hay más horas incurridas que estimadas para un perfil, se considera estimadas = incurridas para ese perfil
-				subtotal += (effort - hours_incurred_by_profile[profile]) * hourly_cost_by_profile[profile]
+				total += (effort - hours_incurred_by_profile[profile]) * hourly_cost_by_profile[profile]
 			end
-			if subtotal > 0
-				total = total + subtotal
+			total) 
+		end
+
+		def hhrr_cost_scheduled
+			@hhrr_cost_scheduled ||= 
+			(total = hhrr_cost_incurred
+			scheduled_remaining = hhrr_cost_scheduled_remaining
+
+			if scheduled_remaining > 0
+				total = total + scheduled_remaining
 			end
+			
 			total)
 		end
 
@@ -156,6 +163,15 @@ module BSC
 			}
 		end
 
+		def variable_income_incurred_by_tracker
+			@variable_income_incurred_by_tracker ||=
+			BSC::Integration.get_variable_incomes.inject({}){|sum, ie|
+				sum.merge({ie.tracker.name => 
+					ie.issues_incurred(@projects.map(&:id), @date).sum{|i| i.amount.to_f} 
+				})
+			}
+		end
+
 		def variable_income_remaining
 			@variable_income_remaining ||= variable_income_scheduled - variable_income_incurred
 		end
@@ -205,7 +221,7 @@ module BSC
 			@fixed_expense_scheduled ||=
 			BSC::Integration.get_fixed_expenses.inject(0.0){|sum, ie|
 				sum += 
-					ie.issues_scheduled(@projects.map(&:id), @date+20.years).sum{|i| i.amount.to_f}
+					ie.issues_scheduled(@projects.map(&:id), @date).sum{|i| i.amount.to_f}
 			}
 		end
 
@@ -213,7 +229,7 @@ module BSC
 			@fixed_expense_scheduled_by_tracker ||= 
 			BSC::Integration.get_fixed_expenses.inject({}){|sum, ie|
 				sum.merge({ie.tracker.name => 
-					ie.issues_scheduled(@projects.map(&:id), @date+20.years).sum{|i| i.amount.to_f}
+					ie.issues_scheduled(@projects.map(&:id), @date).sum{|i| i.amount.to_f}
 				})
 			}
 		end
@@ -224,13 +240,31 @@ module BSC
 			(result = 0.0
 			BSC::Integration.get_fixed_expenses.each do |ie|
 				ie.issues_scheduled(@projects.map(&:id), @date).each do |i|
-					start_date = i.historic_value(@date)['start_date']
-					end_date = i.historic_value(@date)['due_date']
+					start_date = (Date.parse(i.historic_value(@date)['start_date']) rescue i.historic_value(@date)['start_date'])
+					end_date = (Date.parse(i.historic_value(@date)['due_date']) rescue i.historic_value(@date)['due_date'])
 					incurred_end_date = [@date, end_date].min
 					amount = i[:amount].to_f
 
 					result += amount * (incurred_end_date - start_date + 1).to_f / (end_date - start_date + 1).to_f if incurred_end_date >= start_date
 				end
+			end
+			result)
+		end
+
+		def fixed_expense_incurred_by_tracker
+			@fixed_expense_incurred_by_tracker ||=
+			(result = {}
+			BSC::Integration.get_fixed_expenses.each do |ie|
+				subresult = 0
+				result[ie.tracker.name] = (ie.issues_scheduled(@projects.map(&:id), @date).each do |i|
+					start_date = (Date.parse(i.historic_value(@date)['start_date']) rescue i.historic_value(@date)['start_date'])
+					end_date = (Date.parse(i.historic_value(@date)['due_date']) rescue i.historic_value(@date)['due_date'])
+					incurred_end_date = [@date, end_date].min
+					amount = i[:amount].to_f
+
+					subresult += amount * (incurred_end_date - start_date + 1).to_f / (end_date - start_date + 1).to_f if incurred_end_date >= start_date
+				end
+				subresult)			
 			end
 			result)
 		end
@@ -253,6 +287,10 @@ module BSC
 			@total_income_incurred ||= variable_income_incurred
 		end
 
+		def total_income_incurred_by_concept
+			@total_income_incurred_by_concept ||= variable_income_incurred_by_tracker
+		end
+
 		def total_income_remaining
 			@total_income_remaining ||= total_income_scheduled - total_income_incurred
 		end
@@ -269,6 +307,10 @@ module BSC
 
 		def total_expense_incurred
 			@total_expense_incurred ||= hhrr_cost_incurred + variable_expense_incurred + fixed_expense_incurred
+		end
+
+		def total_expense_incurred_by_concept
+			@total_expense_incurred_by_concept ||= [{"RRHH" => hhrr_cost_incurred}, variable_expense_incurred_by_tracker, fixed_expense_incurred_by_tracker].reduce(&:merge)
 		end
 
 		def total_expense_remaining
@@ -300,6 +342,14 @@ module BSC
 
 		def scheduled_start_date
 			@scheduled_start_date ||= @projects.reject{|p| p.bsc_info.blank?}.map{|p| p.bsc_info.scheduled_start_date}.reject{|date| date.blank?}.min
+		end
+
+		def real_finish_date
+        	@real_finish_date ||= [@projects.map{|p| p.issues.maximum(:created_on)}.max, @projects.map{|p| p.time_entries.maximum(:created_on)}.max, scheduled_finish_date].max.to_date rescue nil
+		end
+
+		def real_start_date
+        	@real_start_date ||= [@projects.map{|p| p.issues.minimum(:created_on)}.min, @projects.map{|p| p.time_entries.minimum(:created_on)}.min, scheduled_start_date].min.to_date rescue nil
 		end
 	end
 end
