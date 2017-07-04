@@ -148,7 +148,7 @@ module BSC
 					start_date = [@start_date, i[:start_date]].max
 					end_date = [@end_date, i[:due_date]].min
 					amount = i[:amount].to_f	
-					result += amount * (end_date - start_date + 1).to_f / (i[:due_date] - i[:start_date] + 1).to_f
+					result += amount * (end_date - start_date + 1).to_f / (i[:due_date] - i[:start_date] + 1).to_f if end_date >= start_date
 				end
 			end
 			result)
