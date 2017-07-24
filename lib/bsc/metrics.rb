@@ -84,7 +84,7 @@ module BSC
 
 # HHRR Cost
 		def hhrr_cost_scheduled_remaining
-			@hhrr_cost_scheduled_remaining ||=
+			#@hhrr_cost_scheduled_remaining ||=
 			(hourly_cost_by_profile = Hash.new(0.0).merge(BSC::Integration.get_hourly_cost_array(@date.year))
 			hours_incurred_by_profile = Hash.new(0.0).merge(hhrr_hours_incurred_by_profile)
 			total = 0.0
@@ -242,10 +242,13 @@ module BSC
 				ie.issues_scheduled(@projects.map(&:id), @date).each do |i|
 					start_date = (Date.parse(i.historic_value(@date)['start_date']) rescue i.historic_value(@date)['start_date'])
 					end_date = (Date.parse(i.historic_value(@date)['due_date']) rescue i.historic_value(@date)['due_date'])
-					incurred_end_date = [@date, end_date].min
-					amount = i[:amount].to_f
-
-					result += amount * (incurred_end_date - start_date + 1).to_f / (end_date - start_date + 1).to_f if incurred_end_date >= start_date
+					amount = (i.historic_value(@date)['amount'].to_f) rescue i.historic_value(@date)['amount']
+					
+					if start_date.present? and end_date.present? and amount.present?
+						incurred_end_date = [@date, end_date].min
+					
+						result += amount * (incurred_end_date - start_date + 1).to_f / (end_date - start_date + 1).to_f if incurred_end_date >= start_date
+					end
 				end
 			end
 			result)
@@ -259,10 +262,13 @@ module BSC
 				result[ie.tracker.name] = (ie.issues_scheduled(@projects.map(&:id), @date).each do |i|
 					start_date = (Date.parse(i.historic_value(@date)['start_date']) rescue i.historic_value(@date)['start_date'])
 					end_date = (Date.parse(i.historic_value(@date)['due_date']) rescue i.historic_value(@date)['due_date'])
-					incurred_end_date = [@date, end_date].min
-					amount = i[:amount].to_f
+					amount = (i.historic_value(@date)['amount'].to_f) rescue i.historic_value(@date)['amount']
 
-					subresult += amount * (incurred_end_date - start_date + 1).to_f / (end_date - start_date + 1).to_f if incurred_end_date >= start_date
+					if start_date.present? and end_date.present? and amount.present?
+						incurred_end_date = [@date, end_date].min
+					
+						subresult += amount * (incurred_end_date - start_date + 1).to_f / (end_date - start_date + 1).to_f if incurred_end_date >= start_date
+					end
 				end
 				subresult)			
 			end
@@ -345,11 +351,11 @@ module BSC
 		end
 
 		def real_finish_date
-        	@real_finish_date ||= [@projects.map{|p| p.issues.maximum(:created_on)}.max, @projects.map{|p| p.time_entries.maximum(:created_on)}.max, scheduled_finish_date].max.to_date rescue nil
+        	@real_finish_date ||= [@projects.map{|p| p.issues.maximum(:created_on)}.max, @projects.map{|p| p.time_entries.maximum(:created_on)}.max, scheduled_finish_date].compact.max.to_date rescue Date.today
 		end
 
 		def real_start_date
-        	@real_start_date ||= [@projects.map{|p| p.issues.minimum(:created_on)}.min, @projects.map{|p| p.time_entries.minimum(:created_on)}.min, scheduled_start_date].min.to_date rescue nil
+        	@real_start_date ||= [@projects.map{|p| p.issues.minimum(:created_on)}.min, @projects.map{|p| p.time_entries.minimum(:created_on)}.min, scheduled_start_date].compact.min.to_date rescue @projects.map(&:created_on).min.to_date
 		end
 	end
 end

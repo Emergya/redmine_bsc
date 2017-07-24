@@ -190,10 +190,10 @@ module BSC
 			@fixed_expense_incurred ||=
 			(result = 0.0
 			BSC::Integration.get_fixed_expenses.each do |ie|
-				ie.issues_scheduled_interval(@projects.map(&:id), @start_date, @end_date).each do |i|
+				ie.issues_incurred_interval(@projects.map(&:id), @start_date, @end_date).each do |i|
 					start_date = [@start_date, i[:start_date]].max
 					end_date = [@end_date, i[:due_date], Date.today].min
-					amount = i[:amount].to_f	
+					amount = i[:amount].to_f
 					result += amount * (end_date - start_date + 1).to_f / (i[:due_date] - i[:start_date] + 1).to_f if start_date <= end_date
 				end
 			end
@@ -205,7 +205,7 @@ module BSC
 			(result = {}
 			BSC::Integration.get_fixed_expenses.each do |ie|
 				result[ie.tracker.name] = 0.0
-				ie.issues_scheduled_interval(@projects.map(&:id), @start_date, @end_date).each do |i|
+				ie.issues_incurred_interval(@projects.map(&:id), @start_date, @end_date).each do |i|
 					start_date = [@start_date, i[:start_date]].max
 					end_date = [@end_date, i[:due_date], Date.today].min
 					amount = i[:amount].to_f	
