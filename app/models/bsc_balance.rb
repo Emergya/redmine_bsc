@@ -14,8 +14,8 @@ class BscBalance < ActiveRecord::Base
 	# Generate historic balance data from start_date to end_date
 	def self.record_date(project, start_date, end_date)
 		# days without generate historic balance points
-		last_point = BscBalance.where("project_id = ? AND date <= ?", project, start_date)
-		days = last_point.present? ? (Date.parse(start_date) - Date.parse(last_point.date)).to_i : 0
+		last_point = BscBalance.where("project_id = ? AND date <= ?", project, start_date).order('date DESC')
+		days = last_point.present? ? (start_date - last_point.first.date).to_i : 0
 		
 		(start_date..end_date).each do |date|
 			days += 1
