@@ -1,4 +1,6 @@
 class BscBalance < ActiveRecord::Base
+	# Días hacía atrás que se revisan diariamente para actualizar la información de los puntos de balance
+	BALANCE_UPDATE_DAYS = 20
 	# Porcentaje de variación mínimo de cambios en los ingresos y gastos absolutos respecto al máximo entre los ingresos y gastos estimados, a partir del cual se toma un nuevo punto
 	BALANCE_MIN_VARIATION_PERCENT = 3
 	# Número máximo de días sin generar puntos
