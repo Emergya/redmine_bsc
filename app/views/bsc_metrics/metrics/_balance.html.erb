@@ -34,10 +34,10 @@
           </thead>
           <tbody>
   					<tr>
-  						<td colspan="2"><%=l(:"bsc.label_incomes")%></td>
-  						<td colspan="1"><%=currency(@table_data[:total_income][:scheduled])%></td>
-  						<td colspan="1"><%=currency(@table_data[:total_income][:incurred])%></td>
-  						<td colspan="1"><%=currency(@table_data[:total_income][:remaining])%></td>
+  						<td colspan="2"><b><%=l(:"bsc.label_incomes")%></b></td>
+  						<td colspan="1"><b><%=currency(@table_data[:total_income][:scheduled])%></b></td>
+  						<td colspan="1"><b><%=currency(@table_data[:total_income][:incurred])%></b></td>
+  						<td colspan="1"><b><%=currency(@table_data[:total_income][:remaining])%></b></td>
   					</tr>
   					<% @table_data[:incomes].each do |name, i| %>
   						<tr>
@@ -49,10 +49,10 @@
   						</tr>
   					<% end %>
   					<tr>
-  						<td colspan="2"><%=l(:"bsc.label_expenses")%></td>
-  						<td colspan="1"><%=currency(@table_data[:total_expense][:scheduled])%></td>
-  						<td colspan="1"><%=currency(@table_data[:total_expense][:incurred])%></td>
-  						<td colspan="1"><%=currency(@table_data[:total_expense][:remaining])%></td>
+  						<td colspan="2"><b><%=l(:"bsc.label_expenses")%></b></td>
+  						<td colspan="1"><b><%=currency(@table_data[:total_expense][:scheduled])%></b></td>
+  						<td colspan="1"><b><%=currency(@table_data[:total_expense][:incurred])%></b></td>
+  						<td colspan="1"><b><%=currency(@table_data[:total_expense][:remaining])%></b></td>
   					</tr>
   					<% @table_data[:expenses].each do |name, e| %>
   						<tr>
@@ -64,10 +64,10 @@
   						</tr>
   					<% end %>
             <tr>
-              <td colspan="2"><%=l(:"bsc.label_balance")%></td>
-              <td colspan="1"><%=currency(@table_data[:total_income][:scheduled] - @table_data[:total_expense][:scheduled])%></td>
-              <td colspan="1"><%=currency(@table_data[:total_income][:incurred] - @table_data[:total_expense][:incurred])%></td>
-              <td colspan="1"><%=currency(@table_data[:total_income][:remaining] - @table_data[:total_expense][:remaining])%></td>
+              <td colspan="2"><b><%=l(:"bsc.label_balance")%></b></td>
+              <td colspan="1"><b><%=currency(@table_data[:total_income][:scheduled] - @table_data[:total_expense][:scheduled])%></b></td>
+              <td colspan="1"><b><%=currency(@table_data[:total_income][:incurred] - @table_data[:total_expense][:incurred])%></b></td>
+              <td colspan="1"><b><%=currency(@table_data[:total_income][:remaining] - @table_data[:total_expense][:remaining])%></b></td>
             </tr>
   				</tbody>
   			</table>
