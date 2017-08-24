@@ -112,16 +112,16 @@ namespace :bsc do
 				end
 				puts "Gastos restantes en el año"
 				# Gastos restantes
-				result << metrics_this_year.variable_expense_scheduled_by_tracker['Proveedores'] - metrics_this_year.variable_expense_incurred_by_tracker['Proveedores']
+				result << metrics_this_year.variable_expense_scheduled_by_tracker['Providers'] - metrics_this_year.variable_expense_incurred_by_tracker['Providers']
 				puts "Gastos previstos"
 				# Gastos previstos
-				result << metrics.variable_expense_scheduled_by_tracker['Proveedores']
+				result << metrics.variable_expense_scheduled_by_tracker['Providers']
 				puts "Gastos incurridos"
 				# Gastos incurridos
-				result << metrics.variable_expense_incurred_by_tracker['Proveedores']
+				result << metrics.variable_expense_incurred_by_tracker['Providers']
 				puts "Gastos incurridos en el año"
 				# Gastos incurridos año
-				result << metrics_this_year.variable_expense_incurred_by_tracker['Proveedores']
+				result << metrics_this_year.variable_expense_incurred_by_tracker['Providers']
 				puts "Ingresos previstos"
 				# Ingresos previstos
 				result << metrics.total_income_scheduled
@@ -148,17 +148,17 @@ namespace :bsc do
 				result << metrics_this_year.hhrr_cost_incurred
 				puts "Coste de proveedores estimado"
 				# Proveedores estimados
-				result << metrics.variable_expense_scheduled_by_tracker['Proveedores']
+				result << metrics.variable_expense_scheduled_by_tracker['Providers']
 				puts "Coste de proveedores estimado en el año"
 				# Proveedores estimados año
-				result << metrics_this_year.variable_expense_scheduled_by_tracker['Proveedores']
+				result << metrics_this_year.variable_expense_scheduled_by_tracker['Providers']
 				puts "Coste de proveedores incurrido en el año"
 				# Proveedores incurridos año
-				result << metrics_this_year.variable_expense_incurred_by_tracker['Proveedores']
+				result << metrics_this_year.variable_expense_incurred_by_tracker['Providers']
 				puts "Coste de proveedores restante en el año"
 				# Proveedores restantes año
 				# result << metrics_this_year.variable_expense_remaining_by_tracker('Proveedores')
-				result << metrics_this_year.variable_expense_scheduled_by_tracker['Proveedores'] - metrics_this_year.variable_expense_incurred_by_tracker['Proveedores']
+				result << metrics_this_year.variable_expense_scheduled_by_tracker['Providers'] - metrics_this_year.variable_expense_incurred_by_tracker['Providers']
 				puts "Coste de BPO"
 				# BPO total
 				result << metrics.fixed_expense_scheduled
@@ -186,7 +186,7 @@ namespace :bsc do
 				# Ingresos estimados para el próximo año
 				result << metrics_next_year.variable_income_scheduled
 				# Proveedores estimados para el próximo año
-				result << metrics_next_year.variable_expense_scheduled_by_tracker['Proveedores']
+				result << metrics_next_year.variable_expense_scheduled_by_tracker['Providers']
 				# BPO estimado para el próximo año
 				result << metrics_next_year.fixed_expense_scheduled
 				# BPO incurrido
@@ -205,15 +205,15 @@ namespace :bsc do
 
 				puts "Campos de tracker gastos"
 				# Gastos estimados totales
-				result << metrics.variable_expense_scheduled_by_tracker['Gastos']
+				result << metrics.variable_expense_scheduled_by_tracker['Expenses']
 				# Gastos estimados para este año
-				result << metrics_this_year.variable_expense_scheduled_by_tracker['Gastos']
+				result << metrics_this_year.variable_expense_scheduled_by_tracker['Expenses']
 				# Gastos incurridos para este año
-				result << metrics_this_year.variable_expense_incurred_by_tracker['Gastos']
+				result << metrics_this_year.variable_expense_incurred_by_tracker['Expenses']
 				# Gastos restantes para este año
-				result << metrics_this_year.variable_expense_scheduled_by_tracker['Gastos'] - metrics_this_year.variable_expense_incurred_by_tracker['Gastos']
+				result << metrics_this_year.variable_expense_scheduled_by_tracker['Expenses'] - metrics_this_year.variable_expense_incurred_by_tracker['Expenses']
 				# Gastos estimados para el año próximo
-				result << metrics_next_year.variable_expense_scheduled_by_tracker['Gastos']
+				result << metrics_next_year.variable_expense_scheduled_by_tracker['Expenses']
 
 				results << result
 			end

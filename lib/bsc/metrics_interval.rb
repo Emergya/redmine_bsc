@@ -84,7 +84,7 @@ module BSC
 		def variable_income_scheduled_by_tracker
 			@variable_income_scheduled_by_tracker ||= 
 			BSC::Integration.get_variable_incomes.inject({}){|sum, ie|
-				sum.merge({ie.tracker.name => 
+				sum.merge({ie.tracker[:name] => 
 					ie.issues_scheduled_interval(@projects.map(&:id), @start_date, @end_date).sum{|i| i.amount.to_f}
 				})
 			}
@@ -100,7 +100,7 @@ module BSC
 		def variable_income_incurred_by_tracker
 			@variable_income_incurred_by_tracker ||= 
 			BSC::Integration.get_variable_incomes.inject({}){|sum, ie|
-				sum.merge({ie.tracker.name => 
+				sum.merge({ie.tracker[:name] => 
 					ie.issues_incurred_interval(@projects.map(&:id), @start_date, @end_date).sum{|i| i.amount.to_f}
 				})
 			}
@@ -117,7 +117,7 @@ module BSC
 		def variable_expense_scheduled_by_tracker
 			@variable_expense_scheduled_by_tracker ||= 
 			BSC::Integration.get_variable_expenses.inject({}){|sum, ie|
-				sum.merge({ie.tracker.name => 
+				sum.merge({ie.tracker[:name] => 
 					ie.issues_scheduled_interval(@projects.map(&:id), @start_date, @end_date).sum{|i| i.amount.to_f}
 				})
 			}
@@ -133,7 +133,7 @@ module BSC
 		def variable_expense_incurred_by_tracker
 			@variable_expense_incurred_by_tracker ||= 
 			BSC::Integration.get_variable_expenses.inject({}){|sum, ie|
-				sum.merge({ie.tracker.name => 
+				sum.merge({ie.tracker[:name] => 
 					ie.issues_incurred_interval(@projects.map(&:id), @start_date, @end_date).sum{|i| i.amount.to_f}
 				})
 			}

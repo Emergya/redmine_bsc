@@ -149,7 +149,7 @@ module BscMetricsHelper
       columns = ['tracker', 'status', 'subject', start_field, planned_end_field, amount_field, 'assigned_to', 'updated_on', 'project']
     end
 
-    link_to(tracker[:name], project_issues_path(@project, 
+    link_to(tracker.name, project_issues_path(@project, 
       { :set_filter => 1, 
         :f => ['tracker_id'], #'created_on'], 
         :op => {'tracker_id' => '='}, #'created_on' => '<='}, 
