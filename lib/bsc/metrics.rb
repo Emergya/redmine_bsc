@@ -150,7 +150,7 @@ module BSC
 		def variable_income_scheduled_by_tracker
 			@variable_income_scheduled_by_tracker ||=
 			BSC::Integration.get_variable_incomes.inject({}){|sum, ie|
-				sum.merge({ie.tracker.name => 
+				sum.merge({ie.tracker[:name] => 
 					ie.issues_scheduled(@projects.map(&:id), @date).sum{|i| i.amount.to_f} 
 				})
 			}
@@ -166,7 +166,7 @@ module BSC
 		def variable_income_incurred_by_tracker
 			@variable_income_incurred_by_tracker ||=
 			BSC::Integration.get_variable_incomes.inject({}){|sum, ie|
-				sum.merge({ie.tracker.name => 
+				sum.merge({ie.tracker[:name] => 
 					ie.issues_incurred(@projects.map(&:id), @date).sum{|i| i.amount.to_f} 
 				})
 			}
@@ -189,7 +189,7 @@ module BSC
 		def variable_expense_scheduled_by_tracker
 			@variable_expense_scheduled_by_tracker ||= 
 			BSC::Integration.get_variable_expenses.inject({}){|sum, ie|
-				sum.merge({ie.tracker.name => 
+				sum.merge({ie.tracker[:name] => 
 					ie.issues_scheduled(@projects.map(&:id), @date).sum{|i| i.amount.to_f}
 				})
 			}
@@ -205,7 +205,7 @@ module BSC
 		def variable_expense_incurred_by_tracker
 			@variable_expense_incurred_by_tracker ||= 
 			BSC::Integration.get_variable_expenses.inject({}){|sum, ie|
-				sum.merge({ie.tracker.name => 
+				sum.merge({ie.tracker[:name] => 
 					ie.issues_incurred(@projects.map(&:id), @date).sum{|i| i.amount.to_f}
 				})
 			}
@@ -228,7 +228,7 @@ module BSC
 		def fixed_expense_scheduled_by_tracker
 			@fixed_expense_scheduled_by_tracker ||= 
 			BSC::Integration.get_fixed_expenses.inject({}){|sum, ie|
-				sum.merge({ie.tracker.name => 
+				sum.merge({ie.tracker[:name] => 
 					ie.issues_scheduled(@projects.map(&:id), @date).sum{|i| i.amount.to_f}
 				})
 			}
@@ -259,7 +259,7 @@ module BSC
 			(result = {}
 			BSC::Integration.get_fixed_expenses.each do |ie|
 				subresult = 0
-				result[ie.tracker.name] = (ie.issues_scheduled(@projects.map(&:id), @date).each do |i|
+				result[ie.tracker[:name]] = (ie.issues_scheduled(@projects.map(&:id), @date).each do |i|
 					start_date = (Date.parse(i.historic_value(@date)['start_date']) rescue i.historic_value(@date)['start_date'])
 					end_date = (Date.parse(i.historic_value(@date)['due_date']) rescue i.historic_value(@date)['due_date'])
 					amount = (i.historic_value(@date)['amount'].to_f) rescue i.historic_value(@date)['amount']
