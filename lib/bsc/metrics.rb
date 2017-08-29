@@ -338,7 +338,17 @@ module BSC
 					0.0
 				end
 			else
-				0.0
+				numerator = 0.0
+				denominator = 0.0
+				@projects.each do |p|
+					aux_metric = Metrics.new(p, @date, {:descendants => false})
+					margin = aux_metric.margin_target
+					weight = (margin != 0.0) ? (aux_metric.total_income_scheduled - aux_metric.total_expense_scheduled).to_f : 0.0
+					numerator += (margin * weight)
+					denominator += weight
+				end
+				
+				(denominator != 0.0) ? (numerator / denominator).to_f : 0.0
 			end)
 		end
 
