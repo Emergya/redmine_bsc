@@ -32,7 +32,7 @@ class BscDeliverable < ActiveRecord::Base
 
 	def self.get_header(project)
 		projects = Array(Project.find(project).self_and_descendants).map(&:id)
-		issues = get_deliverables_issues(project)
+		issues = get_deliverables_issues(projects)
 
 		# Get number of deliveries in alert and warning
 		alert = issues.select{|i| Date.parse(i.delivery_date) < Date.today}.count
