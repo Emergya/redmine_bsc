@@ -90,6 +90,11 @@ $(document).ready(function(){
 	$(document).on('change', '#currency_select', function(e){
 		location.href = location.protocol + '//' + location.host + location.pathname + '?currency=' + $(this).val();
 	});
+
+	// Change date selector
+	$(document).on('change', '#date_selector', function(e){
+		change_metric(metric_selected, currency_id, $(this).val());
+	});
 });
 
 // Change highlight table row

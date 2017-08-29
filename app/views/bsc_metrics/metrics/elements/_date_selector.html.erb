@@ -19,7 +19,6 @@
 </div>
 
 <script>
-$(document).on('change', '#date_selector', function(e){
-	change_metric('<%=@metric_selected%>', '<%#=@currency.present? ? @currency.id : 0%>', $(this).val());
-});
+var metric_selected = '<%=@metric_selected%>';
+var currency_id = '<%#=@currency.present? ? @currency.id : 0%>';
 </script>
