@@ -33,6 +33,8 @@ es:
     # metrics
     label_show_more: Ver más
     label_show_less: Ver menos
+    label_start_date: Fecha de inicio
+    label_end_date: Fecha de fin
     # mc
     title_mc: MC
     label_hhrr: RRHH
@@ -86,6 +88,17 @@ es:
     label_entry_hours: Horas cargadas
     label_user_hours: Horas por usuario
     label_profile_hours: Horas por perfil
+    # balance
+    title_balance: Balance
+    label_balance: Balance
+    label_incurred_incomes: Ingresos incurridos
+    label_incurred_expenses: Gastos incurridos
+    label_date_options: Intervalo
+    label_all_project: Todo el proyecto
+    label_scheduled: Estimado
+    label_incurred: Incurrido
+    label_remaining: Restante
+    label_income_expenses_evolution: Evolución de ingresos y gastos
 
     # settings
     title_plugins_integration: Integración con otros plugins

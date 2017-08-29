@@ -90,6 +90,11 @@ $(document).ready(function(){
 	$(document).on('change', '#currency_select', function(e){
 		location.href = location.protocol + '//' + location.host + location.pathname + '?currency=' + $(this).val();
 	});
+
+	// Change date selector
+	$(document).on('change', '#date_selector', function(e){
+		change_metric(metric_selected, currency_id, $(this).val());
+	});
 });
 
 // Change highlight table row
@@ -188,11 +193,11 @@ function calendar_tooltips(){
 }
 
 // Change metric tab
-function change_metric(metric_option, currency){
+function change_metric(metric_option, currency, date_option){
 	if (currency != 0){
-		data = {type: metric_option, currency: currency };
+		data = {type: metric_option, currency: currency, selected_date: date_option};
 	}else{
-		data = {type: metric_option};
+		data = {type: metric_option, selected_date: date_option};
 	}
 	$.ajax({
 		url: 'change_metric',

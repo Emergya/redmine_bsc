@@ -1,0 +1,10 @@
+<div class="metric_content">
+	<div class="header_title">
+		<div class="metric_status <%=@balance_header[:status]%>">
+			<h2><%=l(:"bsc.title_balance").upcase%></h2>
+		</div>
+	</div>
+	<div class="header_text">
+		<%=render_balance_header_text_reduced(@balance_header[:status], @balance_header[:result])%>
+	</div>
+</div>

@@ -33,6 +33,8 @@ en-GB:
     # metrics
     label_show_more: Show more
     label_show_less: Show less
+    label_start_date: Start date
+    label_end_date: End date
     # mc
     title_mc: CM
     label_hhrr: HHRR
@@ -86,6 +88,17 @@ en-GB:
     label_entry_hours: Entry hours
     label_user_hours: Users entries
     label_profile_hours: Profile hours
+    # balance
+    title_balance: Balance
+    label_balance: Balance
+    label_incurred_incomes: Incurred incomes
+    label_incurred_expenses: Incurred expenses
+    label_date_options: Date interval
+    label_all_project: All the project
+    label_scheduled: Scheduled
+    label_incurred: Incurred
+    label_remaining: Remaining
+    label_income_expenses_evolution: Incomes and expenses evolution
 
     # settings
     title_plugins_integration: Other plugins integration
