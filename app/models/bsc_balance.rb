@@ -97,8 +97,8 @@ class BscBalance < ActiveRecord::Base
 			metrics = @metrics || BSC::Metrics.new(project, end_date)
 			start_date = metrics.real_start_date
 		else
-			start_date = [Date.parse(date_option+"-01-01"), Date.today].min
-			end_date = [Date.parse(date_option+"-12-31"), Date.today].min
+			start_date = Date.parse(date_option+"-01-01")
+			end_date = Date.parse(date_option+"-12-31")
 			metrics = BSC::MetricsInterval.new(project, start_date, end_date)
 		end
 
