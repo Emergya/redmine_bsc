@@ -29,8 +29,8 @@ module BSC
 			end)
 		end
 
-		def hhrr_hours_scheduled_by_profile
-			@hhrr_hours_scheduled_by_profile ||= 
+		def all_hhrr_hours_scheduled_by_profile
+			@all_hhrr_hours_scheduled_by_profile ||= 
 			(if @hr_plugin
 				result = Hash.new(0.0)
 				@projects.each do |project|
@@ -46,12 +46,16 @@ module BSC
 			end)
 		end
 
+		def hhrr_hours_scheduled_by_profile
+			all_hhrr_hours_scheduled_by_profile
+		end
+
 		def hhrr_hours_incurred
 			@hhrr_hours_incurred ||= TimeEntry.where('project_id IN (?) AND spent_on <= ?', @projects.map(&:id), @date).sum(:hours)
 		end
 
-		def hhrr_hours_incurred_by_profile
-			@hhrr_hours_incurred_by_profile ||=
+		def all_hhrr_hours_incurred_by_profile
+			@all_hhrr_hours_incurred_by_profile ||=
 			(if @hr_plugin
 				result = Hash.new(0.0)
 				TimeEntry.where('project_id IN (?) AND spent_on <= ?', @projects.map(&:id), @date).each do |te|
@@ -61,6 +65,10 @@ module BSC
 			else
 				{}
 			end)
+		end
+
+		def hhrr_hours_incurred_by_profile
+			all_hhrr_hours_incurred_by_profile
 		end
 
 		def hhrr_hours_remaining
@@ -86,9 +94,9 @@ module BSC
 		def hhrr_cost_scheduled_remaining
 			#@hhrr_cost_scheduled_remaining ||=
 			(hourly_cost_by_profile = Hash.new(0.0).merge(BSC::Integration.get_hourly_cost_array(@date.year))
-			hours_incurred_by_profile = Hash.new(0.0).merge(hhrr_hours_incurred_by_profile)
+			hours_incurred_by_profile = Hash.new(0.0).merge(all_hhrr_hours_incurred_by_profile)
 			total = 0.0
-			hhrr_hours_scheduled_by_profile.each do |profile, effort|
+			all_hhrr_hours_scheduled_by_profile.each do |profile, effort|
 				# Si hay más horas incurridas que estimadas para un perfil, se considera estimadas = incurridas para ese perfil
 				total += (effort - hours_incurred_by_profile[profile]) * hourly_cost_by_profile[profile]
 			end

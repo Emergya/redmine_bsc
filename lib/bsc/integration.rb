@@ -46,7 +46,17 @@ module BSC
 		  	end
 
 		  	def get_hourly_cost_array(year = Date.today.year)
-		  		hr_plugin_enabled? ? HrProfilesCost.where(year: year).inject({}){|sum, pc| sum.merge({pc.hr_profile_id => pc.hourly_cost.to_f}) } : Hash.new(0.0)
+		  		if hr_plugin_enabled? 
+		  			if year >= (min_year = HrProfilesCost.minimum(:year)) and year <= (max_year = HrProfilesCost.maximum(:year))
+		  				result = HrProfilesCost.where(year: year).inject({}){|sum, pc| sum.merge({pc.hr_profile_id => pc.hourly_cost.to_f}) }
+		  			elsif year < min_year
+		  				result = HrProfilesCost.where(year: min_year).inject({}){|sum, pc| sum.merge({pc.hr_profile_id => pc.hourly_cost.to_f}) }
+		  			else
+		  				result = HrProfilesCost.where(year: max_year).inject({}){|sum, pc| sum.merge({pc.hr_profile_id => pc.hourly_cost.to_f}) }
+		  			end
+		  		else
+		  			result = Hash.new(0.0)
+		  		end
 		  	end
 
 		  	# Currency plugin
