@@ -55,6 +55,8 @@ class BscMetricsController < ApplicationController
 			@chart_data = data[:chart].reverse.to_json
 			@scheduled_margin = data[:scheduled_margin]
 			@target_margin = data[:target_margin]
+			@scheduled_expenses = data[:scheduled_expenses]
+			@target_expenses = data[:target_expenses]
 			@incomes_trackers = BSC::Integration.get_income_trackers
 			@expenses_trackers = BSC::Integration.get_expense_trackers
 		when 'effort'

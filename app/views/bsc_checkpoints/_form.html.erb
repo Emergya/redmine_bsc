@@ -1,11 +1,12 @@
 <div class="splitcontentleft">
   <p><%= f.text_field :checkpoint_date, :size => 10, :required => true %><%= calendar_for('checkpoint_checkpoint_date') %></p>
   <p><%= f.text_field :scheduled_finish_date, :size => 10, :required => true %><%= calendar_for('checkpoint_scheduled_finish_date') %></p>
-  <p><%= f.check_box :base_line, :disabled => @first_checkpoint %></p>
+  <p><%= f.text_field :held_qa_meetings, :size => 10, :required => true %></p>
 </div>
 <div class="splitcontentright">
   <p><%= f.text_field :target_margin, :size => 3, :required => true %> %</p>
-  <p><%= f.text_field :held_qa_meetings, :size => 10, :required => true %></p>
+  <p><%= f.text_field :target_expenses, :size => 10, :required => true %></p>
+  <p><%= f.check_box :base_line, :disabled => @first_checkpoint %></p>
 </div>
 <div style="clear:both;"></div>
 <% if @profiles.length > 0

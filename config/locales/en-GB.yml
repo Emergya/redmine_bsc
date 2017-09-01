@@ -12,6 +12,7 @@ en-GB:
   field_held_qa_meetings: Held QA meetings
   field_base_line: Base line
   field_target_margin: Target margin
+  field_target_expenses: Target expenses
 
   field_scheduled_effort: Scheduled effort
 
@@ -40,6 +41,8 @@ en-GB:
     label_hhrr: HHRR
     label_scheduled_margin: Scheduled margin
     label_target_margin: Target margin
+    label_scheduled_expenses: Scheduled expenses
+    label_target_expenses: Target expenses
     label_mc: CM
     label_incomes: Incomes
     label_expenses: Expenses

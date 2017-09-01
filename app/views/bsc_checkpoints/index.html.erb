@@ -14,6 +14,7 @@
         <%= content_tag('th', t(:field_scheduled_finish_date)) %>
         <%= content_tag('th', t(:field_held_qa_meetings)) %>
         <%= content_tag('th', t(:field_target_margin)) %>
+        <%= content_tag('th', t(:field_target_expenses)) %>
         <%= content_tag('th', t(:field_base_line)) %>
       </tr>
     </thead>
@@ -25,6 +26,7 @@
         <%= content_tag 'td', checkpoint.scheduled_finish_date %>
         <%= content_tag 'td', checkpoint.held_qa_meetings %>
         <%= content_tag 'td', checkpoint.target_margin.to_s+'%' %>
+        <%= content_tag 'td', checkpoint.target_expenses %>
         <%= content_tag 'td', if checkpoint.base_line 
                                 image_tag 'toggle_check.png' 
                               end

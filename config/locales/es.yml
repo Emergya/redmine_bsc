@@ -12,6 +12,7 @@ es:
   field_held_qa_meetings: Revisiones de calidad realizadas
   field_base_line: Linea base
   field_target_margin: Margen objetivo
+  field_target_expenses: Gastos objetivo
 
   field_scheduled_effort: Esfuerzo previsto
 
@@ -40,6 +41,8 @@ es:
     label_hhrr: RRHH
     label_scheduled_margin: Margen previsto
     label_target_margin: Margen objetivo
+    label_scheduled_expenses: Gastos previstos
+    label_target_expenses: Gastos objetivo
     label_mc: MC
     label_incomes: Ingresos
     label_expenses: Gastos

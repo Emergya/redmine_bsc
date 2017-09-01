@@ -17,6 +17,23 @@
         </div>
       </div>
   	</div>
+
+    <div class="panel panel-default panel-highlight">
+      <div class="panel-heading">
+        <div class="panel_name"><%=l(:"bsc.label_expenses")%></div>
+      </div>
+      <div class="panel-body">
+        <div class="highlight_metric">
+          <div class="name"><%=l(:"bsc.label_scheduled_expenses")%></div>
+          <div class="value"><%=currency(@scheduled_expenses)%></div>
+        </div>
+        <hr>
+        <div class="highlight_metric">
+          <div class="name"><%=l(:"bsc.label_target_expenses")%></div>
+          <div class="value"><%=currency(@target_expenses)%></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="col-md-9">
@@ -28,7 +45,7 @@
   			<table class="list" id="mc_table">
   				<thead>
             <tr>
-              <th colspan="2"></th>
+              <th colspan="4"></th>
               <% if @incomes_trackers.length > 0 %>
                 <th colspan="<%=@incomes_trackers.length%>"><%=l(:"bsc.label_incomes")%></th>
               <% end %>
@@ -39,6 +56,8 @@
   					<tr>
   						<th><%=l(:"label_date")%></th>
   						<th><%=l(:"bsc.label_mc")%></th>
+              					<th><%=l(:"bsc.label_total_incomes")%></th>
+              					<th><%=l(:"bsc.label_total_expenses")%></th>
   						<%@incomes_trackers.each do |tracker|%>
   							<th><%= render_tracker_query_link(tracker) %></th>
   						<% end %>
@@ -55,6 +74,8 @@
   						<tr id="<%='row_'+(@table_data.length - index - 1).to_s%>" class="table_row">
   							<td><%=data[:date]%></td>
   							<td><%=percent(data[:mc])%></td>
+                					<td><%=currency(data[:total_income])%></td>
+                					<td><%=currency(data[:total_expenses])%></td>
   							<%@incomes_trackers.each do |tracker|%>
   								<td><%= render_mc_table_cell(data[:total_income_details], tracker) %></td>
   							<% end %>

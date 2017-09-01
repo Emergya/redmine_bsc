@@ -83,6 +83,8 @@ class BscMc < ActiveRecord::Base
 		metrics = @metrics || BSC::Metrics.new(project, date)
 		data[:target_margin] = metrics.margin_target
 		data[:scheduled_margin] = data[:chart].first[:mc]
+		data[:target_expenses] = metrics.expenses_target
+		data[:scheduled_expenses] = data[:chart].first[:total_expenses]
 
 		data
 	end
@@ -95,12 +97,17 @@ class BscMc < ActiveRecord::Base
 		mt = metrics.margin_target || 0.0
 		mc = total_income == 0 ? 0.0 : (100.0 * ((total_income - total_expenses) / total_income))
 
-		status = (mc > (mt + 1)) ? 'metric_success' : (((mt - mc).abs <= 1) ? 'metric_warning' : 'metric_alert')
+		ct = metrics.expenses_target || 0.0
+		cc = total_expenses
+
+		status = (mc > (mt + 1) and ct >= cc) ? 'metric_success' : (((ct < cc) or (mc < (mt - 1))) ? 'metric_alert' : 'metric_warning')
 
 		data = {
 			:status => status,
 			:mc => mc,
-			:mt => mt
+			:mt => mt,
+			:cc => cc,
+			:ct => ct
 		}
 	end
 end

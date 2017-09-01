@@ -375,5 +375,23 @@ module BSC
 		def real_start_date
         	@real_start_date ||= [@projects.map{|p| p.issues.minimum(:created_on)}.min, @projects.map{|p| p.time_entries.minimum(:created_on)}.min, scheduled_start_date].compact.min.to_date rescue @projects.map(&:created_on).min.to_date
 		end
+
+		def expenses_target
+			@expenses_target ||=
+			(if @projects.count == 1
+				if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+					last_checkpoint.target_expenses
+				else
+					0.0
+				end
+			else
+				result = 0.0
+				@projects.each do |p|
+					aux_metric = Metrics.new(p, @date, {:descendants => false})
+					result += aux_metric.expenses_target
+				end
+				result
+			end)
+		end
 	end
 end

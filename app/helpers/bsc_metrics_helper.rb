@@ -3,7 +3,7 @@ module BscMetricsHelper
     case metric
     when 'mc'
       data = @mc_header
-      text = render_mc_header_text(data[:status], data[:mc], data[:mt])
+      text = render_mc_header_text(data[:status], data[:mc], data[:mt], data[:cc], data[:ct])
     when 'effort'
       data = @effort_header
       text = render_effort_header_text(data[:status], data[:result])
@@ -25,9 +25,20 @@ module BscMetricsHelper
   end
 
 
-  def render_mc_header_text_reduced(status, mc, mt)
-    type_text = (mt > mc) ? "<b>#{decimal(mt-mc)}</b> puntos por <b>debajo</b>" : "<b>#{decimal(mc-mt)}</b> puntos por <b>encima</b>" 
-    text = "#{type_text} del objetivo"
+  def render_mc_header_text_reduced(status, mc, mt, cc, ct)
+    alert_margin = (mt > mc)
+    alert_expenses = (cc > ct)
+    margin_text = alert_margin ? "<b>#{decimal(mt-mc)}</b> puntos por <b>debajo</b>" : "<b>#{decimal(mc-mt)}</b> puntos por <b>encima</b>" 
+    expenses_text = alert_expenses ? "<b>#{currency(cc-ct)}</b> por <b>encima</b>" : "<b>#{currency(ct-cc)}</b> por <b>debajo</b>"
+
+    if status == 'metric_success' or (alert_margin and alert_expenses)
+      text = "Margen #{margin_text} del objetivo y coste #{expenses_text}"
+    elsif alert_expenses
+      text = "El coste está #{expenses_text} del objetivo"
+    else
+      text = "El margen está #{margin_text} del objetivo."
+    end
+
     text.html_safe
   end
 
@@ -83,9 +94,20 @@ module BscMetricsHelper
 
 
 
-  def render_mc_header_text(status, mc, mt)
-  	type_text = (mt > mc) ? "<b>#{decimal(mt-mc)}</b> puntos por <b>debajo</b>" : "<b>#{decimal(mc-mt)}</b> puntos por <b>encima</b>" 
-  	text = "El margen previsto actual es de <b>#{percent(mc)}</b>, que está #{type_text} del objetivo"
+  def render_mc_header_text(status, mc, mt, cc, ct)
+    alert_margin = (mt > mc)
+    alert_expenses = (cc > ct)
+    margin_text = alert_margin ? "<b>#{decimal(mt-mc)}</b> puntos por <b>debajo</b>" : "<b>#{decimal(mc-mt)}</b> puntos por <b>encima</b>" 
+  	expenses_text = alert_expenses ? "<b>#{currency(cc-ct)}</b> por <b>encima</b>" : "<b>#{currency(ct-cc)}</b> por <b>debajo</b>"
+
+    if alert_margin and alert_expenses
+      text = "El <b>margen</b> está #{margin_text} del objetivo y el <b>coste</b> #{expenses_text}"
+    elsif alert_expenses
+      text = "El <b>coste previsto</b> actual es de <b>#{currency(cc)}</b>, que está #{expenses_text} del objetivo"
+    else
+      text = "El <b>margen previsto</b> actual es de <b>#{percent(mc)}</b>, que está #{margin_text} del objetivo."
+    end
+  	
   	text.html_safe
   end
 
