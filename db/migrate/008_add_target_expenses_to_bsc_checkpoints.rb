@@ -1,6 +1,6 @@
 class AddTargetExpensesToBscCheckpoints < ActiveRecord::Migration
   def self.up
-    add_column :bsc_checkpoints, :target_expenses, :decimal, :precision => 12, :scale => 4
+    add_column :bsc_checkpoints, :target_expenses, :decimal, :precision => 12, :scale => 4, :null => false
   end
 
   def self.down
