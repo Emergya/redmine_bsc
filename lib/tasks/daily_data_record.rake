@@ -1,6 +1,6 @@
 namespace :bsc do
 	task :daily_record => :environment do
-		projects = Project.active.select{|p| p.enabled_modules.map(&:name).include?('bscplugin')}.select{|p| p.bsc_info.present?}.map(&:id)
+		projects = Project.active.map(&:id)
 
 		BscMc.where("project_id IN (?) AND date = ?", projects, Date.yesterday).destroy_all
 		BscEffort.where("project_id IN (?) AND date = ?", projects, Date.yesterday).destroy_all
@@ -17,7 +17,7 @@ namespace :bsc do
 	end
 
 	task :update_records, [:start_date, :end_date, :projects] => :environment do |t, args|
-		projects = args[:projects] || Project.active.select{|p| p.enabled_modules.map(&:name).include?('bscplugin')}.select{|p| p.bsc_info.present?}.map(&:id)
+		projects = Project.active.map(&:id)
 		
 		puts "Deleting old records"
 		start_date = args[:start_date].present? ? Date.parse(args[:start_date]) : Project.minimum(:created_on).to_date
