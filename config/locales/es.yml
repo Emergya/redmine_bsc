@@ -12,7 +12,7 @@ es:
   field_held_qa_meetings: Revisiones de calidad realizadas
   field_base_line: Linea base
   field_target_margin: Margen objetivo
-  field_target_expenses: Gastos objetivo
+  field_target_expenses: Coste objetivo
 
   field_scheduled_effort: Esfuerzo previsto
 
@@ -41,15 +41,15 @@ es:
     label_hhrr: RRHH
     label_scheduled_margin: Margen previsto
     label_target_margin: Margen objetivo
-    label_scheduled_expenses: Gastos previstos
-    label_target_expenses: Gastos objetivo
+    label_scheduled_expenses: Coste previsto
+    label_target_expenses: Coste objetivo
     label_mc: MC
     label_incomes: Ingresos
-    label_expenses: Gastos
+    label_expenses: Costes
     label_mc_evolution: Evolución del MC
     label_margins: Márgenes
-    label_total_incomes: Total ingresos
-    label_total_expenses: Total gastos
+    label_total_incomes: Ingresos totales
+    label_total_expenses: Costes totales
     # income_expenses
     title_income_expenses: Cobros y pagos
     label_subject: Asunto
@@ -95,13 +95,13 @@ es:
     title_balance: Balance
     label_balance: Balance
     label_incurred_incomes: Ingresos incurridos
-    label_incurred_expenses: Gastos incurridos
+    label_incurred_expenses: Costes incurridos
     label_date_options: Intervalo
     label_all_project: Todo el proyecto
     label_scheduled: Estimado
     label_incurred: Incurrido
     label_remaining: Restante
-    label_income_expenses_evolution: Evolución de ingresos y gastos
+    label_income_expenses_evolution: Evolución de ingresos y costes
 
     # settings
     title_plugins_integration: Integración con otros plugins
