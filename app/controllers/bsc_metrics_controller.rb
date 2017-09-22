@@ -50,9 +50,9 @@ class BscMetricsController < ApplicationController
 		case @metric_selected
 		when 'mc'
 			@mc_header ||= BscMc.get_header(@project)
-			data = BscMc.get_data(@project.id, Date.today)
-			@table_data = data[:chart]
-			@chart_data = data[:chart].reverse.to_json
+			data = BscMc.get_data(@project.id, params[:selected_date])
+			@table_data = data[:chart].reverse
+			@chart_data = data[:chart].to_json
 			@scheduled_margin = data[:scheduled_margin]
 			@target_margin = data[:target_margin]
 			@scheduled_expenses = data[:scheduled_expenses]

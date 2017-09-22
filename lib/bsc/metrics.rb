@@ -388,7 +388,7 @@ module BSC
 				result = 0.0
 				@projects.each do |p|
 					aux_metric = Metrics.new(p, @date, {:descendants => false})
-					result += aux_metric.expenses_target
+					result += aux_metric.expenses_target if aux_metric.expenses_target.present?
 				end
 				result
 			end)
