@@ -51,9 +51,9 @@ module BSC
 # HHRR Cost
 		def hhrr_cost_scheduled
 			@hhrr_cost_scheduled ||=
-			(if @end_date < Date.today or scheduled_finish_date < Date.today
+			(if @end_date < Date.today or (scheduled_finish_date and scheduled_finish_date < Date.today)
 				hhrr_cost_incurred
-			elsif scheduled_finish_date >= @start_date
+			elsif (scheduled_finish_date and scheduled_finish_date >= @start_date)
 				scheduled_remaining = hhrr_cost_scheduled_remaining
 				if scheduled_remaining > 0
 					hhrr_cost_incurred + (scheduled_remaining * ([@end_date, scheduled_finish_date].min - [@start_date, Date.today].max + 1) / (scheduled_finish_date - Date.today + 1))
