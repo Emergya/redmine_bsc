@@ -1,22 +1,16 @@
 require 'csv'
 
 desc 'Generate CSV to feed Emergya Profitability Sheet'
-# YEARS = 5
-# VARIABLE_EXPENSES = ['Providers', 'Other expenses', 'Subsistence allowance', 'Other expenses HHRR']
-VARIABLE_EXPENSES = ['Providers', 'Expenses']
-# VARIABLE_INCOMES = ['Bills', 'Other incomes']
-VARIABLE_INCOMES = ['Bills']
+ VARIABLE_EXPENSES = ['Providers', 'Other expenses', 'Subsistence allowance', 'Other expenses HHRR']
+ VARIABLE_INCOMES = ['Clients', 'Other incomes']
 
 ARCHIVADOS_PROJECT_ID = 82
 CF_ESTADO_ID = 120
-# CF_EXPEDIENTE_ID = 26
-CF_UNEGOCIO_ID = 26
+CF_UNEGOCIO_ID = 272
 CF_SERVICIO_ID = 102
-# CF_REGION_ID = 166 # Renombrado a Mercado
-CF_LOCALIZACION_ID = 166 # Renombrado a Mercado
-CF_TIPO_ID = 18 # Renombrado a Ciclo de vida
-CF_JP_ID = 0
-CF_GCUENTAS_ID = 0
+CF_LOCALIZACION_ID = 166
+CF_JP_ID = 273
+CF_GCUENTAS_ID = 274
 
 namespace :bsc2 do
 	task :generate_csv => :environment do
@@ -61,9 +55,9 @@ namespace :bsc2 do
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SERVICIO_ID).first) ? (cf.present? ? cf.value : '') : 0
 					headers << "unidad de negocio"
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : 0
-					headers << "jefe de proyecto"
+					headers << "responsable producción"
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_JP_ID).first) ? (cf.present? ? cf.value : '') : 0
-					headers << "gestor de cuentas"
+					headers << "responsable negocio"
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_GCUENTAS_ID).first) ? (cf.present? ? cf.value : '') : 0
 					headers << "ultimo punto de control"
 					result << (p.last_checkpoint ? p.last_checkpoint.checkpoint_date : "-")
@@ -86,11 +80,11 @@ namespace :bsc2 do
 					headers << "esfuerzo estimado"
 					result << metrics.hhrr_cost_scheduled
 					VARIABLE_EXPENSES.each do |expense|
-						headers << expense+" estimado"
+						headers << expense.downcase+" estimado"
 						result << metrics.variable_expense_scheduled_by_tracker[expense]
 					end
 					VARIABLE_INCOMES.each do |income|
-						headers << income+" estimado"
+						headers << income.downcase+" estimado"
 						result << metrics.variable_income_scheduled_by_tracker[income]
 					end
 					puts "Incurred"
@@ -99,11 +93,11 @@ namespace :bsc2 do
 					headers << "esfuerzo incurrido"
 					result << metrics.hhrr_cost_incurred
 					VARIABLE_EXPENSES.each do |expense|
-						headers << expense+" incurrido"
+						headers << expense.downcase+" incurrido"
 						result << metrics.variable_expense_incurred_by_tracker[expense]
 					end
 					VARIABLE_INCOMES.each do |income|
-						headers << income+" incurrido"
+						headers << income.downcase+" incurrido"
 						result << metrics.variable_income_incurred_by_tracker[income]
 					end
 					puts "Remaining"
@@ -112,11 +106,11 @@ namespace :bsc2 do
 					headers << "esfuerzo restantes"
 					result << metrics.hhrr_cost_remaining
 					VARIABLE_EXPENSES.each do |expense|
-						headers << expense+" restante"
+						headers << expense.downcase+" restante"
 						result << (metrics.variable_expense_scheduled_by_tracker[expense] || 0.0) - (metrics.variable_expense_incurred_by_tracker[expense] || 0.0)
 					end
 					VARIABLE_INCOMES.each do |income|
-						headers << income+" restante"
+						headers << income.downcase+" restante"
 						result << (metrics.variable_income_scheduled_by_tracker[income] || 0.0) - (metrics.variable_income_incurred_by_tracker[income] || 0.0)
 					end
 
@@ -126,7 +120,7 @@ namespace :bsc2 do
 			end
 		end
 
-		CSV.open("public/nre_results.csv","w",:col_sep => ';',:encoding=>'UTF-8') do |file|
+		CSV.open("public/new_profitability.csv","w",:col_sep => ';',:encoding=>'UTF-8') do |file|
 			results.each do |result|
 				file << result
 			end
