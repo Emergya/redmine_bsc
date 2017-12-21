@@ -88,7 +88,7 @@ namespace :bsc2 do
 			end
 			results[0] = headers
 
-			CSV.open("public/"+Tracker.find(tracker_id).name.downcase+".csv","w",:col_sep => ';',:encoding=>'UTF-8') do |file|
+			CSV.open("public/"+Tracker.find(tracker_id).name.parameterize.underscore+".csv","w",:col_sep => ';',:encoding=>'UTF-8') do |file|
 				results.each do |result|
 					file << result
 				end
