@@ -6,11 +6,11 @@ desc 'Generate CSV to feed Emergya Profitability Sheet'
 
 ARCHIVADOS_PROJECT_ID = 82
 CF_ESTADO_ID = 120
-CF_UNEGOCIO_ID = 272
+CF_UNEGOCIO_ID = 275
 CF_SERVICIO_ID = 102
 CF_LOCALIZACION_ID = 166
-CF_JP_ID = 273
-CF_GCUENTAS_ID = 274
+CF_JP_ID = 276
+CF_GCUENTAS_ID = 277
 
 namespace :bsc2 do
 	task :generate_csv => :environment do
