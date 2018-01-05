@@ -3,23 +3,23 @@ require 'csv'
 TRACKERS_ID = [23,43,65,66,67,68]
 CF_SERVICIO_ID = 102
 CF_LOCALIZACON_ID =  166
-CF_UNEGOCIO_ID = 272
+CF_UNEGOCIO_ID = 275
 
 CF_EMPRESA = 156
 CF_IMPORTE_LOCAL = 261
 CF_MONEDA = 263
 CF_IMPORTE = 152
 CF_FECHA_FACTURACION = 153
-CF_RESP_PRODUCCION = 273
-CF_RESP_NEGOCIO = 274
+CF_RESP_PRODUCCION = 276
+CF_RESP_NEGOCIO = 277
 
 CF_IVA = 155
 CF_IMPORTE_IVA = 159
-CF_IMPORTE_LOCAL_IVA = 275
+CF_IMPORTE_LOCAL_IVA = 272
 
 CF_TIPO_FACTURA = 207
-CF_TIPO_INGRESO = 276
-CF_TIPO_GASTO = 277
+CF_TIPO_INGRESO = 273
+CF_TIPO_GASTO = 274
 CF_CLIENTE = 28
 CF_TERCEROS = 271
 CF_NUM_FACTURA = 204
@@ -54,9 +54,19 @@ namespace :bsc2 do
 				headers << "unidad negocio"
 				result << (cf = issue.project.custom_values.where(custom_field_id: CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : ''
 				headers << "responsable producción"
-				result << (cf = issue.project.custom_values.where(custom_field_id: CF_RESP_PRODUCCION).first) ? (cf.present? ? cf.value : '') : ''
+				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_JP_ID).first
+				if cf.present? and cf.value.present?
+					result << User.find(cf.value).login
+				else
+					result << ''
+				end
 				headers << "responsable negocio"
-				result << (cf = issue.project.custom_values.where(custom_field_id: CF_RESP_NEGOCIO).first) ? (cf.present? ? cf.value : '') : ''
+				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_GCUENTAS_ID).first
+				if cf.present? and cf.value.present?
+					result << User.find(cf.value).login
+				else
+					result << ''
+				end				
 				headers << "empresa"
 				result << (cf = issue.custom_values.where(custom_field_id: CF_EMPRESA).first) ? (cf.present? ? cf.value : '') : ''
 				headers << "cliente/terceros"
