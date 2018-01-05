@@ -56,9 +56,19 @@ namespace :bsc2 do
 					headers << "unidad de negocio"
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : 0
 					headers << "responsable producción"
-					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_JP_ID).first) ? (cf.present? ? cf.value : '') : 0
+					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_JP_ID).first
+					if cf.present? and cf.value.present?
+						result << User.find(cf.value).login
+					else
+						result << ''
+					end
 					headers << "responsable negocio"
-					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_GCUENTAS_ID).first) ? (cf.present? ? cf.value : '') : 0
+					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_GCUENTAS_ID).first
+					if cf.present? and cf.value.present?
+						result << User.find(cf.value).login
+					else
+						result << ''
+					end
 					headers << "ultimo punto de control"
 					result << (p.last_checkpoint ? p.last_checkpoint.checkpoint_date : "-")
 					headers << "fecha de fin"
