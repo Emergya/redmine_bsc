@@ -34,7 +34,7 @@ namespace :bsc2 do
 		TRACKERS_ID.each do |tracker_id|
 			headers = []
 			results = [[]]
-			issues = Issue.joins(:project).where("tracker_id = ? AND projects.status = ? AND YEAR(issues.created_on) >= ?", tracker_id, 1, Date.today.year)
+			issues = Issue.joins(:project).where("tracker_id = ? AND projects.status = ? AND YEAR(issues.created_on) >= ?", tracker_id, 1, Date.today.year-2)
 
 			issues.each do |issue|
 				headers = []
