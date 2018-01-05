@@ -1,6 +1,6 @@
 require 'csv'
 CF_SERVICIO_ID = 102
-CF_REGION_ID = 166
+CF_LOCALIZACION_ID = 166
 CF_UNEGOCIO_ID = 275 
 CF_RESP_PRODUCCION = 276
 CF_RESP_NEGOCIO = 277
@@ -56,16 +56,16 @@ namespace :bsc2 do
 					result << u.login
 					result << p.name
 					result << p.identifier
-					result << p.custom_values.find_by(custom_field_id: CF_REGION_ID).value
-					result << p.custom_values.find_by(custom_field_id: CF_SERVICIO_ID).value
-					result << p.custom_values.find_by(custom_field_id: CF_UNEGOCIO_ID).value
-					cf = p.custom_values.find_by(custom_field_id: CF_RESP_PRODUCCION)
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_LOCALIZACION_ID).first) ? (cf.present? ? cf.value : '') : 0
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SERVICIO_ID).first) ? (cf.present? ? cf.value : '') : 0
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : 0
+					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RESP_PRODUCCION).first
 					if cf.present? and cf.value.present?
 						result << User.find(cf.value).login
 					else
 						result << ''
 					end
-					cf = p.custom_values.find_by(custom_field_id: CF_RESP_NEGOCIO)
+					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RESP_NEGOCIO).first
 					if cf.present? and cf.value.present?
 						result << User.find(cf.value).login
 					else
