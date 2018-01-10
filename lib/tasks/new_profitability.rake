@@ -33,7 +33,7 @@ namespace :bsc2 do
 					metrics = BSC::MetricsInterval.new(p.id, Date.parse(year.to_s+"-01-01"), Date.parse(year.to_s+"-12-31"), {:descendants => include_descendants})
 				end
 
-				if maux.total_income_scheduled != 0 or maux.variable_expense_scheduled > 0 or maux.hhrr_cost_incurred > 0 or maux.fixed_expense_scheduled > 0 or (start_year <= Date.today.year and end_year >= Date.today.year)
+				if maux.total_income_scheduled != 0 or maux.variable_expense_scheduled != 0 or maux.hhrr_cost_incurred != 0 or maux.fixed_expense_scheduled != 0 or (start_year <= Date.today.year and end_year >= Date.today.year)
 					puts "Atributos del proyecto"
 					headers = []
 					result = []
@@ -72,7 +72,7 @@ namespace :bsc2 do
 					headers << "ultimo punto de control"
 					result << (p.last_checkpoint ? p.last_checkpoint.checkpoint_date : "-")
 					headers << "fecha de fin"
-					result << metrics.scheduled_finish_date
+					result << maux.scheduled_finish_date
 					puts "MC"
 					headers << "mc incurrido"
 					result << metrics.total_income_incurred - metrics.total_expense_incurred
