@@ -80,7 +80,7 @@ namespace :bsc2 do
 			end
 		end
 
-		generate_csv("time_entries", results)
+		generate_csv("time_entries_current_year", results)
 	end
 
 	def checkpoints
