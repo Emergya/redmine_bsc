@@ -31,6 +31,7 @@
       <th><%=l(:field_target_expenses)%>:</th><td><%= @checkpoint.target_expenses %></td>
     </tr>
     <tr>
+      <th><%=l(:field_achievement_percentage)%>:</th><td><%= @checkpoint.achievement_percentage %> %</td>
       <th><%=l(:field_scheduled_qa_meetings)%>:</th><td><%= @checkpoint.held_qa_meetings %></td>
     </tr>
     <% @profiles.each_slice(2) do |profiles| %>

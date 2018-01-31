@@ -13,6 +13,7 @@ es:
   field_base_line: Linea base
   field_target_margin: Margen objetivo
   field_target_expenses: Coste objetivo
+  field_achievement_percentage: % Consecución
 
   field_scheduled_effort: Esfuerzo previsto
 
