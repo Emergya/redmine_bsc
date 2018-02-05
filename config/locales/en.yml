@@ -13,7 +13,7 @@ en:
   field_base_line: Base line
   field_target_margin: Target margin
   field_target_expenses: Target expenses
-  field_achievement_percentage: % Achievement
+  field_achievement_percentage: "% Achievement"
 
   field_scheduled_effort: Scheduled effort
 
