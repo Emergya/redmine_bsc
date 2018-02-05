@@ -25,6 +25,9 @@ CF_TERCEROS = 271
 CF_NUM_FACTURA = 204
 CF_FECHA_COBRO = 154
 
+CF_JP_ID = 276
+CF_GCUENTAS_ID = 277
+
 
 
 namespace :bsc2 do
@@ -54,14 +57,14 @@ namespace :bsc2 do
 				headers << "unidad negocio"
 				result << (cf = issue.project.custom_values.where(custom_field_id: CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : ''
 				headers << "responsable producción"
-				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_JP_ID).first
+				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", issue.project_id, CF_JP_ID).first
 				if cf.present? and cf.value.present?
 					result << User.find(cf.value).login
 				else
 					result << ''
 				end
 				headers << "responsable negocio"
-				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_GCUENTAS_ID).first
+				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", issue.project_id, CF_GCUENTAS_ID).first
 				if cf.present? and cf.value.present?
 					result << User.find(cf.value).login
 				else
