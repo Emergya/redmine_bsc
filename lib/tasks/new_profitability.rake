@@ -19,7 +19,7 @@ namespace :bsc2 do
 		results = [[]]
 
 		projects.each do |p|
-			puts "#{p}"
+			puts "#{p.identifier}"
 			maux = BSC::MetricsInterval.new(p.id, Date.parse(Date.today.year.to_s+"-01-01"), Date.parse(Date.today.year.to_s+"-12-31"), {:descendants => false})
 			include_descendants = (p.bsc_end_date.present? and (p.parent_id != ARCHIVADOS_PROJECT_ID or maux.hhrr_hours_incurred_by_profile.reject{|k,v| k==nil}.present?) )
 
@@ -131,6 +131,9 @@ namespace :bsc2 do
 						headers << income.downcase+" restante"
 						result << (metrics.variable_income_scheduled_by_tracker[income] || 0.0) - (metrics.variable_income_incurred_by_tracker[income] || 0.0)
 					end
+					headers << "%consecución"
+					result << ((p.last_checkpoint.present? and p.last_checkpoint.achievement_percentage.present?) ? p.last_checkpoint.achievement_percentage : p.issues.map(&:done_ratio).sum/p.issues.count.to_f)
+						# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 
 					results << result
 				end
