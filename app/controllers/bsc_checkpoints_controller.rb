@@ -2,6 +2,7 @@ class BscCheckpointsController < ApplicationController
 	before_filter :find_project_by_project_id, :authorize
   before_filter :get_profiles, :only => [:new, :edit, :show]
   before_filter :find_checkpoint, :only => [:show, :edit, :update, :destroy]
+  before_filter :has_bsc_project_info
 	
   menu_item :bsc
 	helper :bsc
@@ -102,5 +103,12 @@ class BscCheckpointsController < ApplicationController
 
   def checkpoint_params
     params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :scheduled_finish_date, :held_qa_meetings, :base_line, :target_margin, :target_expenses, :achievement_percentage, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number])
+  end
+
+  def has_bsc_project_info
+    unless @project.bsc_info.present?
+      deny_access
+      return
+    end
   end
 end
