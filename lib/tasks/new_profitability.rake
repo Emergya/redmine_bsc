@@ -23,15 +23,7 @@ namespace :bsc2 do
 			maux = BSC::MetricsInterval.new(p.id, Date.parse(Date.today.year.to_s+"-01-01"), Date.parse(Date.today.year.to_s+"-12-31"), {:descendants => false})
 			include_descendants = (p.bsc_end_date.present? and (p.parent_id != ARCHIVADOS_PROJECT_ID or maux.hhrr_hours_incurred_by_profile.reject{|k,v| k==nil}.present?) )
 
-			start_date_by_planned_end_date = []
-			(BSC::Integration.get_expense_trackers + BSC::Integration.get_income_trackers).each do |tracker|
-				planned_end_date = tracker.ie_income_expense.planned_end_date_field.to_i
-				start_date_by_planned_end_date += p.issues.where(tracker_id: tracker.id).map{|i| i.custom_value_for(planned_end_date).present? ? i.custom_value_for(planned_end_date).value : nil}
-			end
-			start_date_by_planned_end_date = start_date_by_planned_end_date.compact.present? ? start_date_by_planned_end_date.compact.min.to_date.year : Date.today.year+10
-
-
-			start_year = maux.scheduled_start_date ? maux.scheduled_start_date.year : [maux.real_start_date.year, start_date_by_planned_end_date].min
+			start_year = maux.scheduled_start_date ? maux.scheduled_start_date.year : maux.real_start_date.year
 			end_year = maux.scheduled_finish_date ? maux.scheduled_finish_date.year : maux.real_finish_date.year
 
 			(["total"]+Array(start_year..end_year)).each do |year|

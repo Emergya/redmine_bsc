@@ -369,11 +369,37 @@ module BSC
 		end
 
 		def real_finish_date
-        	@real_finish_date ||= [@projects.map{|p| p.issues.maximum(:created_on)}.max, @projects.map{|p| p.time_entries.maximum(:created_on)}.max, scheduled_finish_date].compact.max.to_date rescue Date.today
+        	@real_finish_date ||= 
+        	(end_date_by_planned_end_date = []
+        	(BSC::Integration.get_expense_trackers + BSC::Integration.get_income_trackers).each do |tracker|
+				planned_end_date = tracker.ie_income_expense.planned_end_date_field.to_i
+				@projects.each do |p|
+					end_date_by_planned_end_date += p.issues.where(tracker_id: tracker.id).map{|i| i.custom_value_for(planned_end_date).present? ? i.custom_value_for(planned_end_date).value : nil}
+				end
+			end
+			end_date_by_planned_end_date = end_date_by_planned_end_date.compact.present? ? end_date_by_planned_end_date.compact.max.to_date : nil
+
+			end_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:created_on)}.compact.max
+			end_date_by_issues = @projects.map{|p| p.issues.minimum(:created_on)}.compact.max
+
+        	[end_date_by_time_entries, end_date_by_issues, end_date_by_planned_end_date, scheduled_finish_date].compact.max.to_date rescue Date.today)
 		end
 
 		def real_start_date
-        	@real_start_date ||= [@projects.map{|p| p.issues.minimum(:created_on)}.min, @projects.map{|p| p.time_entries.minimum(:created_on)}.min, scheduled_start_date].compact.min.to_date rescue @projects.map(&:created_on).min.to_date
+			@real_start_date ||= 
+			(start_date_by_planned_end_date = []
+			(BSC::Integration.get_expense_trackers + BSC::Integration.get_income_trackers).each do |tracker|
+				planned_end_date = tracker.ie_income_expense.planned_end_date_field.to_i
+				@projects.each do |p|
+					start_date_by_planned_end_date += p.issues.where(tracker_id: tracker.id).map{|i| i.custom_value_for(planned_end_date).present? ? i.custom_value_for(planned_end_date).value : nil}
+				end
+			end
+			start_date_by_planned_end_date = start_date_by_planned_end_date.compact.present? ? start_date_by_planned_end_date.compact.min.to_date : nil
+
+			start_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:created_on)}.compact.min
+			start_date_by_issues = @projects.map{|p| p.issues.minimum(:created_on)}.compact.min
+
+     		[start_date_by_time_entries, start_date_by_issues, start_date_by_planned_end_date, scheduled_start_date].compact.min.to_date rescue @projects.map(&:created_on).min.to_date)
 		end
 
 		def expenses_target
