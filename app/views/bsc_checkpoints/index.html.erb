@@ -13,7 +13,7 @@
         <%= content_tag('th', t(:"bsc.label_effort")) %>
         <%= content_tag('th', t(:field_scheduled_finish_date)) %>
         <%= content_tag('th', t(:field_held_qa_meetings)) %>
-        <%= content_tag('th', t(:field_target_margin)) %>
+        <%= content_tag('th', t(:field_target_incomes)) %>
         <%= content_tag('th', t(:field_target_expenses)) %>
         <%= content_tag('th', t(:field_achievement_percentage)) %>
         <%= content_tag('th', t(:field_base_line)) %>
@@ -26,7 +26,7 @@
         <%= content_tag 'td', hours(checkpoint.bsc_checkpoint_efforts.reduce(0.0){ |sum, effort| sum += effort.scheduled_effort }) %>
         <%= content_tag 'td', checkpoint.scheduled_finish_date %>
         <%= content_tag 'td', checkpoint.held_qa_meetings %>
-        <%= content_tag 'td', checkpoint.target_margin.to_s+'%' %>
+        <%= content_tag 'td', checkpoint.target_incomes %>
         <%= content_tag 'td', checkpoint.target_expenses %>
         <%= content_tag 'td', checkpoint.achievement_percentage.to_s+'%' %>
         <%= content_tag 'td', if checkpoint.base_line 

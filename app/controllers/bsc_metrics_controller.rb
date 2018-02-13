@@ -57,6 +57,8 @@ class BscMetricsController < ApplicationController
 			@target_margin = data[:target_margin]
 			@scheduled_expenses = data[:scheduled_expenses]
 			@target_expenses = data[:target_expenses]
+			@scheduled_incomes = data[:scheduled_incomes]
+			@target_incomes = data[:target_incomes]
 			@incomes_trackers = BSC::Integration.get_income_trackers
 			@expenses_trackers = BSC::Integration.get_expense_trackers
 		when 'effort'

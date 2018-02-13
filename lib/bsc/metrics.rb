@@ -341,7 +341,7 @@ module BSC
 			@margin_target ||= 
 			(if @projects.count == 1
 				if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
-					last_checkpoint.target_margin
+					100.0 * (last_checkpoint.target_incomes - last_checkpoint.target_expenses) / last_checkpoint.target_incomes
 				else
 					0.0
 				end
@@ -415,6 +415,24 @@ module BSC
 				@projects.each do |p|
 					aux_metric = Metrics.new(p, @date, {:descendants => false})
 					result += aux_metric.expenses_target
+				end
+				result
+			end)
+		end
+
+		def incomes_target
+			@incomes_target ||=
+			(if @projects.count == 1
+				if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+					last_checkpoint.target_incomes
+				else
+					0.0
+				end
+			else
+				result = 0.0
+				@projects.each do |p|
+					aux_metric = Metrics.new(p, @date, {:descendants => false})
+					result += aux_metric.incomes_target
 				end
 				result
 			end)

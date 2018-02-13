@@ -14,6 +14,7 @@ en:
   field_target_margin: Target margin
   field_target_expenses: Target expenses
   field_achievement_percentage: "% Achievement"
+  field_target_incomes: Target incomes
 
   field_scheduled_effort: Scheduled effort
 
@@ -44,6 +45,8 @@ en:
     label_target_margin: Target margin
     label_scheduled_expenses: Scheduled expenses
     label_target_expenses: Target expenses
+    label_scheduled_incomes: Scheduled incomes
+    label_target_incomes: Target incomes
     label_mc: CM
     label_incomes: Incomes
     label_expenses: Expenses

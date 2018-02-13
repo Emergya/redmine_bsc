@@ -34,6 +34,23 @@
         </div>
       </div>
     </div>
+
+    <div class="panel panel-default panel-highlight">
+      <div class="panel-heading">
+        <div class="panel_name"><%=l(:"bsc.label_incomes")%></div>
+      </div>
+      <div class="panel-body">
+        <div class="highlight_metric">
+          <div class="name"><%=l(:"bsc.label_scheduled_incomes")%></div>
+          <div class="value"><%=currency(@scheduled_incomes)%></div>
+        </div>
+        <hr>
+        <div class="highlight_metric">
+          <div class="name"><%=l(:"bsc.label_target_incomes")%></div>
+          <div class="value"><%=currency(@target_incomes)%></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="col-md-9">
