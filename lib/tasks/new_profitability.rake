@@ -11,6 +11,9 @@ CF_SERVICIO_ID = 102
 CF_LOCALIZACION_ID = 166
 CF_JP_ID = 276
 CF_GCUENTAS_ID = 277
+CF_EXPEDIENTE_ID = 26
+CF_INICO_GARANTIA_ID = 264
+CF_FIN_GARANTIA_ID = 265
 
 namespace :bsc2 do
 	task :generate_csv => :environment do
@@ -123,10 +126,22 @@ namespace :bsc2 do
 						headers << income.downcase+" restante"
 						result << (metrics.variable_income_scheduled_by_tracker[income] || 0.0) - (metrics.variable_income_incurred_by_tracker[income] || 0.0)
 					end
-					headers << "%consecución"
-					result << ((p.last_checkpoint.present? and p.last_checkpoint.achievement_percentage.present?) ? p.last_checkpoint.achievement_percentage : p.issues.map(&:done_ratio).sum/p.issues.count.to_f)
-						# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
+					headers << "%consecución (puntos de control)"
+					result << ((p.last_checkpoint.present? and p.last_checkpoint.achievement_percentage.present?) ? p.last_checkpoint.achievement_percentage : "-")
+					headers << "%consecución (avance peticiones)"
+					result << ((year == 'total') ? p.issues.map(&:done_ratio).sum/p.issues.count.to_f : '-')
+					headers << "expediente"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_EXPEDIENTE_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "inicio garantía"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_INICO_GARANTIA_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "fin garantía"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_FIN_GARANTIA_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "fecha comienzo planificada"
+					result << metrics.scheduled_start_date
+					headers << "fecha comienzo real"
+					result << metrics.real_start_date
 
+						# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result
 				end
 				results[0] = headers
