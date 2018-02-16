@@ -341,7 +341,8 @@ module BSC
 			@margin_target ||= 
 			(if @projects.count == 1
 				if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
-					100.0 * (last_checkpoint.target_incomes - last_checkpoint.target_expenses) / last_checkpoint.target_incomes
+					res = (100.0 * (last_checkpoint.target_incomes - last_checkpoint.target_expenses) / last_checkpoint.target_incomes)
+					!res.nan? ? res : 0.0
 				else
 					0.0
 				end
