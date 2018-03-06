@@ -57,7 +57,8 @@ namespace :bsc2 do
 		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"]
 
 		results = [headers]
-		users = User.active
+		# users = User.active
+		users = User.find(TimeEntry.where(tyear: Date.today.year).distinct(:user_id).map(&:user_id))
 
 		users.each do |u|
 			projects = u.projects.active
@@ -158,7 +159,7 @@ namespace :bsc2 do
 
 		results = [headers]
 		# users = User.active
-		users = User.find(TimeEntry.where(tyear: Date.today.year).distinct(:user_id).map(&:user_id))
+		users = User.all
 
 		users.each do |u|
 			projects = u.projects.active
