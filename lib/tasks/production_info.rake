@@ -157,7 +157,8 @@ namespace :bsc2 do
 		end
 
 		results = [headers]
-		users = User.active
+		# users = User.active
+		users = User.find(TimeEntry.where(tyear: Date.today.year).distinct(:user_id).map(&:user_id))
 
 		users.each do |u|
 			projects = u.projects.active
