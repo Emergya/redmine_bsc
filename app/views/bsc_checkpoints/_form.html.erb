@@ -1,3 +1,8 @@
+<% content_for :header_tags do %>
+  <%= javascript_include_tag "checkpoint_form", :plugin => 'redmine_bsc' %>
+  <%= stylesheet_link_tag "checkpoint_form", :plugin => 'redmine_bsc' %>  
+<% end %>
+
 <div class="splitcontentleft">
   <p><%= f.text_field :checkpoint_date, :size => 10, :required => true %><%= calendar_for('checkpoint_checkpoint_date') %></p>
   <p><%= f.text_field :scheduled_finish_date, :size => 10, :required => true %><%= calendar_for('checkpoint_scheduled_finish_date') %></p>
@@ -10,26 +15,78 @@
   <p><%= f.text_field :achievement_percentage, :size => 3, :required => true %> %</p>
 </div>
 <div style="clear:both;"></div>
-<% if @profiles.length > 0
-     profiles = @profiles.dup
-     profiles.push nil if profiles.length.odd?
-     columns = profiles.each_slice(2).to_a.transpose
-     columns[-1].pop if columns[-1][-1].nil? %>
-  <% ["splitcontentleft", "splitcontentright"].each_with_index do |css_class, i| %>
-    <div class="<%= css_class %>">
-      <% columns[i].each do |profile| %>
-        <p>
-          <%= label_tag "checkpoint_scheduled_profile_effort_#{profile.name}",
-                        l(:"bsc.label_scheduled_profile_effort", :profile => profile.name).html_safe + '<span class="required"> *</span>'.html_safe %>
-          <%= hidden_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][id]", @checkpoint.scheduled_profile_effort_id(profile.id) %>
-          <%= hidden_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][hr_profile_id]", profile.id %>
-          <%= text_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][scheduled_effort]", @checkpoint.scheduled_profile_effort(profile.id), :size => 10 %>
-          <%= l(:"bsc.label_profile_plural") %>
-          <%= text_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][number]", @checkpoint.scheduled_profile_number(profile.id), :size => 1 %>
-        </p>
+<% if @profiles.length > 0 %>
+    <div class="checkpoint_column">
+    <% @profiles.each do |profile| %>
+      <div class="checkpoint_cell"><b><%=profile.name%></b></div>
+    <% end %>
+    <div class="checkpoint_cell"><b>Total</b></div>
+    <div class="checkpoint_cell"><b>Anterior</b></div>
+    <div class="checkpoint_cell"><b>Diferencia</b></div>
+
+    </div>
+    <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
+      <div class="checkpoint_column">
+        <div class="checkpoint_cell"><b><%=year%></b></div>
+      <% @profiles.each do |profile| %>
+        <div class="checkpoint_cell">
+          <%= render :partial => 'year', :locals => {:checkpoint => @checkpoint, :profile => profile, :year => year} %>      
+        </div>
       <% end %>
+        <!-- Total row -->
+        <div class="checkpoint_cell" data-total="year" data-year="<%=year%>">
+          <%#=@checkpoint.scheduled_profile_effort_year(year).values.sum.round(2)%>
+        </div>
+        <!-- Total anterior row -->
+        <% if @last_checkpoint.present? %>
+          <div class="checkpoint_cell" data-total="old" data-year="<%=year%>"><%=@last_checkpoint.scheduled_profile_effort_year(year).values.sum.round(2)%></div>
+        <% else %>
+          <div class="checkpoint_cell" data-total="old" data-year="<%=year%>">0.0</div>
+        <% end %>
+        <!-- Difference row -->
+        <div class="checkpoint_cell" data-total="diff" data-year="<%=year%>"></div>
     </div>
   <% end %>
+
+  <!-- Total column -->
+  <div class="checkpoint_column">
+    <div class="checkpoint_cell"><b>Total</b></div>
+    <% @profiles.each do |profile| %>
+      <div class="checkpoint_cell" data-total="profile" data-profile="<%=profile.id%>">
+        <%#= @checkpoint.scheduled_profile_effort(profile.id).values.sum.round(2) %>
+      </div>
+    <% end %>
+    <div class="checkpoint_cell" data-total="total"></div>
+    <div class="checkpoint_cell"></div>
+    <div class="checkpoint_cell"></div>
+  </div>
+  <!-- Total anterior column -->
+  <div class="checkpoint_column">
+    <div class="checkpoint_cell"><b>Anterior</b></div>
+    <% @profiles.each do |profile| %>
+      <% if @last_checkpoint.present? %>
+        <div class="checkpoint_cell" data-total="old" data-profile="<%=profile.id%>"><%=@last_checkpoint.scheduled_profile_effort(profile.id).values.sum.round(2)%></div>
+      <% else %>
+        <div class="checkpoint_cell" data-total="old" data-profile="<%=profile.id%>">0.0</div>
+      <% end %>
+    <% end %>
+    <div class="checkpoint_cell" data-total="total_old">
+      <%=@last_checkpoint.scheduled_effort.round(2)%>
+    </div>
+    <div class="checkpoint_cell"></div>
+    <div class="checkpoint_cell"></div>
+  </div>
+  <!-- Diferencia column -->
+  <div class="checkpoint_column">
+    <div class="checkpoint_cell"><b>Diferencia</b></div>
+    <% @profiles.each do |profile| %>
+      <div class="checkpoint_cell" data-total="diff" data-profile="<%=profile.id%>"></div>
+    <% end %>
+    <div class="checkpoint_cell" data-total="total_diff"></div>
+    <div class="checkpoint_cell"></div>
+    <div class="checkpoint_cell"></div>
+  </div>
+  
   <div style="clear:both;"></div>
 <% end %>
 <p><%= f.text_area :description,

@@ -33,6 +33,8 @@ class BscCheckpointsController < ApplicationController
     @profiles.each do |profile|
       @checkpoint.bsc_checkpoint_efforts.build :hr_profile_id => profile.id
     end
+
+    @last_checkpoint = @project.last_checkpoint
   end
 
   def create
@@ -57,6 +59,7 @@ class BscCheckpointsController < ApplicationController
   def edit
     @journal = @checkpoint.current_journal
     @first_checkpoint = (@project.first_checkpoint == @checkpoint)
+    @last_checkpoint = BscCheckpoint.where("project_id = ? AND checkpoint_date < ?", @project.id, @checkpoint.checkpoint_date).order("checkpoint_date DESC").first
   end
 
   def update
@@ -102,7 +105,7 @@ class BscCheckpointsController < ApplicationController
   end
 
   def checkpoint_params
-    params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :scheduled_finish_date, :held_qa_meetings, :base_line, :target_expenses, :target_incomes, :achievement_percentage, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number])
+    params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :scheduled_finish_date, :held_qa_meetings, :base_line, :target_expenses, :target_incomes, :achievement_percentage, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number, :year])
   end
 
   def has_bsc_project_info

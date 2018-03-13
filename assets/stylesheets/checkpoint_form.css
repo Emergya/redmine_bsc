@@ -1,0 +1,6 @@
+.checkpoint_cell {
+  height:30px; padding:10px; overflow: hidden;
+}
+.checkpoint_column {
+  display:inline-block;
+}
