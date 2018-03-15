@@ -7,7 +7,7 @@ namespace :bsc do
 
 		projects.each do |project|
 			puts "Enable module"
-			Project.find(project).enable_module!('bscplugin')
+			# Project.find(project).enable_module!('bscplugin')
 
 			BscMc.record_date(project, Date.yesterday, Date.yesterday)
 			BscEffort.record_date(project, Date.yesterday, Date.yesterday)
