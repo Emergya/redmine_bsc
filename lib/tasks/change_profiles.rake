@@ -16,11 +16,11 @@ namespace :bsc do
 				efforts.each do |effort|
 					puts "#{effort.inspect}"
 					remaining_effort = effort.scheduled_effort - incurred[effort.hr_profile_id]
+					effort.scheduled_effort = incurred_2017[effort.hr_profile_id]
 					if remaining_effort > 0
-						effort.scheduled_effort = incurred_2017[effort.hr_profile_id]
 						BscCheckpointEffort.create({bsc_checkpoint_id: last_checkpoint.id, hr_profile_id: new_profile[effort.hr_profile_id], scheduled_effort: remaining_effort, number: effort.number})
-						effort.save
 					end
+					effort.save
 				end
 			end
 		end
