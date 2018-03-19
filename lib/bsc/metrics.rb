@@ -397,7 +397,8 @@ module BSC
 			end
 			start_date_by_planned_end_date = start_date_by_planned_end_date.compact.present? ? start_date_by_planned_end_date.compact.min.to_date : nil
 
-			start_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:created_on)-1.day}.compact.min
+			start_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:created_on)}.compact.min
+			start_date_by_time_entries = start_date_by_time_entries.present? ? start_date_by_time_entries - 1.day : start_date_by_time_entries
 			start_date_by_issues = @projects.map{|p| p.issues.minimum(:created_on)}.compact.min
 
      		[start_date_by_time_entries, start_date_by_issues, start_date_by_planned_end_date, scheduled_start_date].compact.min.to_date rescue @projects.map(&:created_on).min.to_date)
