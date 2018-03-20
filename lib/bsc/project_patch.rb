@@ -26,6 +26,14 @@ module BSC
         end
       end
 
+      def real_last_checkpoint
+        begin
+          bsc_checkpoints.order('checkpoint_date DESC').first
+        rescue
+          nil
+        end
+      end
+
       def bsc_start_date
         begin
           bsc_info.scheduled_start_date

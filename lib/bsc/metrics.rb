@@ -407,7 +407,8 @@ module BSC
 		def expenses_target
 			@expenses_target ||=
 			(if @projects.count == 1
-				if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+				# if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+				if (last_checkpoint = @projects.first.real_last_checkpoint).present?
 					last_checkpoint.target_expenses
 				else
 					0.0
@@ -425,7 +426,8 @@ module BSC
 		def incomes_target
 			@incomes_target ||=
 			(if @projects.count == 1
-				if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+				# if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+				if (last_checkpoint = @projects.first.real_last_checkpoint).present?
 					last_checkpoint.target_incomes
 				else
 					0.0
