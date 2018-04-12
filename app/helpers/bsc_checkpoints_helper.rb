@@ -81,6 +81,9 @@ module BscCheckpointsHelper
       field = detail.prop_key.to_s.gsub(/\_id$/, "")
       label = l(("field_" + field).to_sym)
       case detail.prop_key
+      when 'scheduled_profile_effort'
+        profiles = Hash.new('Unknwon').merge(HrProfile.all.map{|p| [p.id, p.name]}.to_h)
+        detail.value = eval(detail.value).map{|k, v| [profiles[k], v] }.to_h
       when 'due_date', 'start_date'
         value = format_date(detail.value.to_date) if detail.value
         old_value = format_date(detail.old_value.to_date) if detail.old_value

@@ -93,12 +93,12 @@ class BscCheckpoint < ActiveRecord::Base
   def create_journal
     if @current_journal
       # attributes changes
-      self.changes.each do |c, value|
-        @current_journal.details << JournalDetail.new(:property => 'attr',
-                                                      :prop_key => c,
-                                                      :old_value => value[0],
-                                                      :value => value[1])
-      end
+      # self.changes.each do |c, value|
+      #   @current_journal.details << JournalDetail.new(:property => 'attr',
+      #                                                 :prop_key => c,
+      #                                                 :old_value => value[0],
+      #                                                 :value => value[1])
+      # end
 
       # scheduled profile effort
       unless scheduled_profile_effort_hash == @scheduled_profile_effort_hash_before_change
