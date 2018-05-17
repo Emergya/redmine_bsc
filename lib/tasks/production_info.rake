@@ -61,10 +61,10 @@ namespace :bsc2 do
 
 		results = [headers]
 		# users = User.active
-		users = User.find(TimeEntry.where(tyear: Date.today.year).distinct(:user_id).map(&:user_id))
+		users = User.find(TimeEntry.where(tyear: year).distinct(:user_id).map(&:user_id))
 
 		users.each do |u|
-			projects = u.projects.active
+			projects = Project.find(TimeEntry.where(user_id: u.id, tyear: year).distinct(:project_id).map(&:project_id)) #u.projects.active
 
 			projects.each do |p|
 				te = TimeEntry.where(user_id: u.id, project_id: p.id, tyear: year)
@@ -165,7 +165,8 @@ namespace :bsc2 do
 		users = User.all
 
 		users.each do |u|
-			projects = u.projects.active
+			# projects = u.projects.active
+			projects = Project.find(TimeEntry.where(user_id: u.id).distinct(:project_id).map(&:project_id))
 
 			projects.each do |p|
 				te = TimeEntry.where(user_id: u.id, project_id: p.id)
