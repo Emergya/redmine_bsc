@@ -103,6 +103,17 @@ module BSC
 			total) 
 		end
 
+		def hhrr_cost_scheduled_remaining_by_profile
+			(hourly_cost_by_profile = Hash.new(0.0).merge(BSC::Integration.get_hourly_cost_array(@date.year))
+			hours_incurred_by_profile = Hash.new(0.0).merge(all_hhrr_hours_incurred_by_profile)
+			result = Hash.new(0.0)
+			all_hhrr_hours_scheduled_by_profile.each do |profile, effort|
+				# Si hay más horas incurridas que estimadas para un perfil, se considera estimadas = incurridas para ese perfil
+				result[profile] += (effort - hours_incurred_by_profile[profile]) * hourly_cost_by_profile[profile]
+			end
+			result) 
+		end
+
 		def hhrr_cost_scheduled
 			@hhrr_cost_scheduled ||= 
 			(total = hhrr_cost_incurred
@@ -115,8 +126,22 @@ module BSC
 			total)
 		end
 
-		# def hhrr_cost_scheduled_by_profile
-		# end
+		def hhrr_cost_scheduled_by_profile
+			@hhrr_cost_scheduled_by_profile ||= 
+			(if @hr_plugin
+				result = hhrr_cost_incurred_by_profile
+				scheduled_remaining = hhrr_cost_scheduled_remaining_by_profile
+
+				scheduled_remaining.each do |profile, effort|
+					if effort > 0
+						result[profile] += effort
+					end
+				end
+				result
+			else
+				{}
+			end)
+		end
 
 		def hhrr_cost_incurred
 			@hhrr_cost_incurred ||= 
@@ -398,6 +423,7 @@ module BSC
 			start_date_by_planned_end_date = start_date_by_planned_end_date.compact.present? ? start_date_by_planned_end_date.compact.min.to_date : nil
 
 			start_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:created_on)}.compact.min
+			start_date_by_time_entries = start_date_by_time_entries.present? ? start_date_by_time_entries - 1.day : start_date_by_time_entries
 			start_date_by_issues = @projects.map{|p| p.issues.minimum(:created_on)}.compact.min
 
      		[start_date_by_time_entries, start_date_by_issues, start_date_by_planned_end_date, scheduled_start_date].compact.min.to_date rescue @projects.map(&:created_on).min.to_date)
@@ -406,7 +432,8 @@ module BSC
 		def expenses_target
 			@expenses_target ||=
 			(if @projects.count == 1
-				if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+				# if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+				if (last_checkpoint = @projects.first.real_last_checkpoint).present?
 					last_checkpoint.target_expenses
 				else
 					0.0
@@ -424,7 +451,8 @@ module BSC
 		def incomes_target
 			@incomes_target ||=
 			(if @projects.count == 1
-				if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+				# if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
+				if (last_checkpoint = @projects.first.real_last_checkpoint).present?
 					last_checkpoint.target_incomes
 				else
 					0.0

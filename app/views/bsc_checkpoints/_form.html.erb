@@ -64,14 +64,20 @@
   <div class="checkpoint_column">
     <div class="checkpoint_cell"><b>Anterior</b></div>
     <% @profiles.each do |profile| %>
-      <% if @last_checkpoint.present? %>
-        <div class="checkpoint_cell" data-total="old" data-profile="<%=profile.id%>"><%=@last_checkpoint.scheduled_profile_effort(profile.id).values.sum.round(2)%></div>
-      <% else %>
-        <div class="checkpoint_cell" data-total="old" data-profile="<%=profile.id%>">0.0</div>
-      <% end %>
+      <div class="checkpoint_cell" data-total="old" data-profile="<%=profile.id%>">
+        <% if @last_checkpoint.present? %>
+          <%=@last_checkpoint.scheduled_profile_effort(profile.id).values.sum.round(2)%>
+        <% else %>
+          0.0
+        <% end %>
+      </div>
     <% end %>
     <div class="checkpoint_cell" data-total="total_old">
-      <%=@last_checkpoint.scheduled_effort.round(2)%>
+      <% if @last_checkpoint.present? %>
+        <%=@last_checkpoint.scheduled_effort.round(2)%>
+      <% else %>
+        0.0
+      <% end %>
     </div>
     <div class="checkpoint_cell"></div>
     <div class="checkpoint_cell"></div>

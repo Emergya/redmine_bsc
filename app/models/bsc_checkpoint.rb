@@ -67,22 +67,22 @@ class BscCheckpoint < ActiveRecord::Base
 
   def scheduled_profile_number(profile_id)
     efforts = bsc_checkpoint_efforts.select{ |effort| effort.hr_profile_id == profile_id }
-    efforts.present? ? efforts.map{|e| {e.year => e.number}}.reduce(:merge) : Hash.new(0.0)
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.year => e.number}}.reduce(:merge)) : Hash.new(0.0)
   end
 
   def scheduled_profile_number_year(year)
     efforts = bsc_checkpoint_efforts.select{ |effort| effort.year == year }
-    efforts.present? ? efforts.map{|e| {e.hr_profile_id => e.number}}.reduce(:merge) : Hash.new(0.0)
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.hr_profile_id => e.number}}.reduce(:merge)) : Hash.new(0.0)
   end
 
   def scheduled_profile_effort(profile_id)
     efforts = bsc_checkpoint_efforts.select{ |effort| effort.hr_profile_id == profile_id }
-    efforts.present? ? efforts.map{|e| {e.year => e.scheduled_effort}}.reduce(:merge) : Hash.new(0.0)
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.year => e.scheduled_effort}}.reduce(:merge)) : Hash.new(0.0)
   end
 
   def scheduled_profile_effort_year(year)
     efforts = bsc_checkpoint_efforts.select{ |effort| effort.year == year }
-    efforts.present? ? efforts.map{|e| {e.hr_profile_id => e.scheduled_effort}}.reduce(:merge) : Hash.new(0.0)
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.hr_profile_id => e.scheduled_effort}}.reduce(:merge)) : Hash.new(0.0)
   end
 
   def scheduled_profile_effort_id(profile_id)

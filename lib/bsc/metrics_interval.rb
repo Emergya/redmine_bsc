@@ -11,7 +11,15 @@ module BSC
 		def hhrr_hours_scheduled
 			@hhrr_hours_scheduled ||= 
 			(begin
-				super * ([@end_date, scheduled_finish_date, Date.today].min - [@start_date, scheduled_start_date].max) / (scheduled_finish_date - scheduled_start_date)
+				result = 0.0
+				(@start_date.year..@end_date.year).each do |year|
+					@projects.each do |project|
+						if (last_checkpoint = project.last_checkpoint(@date)).present?
+							result += last_checkpoint.scheduled_profile_effort_year(year).values.sum * (([@end_date, scheduled_finish_date, "#{year}-12-31".to_date].min - [@start_date, scheduled_start_date, "#{year}-01-01".to_date].max) / ([scheduled_finish_date, "#{year}-12-31".to_date].min - [scheduled_start_date, "#{year}-01-01".to_date].max))
+						end
+					end
+				end
+				result
 			rescue
 				0.0
 			end)
@@ -20,13 +28,19 @@ module BSC
 		def hhrr_hours_scheduled_by_profile
 			@hhrr_hours_scheduled_by_profile ||= 
 			(begin
-				result = {}
-				super.each do |profile, hours|
-					result[profile] = hours * ([@end_date, scheduled_finish_date, Date.today].min - [@start_date, scheduled_start_date].max) / (scheduled_finish_date - scheduled_start_date)
+				result = Hash.new(0.0)
+				(@start_date.year..@end_date.year).each do |year|
+					@projects.each do |project|
+						if (last_checkpoint = project.last_checkpoint(@date)).present?
+							last_checkpoint.scheduled_profile_effort_year(year).each do |profile, hours|
+								result[profile] += hours * (([@end_date, scheduled_finish_date, "#{year}-12-31".to_date].min - [@start_date, scheduled_start_date, "#{year}-01-01".to_date].max) / ([scheduled_finish_date, "#{year}-12-31".to_date].min - [scheduled_start_date, "#{year}-01-01".to_date].max))
+							end
+						end
+					end
 				end
 				result
 			rescue
-				{}
+				Hash.new(0.0)
 			end)
 		end
 
@@ -49,14 +63,24 @@ module BSC
 
 
 # HHRR Cost
+		def hhrr_cost_scheduled_remaining
+			#@hhrr_cost_scheduled_remaining ||=
+			(hourly_cost_by_profile = Hash.new(0.0).merge(BSC::Integration.get_hourly_cost_array(@date.year))
+			hours_incurred_by_profile = Hash.new(0.0).merge(hhrr_hours_incurred_by_profile)
+			total = 0.0
+			hhrr_hours_scheduled_by_profile.each do |profile, effort|
+				# Si hay más horas incurridas que estimadas para un perfil, se considera estimadas = incurridas para ese perfil
+				total += (effort - hours_incurred_by_profile[profile]) * hourly_cost_by_profile[profile]
+			end
+			total) 
+		end
+
 		def hhrr_cost_scheduled
 			@hhrr_cost_scheduled ||=
-			(if @end_date < Date.today or (scheduled_finish_date and scheduled_finish_date < Date.today)
-				hhrr_cost_incurred
-			elsif (scheduled_finish_date and scheduled_finish_date >= @start_date)
+			(if (scheduled_finish_date and scheduled_finish_date >= @start_date)
 				scheduled_remaining = hhrr_cost_scheduled_remaining
 				if scheduled_remaining > 0
-					hhrr_cost_incurred + (scheduled_remaining * ([@end_date, scheduled_finish_date].min - [@start_date, Date.today].max + 1) / (scheduled_finish_date - Date.today + 1))
+					hhrr_cost_incurred + scheduled_remaining
 				else
 					hhrr_cost_incurred
 				end
