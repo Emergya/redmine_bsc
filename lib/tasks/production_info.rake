@@ -291,21 +291,6 @@ namespace :bsc2 do
 						headers << income.downcase+" estimado"
 						result << metrics.variable_income_scheduled_by_tracker[income]
 					end
-					metric_projects = [p.id] + (include_descendants.present? ? p.descendants.active.map(&:id) : [])
-					headers << "Ajustes contables de ingresos estimados"
-					if year=="total"
-						scheduled_incomes_ajustes = BSC::Integration.get_variable_incomes.find{|e| e.tracker_id==T_OTHER_INCOMES}.issues_scheduled(metric_projects, Date.today).sum{|i| i.amount.to_f}
-					else
-						scheduled_incomes_ajustes = BSC::Integration.get_variable_incomes.find{|e| e.tracker_id==T_OTHER_INCOMES}.issues_scheduled_interval(metric_projects, "#{year}-01-01".to_date, "#{year}-12-31".to_date).sum{|i| i.amount.to_f}
-					end
-					result << scheduled_incomes_ajustes
-					headers << "Ajustes contables de gastos estimados"
-					if year=="total"
-						scheduled_expenses_ajustes = BSC::Integration.get_variable_expenses.find{|e| e.tracker_id==T_OTHER_EXPENSES}.issues_scheduled(metric_projects, Date.today).sum{|i| i.amount.to_f}
-					else
-						scheduled_expenses_ajustes = BSC::Integration.get_variable_expenses.find{|e| e.tracker_id==T_OTHER_EXPENSES}.issues_scheduled_interval(metric_projects, "#{year}-01-01".to_date, "#{year}-12-31".to_date).sum{|i| i.amount.to_f}
-					end
-					result << scheduled_expenses_ajustes
 
 					puts "Incurred"
 					headers << "bpo incurrido"
@@ -320,20 +305,6 @@ namespace :bsc2 do
 						headers << income.downcase+" incurrido"
 						result << metrics.variable_income_incurred_by_tracker[income]
 					end
-					headers << "Ajustes contables de ingresos incurridos"
-					if year=="total"
-						incurred_incomes_ajustes = BSC::Integration.get_variable_incomes.find{|e| e.tracker_id==T_OTHER_INCOMES}.issues_incurred(metric_projects, Date.today).sum{|i| i.amount.to_f}
-					else
-						incurred_incomes_ajustes = BSC::Integration.get_variable_incomes.find{|e| e.tracker_id==T_OTHER_INCOMES}.issues_incurred_interval(metric_projects, "#{year}-01-01".to_date, "#{year}-12-31".to_date).sum{|i| i.amount.to_f}
-					end
-					result << incurred_incomes_ajustes
-					headers << "Ajustes contables de gastos incurridos"
-					if year=="total"
-						incurred_expenses_ajustes = BSC::Integration.get_variable_expenses.find{|e| e.tracker_id==T_OTHER_EXPENSES}.issues_incurred(metric_projects, Date.today).sum{|i| i.amount.to_f}
-					else
-						incurred_expenses_ajustes = BSC::Integration.get_variable_expenses.find{|e| e.tracker_id==T_OTHER_EXPENSES}.issues_incurred_interval(metric_projects, "#{year}-01-01".to_date, "#{year}-12-31".to_date).sum{|i| i.amount.to_f}
-					end
-					result << incurred_expenses_ajustes
 
 					puts "Remaining"
 					headers << "bpo restantes"
@@ -349,11 +320,6 @@ namespace :bsc2 do
 						result << (metrics.variable_income_scheduled_by_tracker[income] || 0.0) - (metrics.variable_income_incurred_by_tracker[income] || 0.0)
 					end
 
-					headers << "Ajustes contables de ingresos restantes"
-					result << scheduled_incomes_ajustes - incurred_incomes_ajustes
-					headers << "Ajustes contables de gastos restantes"
-					result << scheduled_expenses_ajustes - incurred_expenses_ajustes
-
 					headers << "%consecución (puntos de control)"
 					result << ((p.last_checkpoint.present? and p.last_checkpoint.achievement_percentage.present?) ? p.last_checkpoint.achievement_percentage : "-")
 					headers << "%consecución (avance peticiones)"
@@ -368,6 +334,43 @@ namespace :bsc2 do
 					result << metrics.scheduled_start_date
 					headers << "fecha comienzo real"
 					result << metrics.real_start_date
+					
+
+					metric_projects = [p.id] + (include_descendants.present? ? p.descendants.active.map(&:id) : [])
+                                        headers << "Ajustes contables de ingresos estimados"
+                                        if year=="total"
+                                                scheduled_incomes_ajustes = BSC::Integration.get_variable_incomes.find{|e| e.tracker_id==T_OTHER_INCOMES}.issues_scheduled(metric_projects, Date.today).sum{|i| i.amount.to_f}
+                                        else
+                                                scheduled_incomes_ajustes = BSC::Integration.get_variable_incomes.find{|e| e.tracker_id==T_OTHER_INCOMES}.issues_scheduled_interval(metric_projects, "#{year}-01-01".to_date, "#{year}-12-31".to_date).sum{|i| i.amount.to_f}
+                                        end
+                                        result << scheduled_incomes_ajustes
+                                        headers << "Ajustes contables de gastos estimados"
+                                        if year=="total"
+                                                scheduled_expenses_ajustes = BSC::Integration.get_variable_expenses.find{|e| e.tracker_id==T_OTHER_EXPENSES}.issues_scheduled(metric_projects, Date.today).sum{|i| i.amount.to_f}
+                                        else
+                                                scheduled_expenses_ajustes = BSC::Integration.get_variable_expenses.find{|e| e.tracker_id==T_OTHER_EXPENSES}.issues_scheduled_interval(metric_projects, "#{year}-01-01".to_date, "#{year}-12-31".to_date).sum{|i| i.amount.to_f}
+                                        end
+                                        result << scheduled_expenses_ajustes
+
+					headers << "Ajustes contables de ingresos incurridos"
+                                        if year=="total"
+                                                incurred_incomes_ajustes = BSC::Integration.get_variable_incomes.find{|e| e.tracker_id==T_OTHER_INCOMES}.issues_incurred(metric_projects, Date.today).sum{|i| i.amount.to_f}
+                                        else
+                                                incurred_incomes_ajustes = BSC::Integration.get_variable_incomes.find{|e| e.tracker_id==T_OTHER_INCOMES}.issues_incurred_interval(metric_projects, "#{year}-01-01".to_date, "#{year}-12-31".to_date).sum{|i| i.amount.to_f}
+                                        end
+                                        result << incurred_incomes_ajustes
+                                        headers << "Ajustes contables de gastos incurridos"
+                                        if year=="total"
+                                                incurred_expenses_ajustes = BSC::Integration.get_variable_expenses.find{|e| e.tracker_id==T_OTHER_EXPENSES}.issues_incurred(metric_projects, Date.today).sum{|i| i.amount.to_f}
+                                        else
+                                                incurred_expenses_ajustes = BSC::Integration.get_variable_expenses.find{|e| e.tracker_id==T_OTHER_EXPENSES}.issues_incurred_interval(metric_projects, "#{year}-01-01".to_date, "#{year}-12-31".to_date).sum{|i| i.amount.to_f}
+                                        end
+                                        result << incurred_expenses_ajustes
+
+					headers << "Ajustes contables de ingresos restantes"
+                                        result << scheduled_incomes_ajustes - incurred_incomes_ajustes
+                                        headers << "Ajustes contables de gastos restantes"
+                                        result << scheduled_expenses_ajustes - incurred_expenses_ajustes
 
 						# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result
