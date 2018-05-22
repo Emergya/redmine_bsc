@@ -102,7 +102,7 @@ class BscMc < ActiveRecord::Base
 		ct = metrics.expenses_target || 0.0
 		cc = total_expenses
 
-		status = (mc > (mt + 1) and ct >= cc) ? 'metric_success' : (((ct < cc) or (mc < (mt - 1))) ? 'metric_alert' : 'metric_warning')
+		status = (mc > (mt + 1) and ct.round(2) >= cc.round(2)) ? 'metric_success' : (((ct.round(2) < cc.round(2)) or (mc < (mt - 1))) ? 'metric_alert' : 'metric_warning')
 
 		data = {
 			:status => status,

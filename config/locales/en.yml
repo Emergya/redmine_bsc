@@ -18,6 +18,9 @@ en:
 
   field_scheduled_effort: Scheduled effort
 
+  field_updated_at: Updated
+  field_scheduled_profile_effort: Scheduled profile effort
+
   bsc:
     plugin_name: Balanced Score Card
     plugin_description: Balanced score card for Redmine

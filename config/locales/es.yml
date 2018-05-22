@@ -18,6 +18,9 @@ es:
 
   field_scheduled_effort: Esfuerzo previsto
 
+  field_updated_at: Actualizado
+  field_scheduled_profile_effort: Esfuerzo estimado por perfil
+
   bsc:
     plugin_name: Balanced Score Card
     plugin_description: Cuadro de mando integral para Redmine

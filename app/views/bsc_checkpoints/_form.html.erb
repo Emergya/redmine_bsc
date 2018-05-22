@@ -10,8 +10,8 @@
   <p><%= f.check_box :base_line, :disabled => @first_checkpoint %></p>
 </div>
 <div class="splitcontentright">
-  <p><%= f.text_field :target_incomes, :size => 10, :required => true %></p>
-  <p><%= f.text_field :target_expenses, :size => 10, :required => true %></p>
+  <p><%= f.text_field :target_incomes, :size => 10, :required => true, :readonly => !User.current.admin? %></p>
+  <p><%= f.text_field :target_expenses, :size => 10, :required => true, :readonly => !User.current.admin? %></p>
   <p><%= f.text_field :achievement_percentage, :size => 3, :required => true %> %</p>
 </div>
 <div style="clear:both;"></div>

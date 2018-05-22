@@ -359,14 +359,14 @@ module BSC
 		
 # Others
 		def scheduled_margin
-			@scheduled_target ||= 100.0 * (total_income_scheduled - total_expense_scheduled) / total_income_scheduled
+			@scheduled_target ||= 100.0 * (total_income_scheduled - total_expense_scheduled) / total_income_scheduled.abs
 		end
 
 		def margin_target
 			@margin_target ||= 
 			(if @projects.count == 1
 				if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
-					res = (100.0 * (last_checkpoint.target_incomes - last_checkpoint.target_expenses) / last_checkpoint.target_incomes)
+					res = (100.0 * (last_checkpoint.target_incomes - last_checkpoint.target_expenses) / last_checkpoint.target_incomes.abs)
 					!res.nan? ? res : 0.0
 				else
 					0.0
