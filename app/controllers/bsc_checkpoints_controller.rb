@@ -102,11 +102,7 @@ class BscCheckpointsController < ApplicationController
   end
 
   def checkpoint_params
-    if User.current.admin?
-      params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :scheduled_finish_date, :held_qa_meetings, :base_line, :target_expenses, :target_incomes, :achievement_percentage, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number])
-    else
-      params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :scheduled_finish_date, :held_qa_meetings, :base_line, :achievement_percentage, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number])
-    end
+    params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :scheduled_finish_date, :held_qa_meetings, :base_line, :target_expenses, :target_incomes, :achievement_percentage, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number])
   end
 
   def has_bsc_project_info
