@@ -21,12 +21,18 @@ class AddYearToBscCheckpointEfforts < ActiveRecord::Migration
                         if Date.today.year > year
                             myear = BSC::MetricsInterval.new(p.id, "#{year}-01-01".to_date, "#{year}-12-31".to_date)
                             new_eff.scheduled_effort = myear.hhrr_hours_incurred_by_profile[new_eff[:hr_profile_id]]
+                            if year == end_year
+                                m = BSC::Metrics.new(p.id)
+                                new_eff.scheduled_effort += eff[:scheduled_effort] - m.hhrr_hours_incurred_by_profile[new_eff[:hr_profile_id]]
+                            end
                         elsif Date.today.year == year
                             myear = BSC::MetricsInterval.new(p.id, "#{year}-01-01".to_date, "#{year}-12-31".to_date)
                             m = BSC::Metrics.new(p.id)
                             new_eff.scheduled_effort = myear.hhrr_hours_incurred_by_profile[new_eff[:hr_profile_id]]
                             if future_days > 0
                                 new_eff.scheduled_effort += (["#{year}-12-31".to_date, p.bsc_end_date].min - ["#{year}-01-01".to_date, p.bsc_start_date.to_date, Date.today].max) * ((eff[:scheduled_effort] - m.hhrr_hours_incurred_by_profile[new_eff[:hr_profile_id]]) / future_days)
+                            elsif year == end_year
+                                new_eff.scheduled_effort += eff[:scheduled_effort] - m.hhrr_hours_incurred_by_profile[new_eff[:hr_profile_id]]
                             end
                         else
                             if future_days > 0
