@@ -215,8 +215,8 @@ namespace :bsc2 do
 			maux = BSC::MetricsInterval.new(p.id, Date.parse(Date.today.year.to_s+"-01-01"), Date.parse(Date.today.year.to_s+"-12-31"), {:descendants => false})
 			include_descendants = (p.bsc_end_date.present? and p.parent_id != ARCHIVADOS_PROJECT_ID)
 
-			start_year = maux.scheduled_start_date ? maux.scheduled_start_date.year : maux.real_start_date.year
-			end_year = maux.scheduled_finish_date ? maux.scheduled_finish_date.year : maux.real_finish_date.year
+			start_year = maux.real_start_date.year
+			end_year = maux.real_finish_date.year
 
 			(["total"]+Array(start_year..end_year)).each do |year|
 				if year == "total"
