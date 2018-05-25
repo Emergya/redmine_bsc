@@ -405,7 +405,7 @@ module BSC
 			end
 			end_date_by_planned_end_date = end_date_by_planned_end_date.compact.present? ? end_date_by_planned_end_date.compact.max.to_date : nil
 
-			end_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:created_on)}.compact.max
+			end_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:spent_on)}.compact.max
 			end_date_by_issues = @projects.map{|p| p.issues.minimum(:created_on)}.compact.max
 
         	[end_date_by_time_entries, end_date_by_issues, end_date_by_planned_end_date, scheduled_finish_date].compact.max.to_date rescue Date.today)
@@ -422,7 +422,7 @@ module BSC
 			end
 			start_date_by_planned_end_date = start_date_by_planned_end_date.compact.present? ? start_date_by_planned_end_date.compact.min.to_date : nil
 
-			start_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:created_on)}.compact.min
+			start_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:spent_on)}.compact.min
 			start_date_by_time_entries = start_date_by_time_entries.present? ? start_date_by_time_entries - 1.day : start_date_by_time_entries
 			start_date_by_issues = @projects.map{|p| p.issues.minimum(:created_on)}.compact.min
 
