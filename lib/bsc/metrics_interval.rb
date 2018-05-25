@@ -85,7 +85,7 @@ module BSC
 					hhrr_cost_incurred
 				end
 			else
-				0.0
+				hhrr_cost_incurred
 			end)
 		end
 
