@@ -44,11 +44,7 @@ module BSC
 
       def bsc_end_date
         begin
-          if last_checkpoint
-            last_checkpoint.scheduled_finish_date
-          else
-            bsc_info.scheduled_finish_date
-          end
+          last_checkpoint.scheduled_finish_date
         rescue
          nil
         end
