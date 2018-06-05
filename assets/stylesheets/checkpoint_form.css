@@ -1,6 +1,11 @@
-.checkpoint_cell {
-  height:30px; padding:10px; overflow: hidden;
+#checkpoint_efforts_form{
+	font-size: 12px;
 }
-.checkpoint_column {
-  display:inline-block;
+
+#checkpoint_efforts_form tr, #checkpoint_efforts_form td, #checkpoint_efforts_form th{
+	border: 1px solid grey !important;
+}
+
+#checkpoint_efforts_form input{
+	font-size: 12px !important;
 }

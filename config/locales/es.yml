@@ -35,6 +35,9 @@ es:
     label_effort: Esfuerzo
     label_scheduled_profile_effort: "Esfuerzo previsto %{profile}"
     label_profile_plural: Perfiles
+    label_total: Total
+    label_previous: Anterior
+    label_difference: Diferencia
 
     # metrics
     label_show_more: Ver más

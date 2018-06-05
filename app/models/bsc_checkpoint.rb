@@ -80,9 +80,19 @@ class BscCheckpoint < ActiveRecord::Base
     efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.year => e.scheduled_effort}}.reduce(:merge)) : Hash.new(0.0)
   end
 
+  def scheduled_profile_effort_cost(profile_id)
+    efforts = bsc_checkpoint_efforts.select{ |effort| effort.hr_profile_id == profile_id }
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.year => e.scheduled_cost}}.reduce(:merge)) : Hash.new(0.0)
+  end
+
   def scheduled_profile_effort_year(year)
     efforts = bsc_checkpoint_efforts.select{ |effort| effort.year == year }
     efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.hr_profile_id => e.scheduled_effort}}.reduce(:merge)) : Hash.new(0.0)
+  end
+
+  def scheduled_profile_effort_year_cost(year)
+    efforts = bsc_checkpoint_efforts.select{ |effort| effort.year == year }
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.hr_profile_id => e.scheduled_cost}}.reduce(:merge)) : Hash.new(0.0)
   end
 
   def scheduled_profile_effort_id(profile_id)
@@ -98,6 +108,10 @@ class BscCheckpoint < ActiveRecord::Base
 
   def scheduled_effort
     bsc_checkpoint_efforts.sum(:scheduled_effort)
+  end
+
+  def scheduled_effort_cost
+    bsc_checkpoint_efforts.reduce(0.0){|sum, e| sum + e.scheduled_cost}
   end
 
   private

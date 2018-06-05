@@ -1,6 +1,7 @@
 class BscCheckpointsController < ApplicationController
 	before_filter :find_project_by_project_id, :authorize
   before_filter :get_profiles, :only => [:new, :edit, :show]
+  before_filter :get_hourly_cost, :only => [:new, :edit]
   before_filter :find_checkpoint, :only => [:show, :edit, :update, :destroy]
   before_filter :has_bsc_project_info
 	
@@ -112,6 +113,13 @@ class BscCheckpointsController < ApplicationController
     unless @project.bsc_info.present?
       deny_access
       return
+    end
+  end
+
+  def get_hourly_cost
+    @hourly_cost = Hash.new(Hash.new(0.0))
+    (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year|
+      @hourly_cost[year] = BSC::Integration.get_hourly_cost_array(year)
     end
   end
 end
