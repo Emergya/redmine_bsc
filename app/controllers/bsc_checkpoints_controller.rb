@@ -15,7 +15,7 @@ class BscCheckpointsController < ApplicationController
     @sort = sort_column
     @order = sort_direction
     @checkpoints = BscCheckpoint.where(project_id: @project).
-                                    	order([@sort, @order].join(' ')).
+                                    	order([[@sort, @order].join(' '),['created_at', @order].join(' ')].join(',')).
                                      	offset(@offset).
                                      	limit(@limit).
                                      	includes(:bsc_checkpoint_efforts)       	
