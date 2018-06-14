@@ -27,9 +27,9 @@ var hourly_cost = <%=raw @hourly_cost.to_json%>;
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
       <th><%=year%></th>
       <% end %>
-      <th><%=l(:"bsc.label_total")%> (€)</th>
-      <th><%=l(:"bsc.label_previous")%> (€)</th>
-      <th><%=l(:"bsc.label_difference")%> (€)</th>
+      <th class="total"><%=l(:"bsc.label_total")%> (€)</th>
+      <th class="total"><%=l(:"bsc.label_previous")%> (€)</th>
+      <th class="total"><%=l(:"bsc.label_difference")%> (€)</th>
     </tr>
     <% @profiles.each do |profile| %>
     <tr>
@@ -40,9 +40,9 @@ var hourly_cost = <%=raw @hourly_cost.to_json%>;
       </td>
       <% end %>
       <!-- Total column -->
-      <td class="checkpoint_cell" data-total="profile" data-profile="<%=profile.id%>"></td>
+      <td class="checkpoint_cell total" data-total="profile" data-profile="<%=profile.id%>"></td>
       <!-- Total previous column -->
-      <td class="checkpoint_cell" data-total="previous" data-profile="<%=profile.id%>">
+      <td class="checkpoint_cell total" data-total="previous" data-profile="<%=profile.id%>">
         <% if @last_checkpoint.present? %>
         <%=@last_checkpoint.scheduled_profile_effort_cost(profile.id).values.sum.round(2)%>
         <% else %>
@@ -50,28 +50,28 @@ var hourly_cost = <%=raw @hourly_cost.to_json%>;
         <% end %>
       </td>
       <!-- Difference column -->
-      <td class="checkpoint_cell" data-total="diff" data-profile="<%=profile.id%>"></td>
+      <td class="checkpoint_cell total" data-total="diff" data-profile="<%=profile.id%>"></td>
     </tr>
     <% end %>
     <!-- Total row -->
     <tr>
-      <th class="checkpoint_cell"><b><%=l(:"bsc.label_total")%> (€)</b></th>
+      <th class="checkpoint_cell total"><b><%=l(:"bsc.label_total")%> (€)</b></th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-        <td class="checkpoint_cell" data-total="year" data-year="<%=year%>">
+        <td class="checkpoint_cell total" data-total="year" data-year="<%=year%>">
       <% end %>
-      <td class="checkpoint_cell" data-total="total"></td>
-      <td class="checkpoint_cell" data-total="total_previous">
+      <td class="checkpoint_cell total_total" data-total="total"></td>
+      <td class="checkpoint_cell total_total" data-total="total_previous">
         <%=@last_checkpoint.scheduled_effort_cost.round(2)%>
       </td>
-      <td class="checkpoint_cell" data-total="total_diff"></td>
+      <td class="checkpoint_cell total_total" data-total="total_diff"></td>
     </tr>
     <!-- Total previous row -->
-      <th class="checkpoint_cell"><b><%=l(:"bsc.label_previous")%> (€)</b></th>
+      <th class="checkpoint_cell total"><b><%=l(:"bsc.label_previous")%> (€)</b></th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
         <% if @last_checkpoint.present? %>
-        <td class="checkpoint_cell" data-total="previous" data-year="<%=year%>"><%=@last_checkpoint.scheduled_profile_effort_year_cost(year).values.sum.round(2)%></td>
+        <td class="checkpoint_cell total" data-total="previous" data-year="<%=year%>"><%=@last_checkpoint.scheduled_profile_effort_year_cost(year).values.sum.round(2)%></td>
         <% else %>
-        <td class="checkpoint_cell" data-total="previous" data-year="<%=year%>">0.00</td>
+        <td class="checkpoint_cell total" data-total="previous" data-year="<%=year%>">0.00</td>
         <% end %>
       <% end %>
       <td></td>
@@ -81,9 +81,9 @@ var hourly_cost = <%=raw @hourly_cost.to_json%>;
     </tr>
     <!-- Difference row -->
     <tr>
-      <th class="checkpoint_cell"><b><%=l(:"bsc.label_difference")%> (€)</b></th>
+      <th class="checkpoint_cell total"><b><%=l(:"bsc.label_difference")%> (€)</b></th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-      <td class="checkpoint_cell" data-total="diff" data-year="<%=year%>"></td>
+      <td class="checkpoint_cell total" data-total="diff" data-year="<%=year%>"></td>
       <% end %>
       <td></td>
       <td></td>

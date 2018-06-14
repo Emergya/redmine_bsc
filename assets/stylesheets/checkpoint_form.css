@@ -1,9 +1,28 @@
 #checkpoint_efforts_form{
 	font-size: 12px;
+	margin-bottom: 40px;
 }
 
 #checkpoint_efforts_form tr, #checkpoint_efforts_form td, #checkpoint_efforts_form th{
 	border: 1px solid grey !important;
+}
+
+#checkpoint_efforts_form th{
+	background-color: #EEE;
+}
+#checkpoint_efforts_form th.total{
+	background-color: #CCC;
+}
+
+#checkpoint_efforts_form td{
+	text-align: right;
+}
+#checkpoint_efforts_form td.total{
+	background-color: #EEF;
+}
+#checkpoint_efforts_form td.total_total{
+	background-color: #BBF;
+	color: black;
 }
 
 #checkpoint_efforts_form input{
