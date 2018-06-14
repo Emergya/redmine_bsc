@@ -38,6 +38,7 @@ es:
     label_total: Total
     label_previous: Anterior
     label_difference: Diferencia
+    text_checkpoint_confirm: "¿Está seguro que desea guardar el punto de control? Se ha producido una variación de {amount} ({percentage}) respecto al punto de control anterior"
 
     # metrics
     label_show_more: Ver más

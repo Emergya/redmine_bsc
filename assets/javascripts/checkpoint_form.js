@@ -5,6 +5,21 @@ $(document).ready(function(){
   $(document).on('keyup', '.checkpoint_cell input', function(event){
     recalculate_totals();
   });
+
+  $('#checkpoint-form').submit(function(event){
+    new_value = $('td[data-total="total"]').text();
+    old_value = $('td[data-total="total_previous"]').text();
+    value = (new_value - old_value).toFixed(2);
+    percentage = (100*Math.abs((new_value - old_value)/old_value)).toFixed(2)
+
+    if (percentage > 5){
+      text = text_checkpoint_confirm.replace('{amount}', value+'€').replace('{percentage}', percentage+'%');
+      c = confirm(text);
+      return c;
+    } else {
+      return true
+    }
+  });
 });
 
 function recalculate_totals(){
