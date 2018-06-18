@@ -1,7 +1,7 @@
 class BscCheckpointsController < ApplicationController
 	before_filter :find_project_by_project_id, :authorize
   before_filter :get_profiles, :only => [:new, :edit, :show]
-  before_filter :get_hourly_cost, :only => [:new, :edit]
+  before_filter :get_hourly_cost, :only => [:new, :edit, :update, :create]
   before_filter :find_checkpoint, :only => [:show, :edit, :update, :destroy]
   before_filter :has_bsc_project_info
 	
