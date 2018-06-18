@@ -62,18 +62,24 @@ var text_checkpoint_confirm = "<%= l(:'bsc.text_checkpoint_confirm') %>";
       <% end %>
       <td class="checkpoint_cell total_total" data-total="total"></td>
       <td class="checkpoint_cell total_total" data-total="total_previous">
+        <% if @last_checkpoint.present? %>
         <%=@last_checkpoint.scheduled_effort_cost.round(2)%>
+        <% else %>
+        0.00
+        <% end %>
       </td>
       <td class="checkpoint_cell total_total" data-total="total_diff"></td>
     </tr>
     <!-- Total previous row -->
       <th class="checkpoint_cell total"><b><%=l(:"bsc.label_previous")%> (€)</b></th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
+        <td class="checkpoint_cell total" data-total="previous" data-year="<%=year%>">
         <% if @last_checkpoint.present? %>
-        <td class="checkpoint_cell total" data-total="previous" data-year="<%=year%>"><%=@last_checkpoint.scheduled_profile_effort_year_cost(year).values.sum.round(2)%></td>
+        <%=@last_checkpoint.scheduled_profile_effort_year_cost(year).values.sum.round(2)%>
         <% else %>
-        <td class="checkpoint_cell total" data-total="previous" data-year="<%=year%>">0.00</td>
+        0.00
         <% end %>
+        </td>
       <% end %>
       <td></td>
       <td></td>
