@@ -11,13 +11,13 @@ var text_checkpoint_confirm = "<%= l(:'bsc.text_checkpoint_confirm') %>";
 
 <div class="splitcontentleft">
   <p><%= f.text_field :checkpoint_date, :size => 10, :required => true %><%= calendar_for('checkpoint_checkpoint_date') %></p>
-  <p><%= f.text_field :scheduled_finish_date, :size => 10, :required => true %><%= calendar_for('checkpoint_scheduled_finish_date') %></p>
+  <p><%= f.text_field :scheduled_finish_date, :size => 10, :required => true, :readonly => (!User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates) %><%= calendar_for('checkpoint_scheduled_finish_date') %></p>
   <p><%= f.text_field :held_qa_meetings, :size => 10, :required => true %></p>
   <p><%= f.check_box :base_line, :disabled => @first_checkpoint %></p>
 </div>
 <div class="splitcontentright">
-  <p><%= f.text_field :target_incomes, :size => 10, :required => true %></p>
-  <p><%= f.text_field :target_expenses, :size => 10, :required => true %></p>
+  <p><%= f.text_field :target_incomes, :size => 10, :required => true, :readonly => (!User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates) %></p>
+  <p><%= f.text_field :target_expenses, :size => 10, :required => true, :readonly => (!User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates) %></p>
   <p><%= f.text_field :achievement_percentage, :size => 3, :required => true %> %</p>
 </div>
 <div style="clear:both;"></div>

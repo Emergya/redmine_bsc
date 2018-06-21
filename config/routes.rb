@@ -11,3 +11,4 @@ end
 
 match '/settings/show_tracker_custom_fields' => 'settings#show_tracker_custom_fields', :via => [:get, :post]
 match '/settings/show_tracker_statuses' => 'settings#show_tracker_statuses', :via => [:get, :post]
+match 'projects/:id/setting_bsc_manage_dates' => 'projects#setting_bsc_manage_dates', via: [:post, :put], :as => 'projects_setting_bsc_manage_dates'

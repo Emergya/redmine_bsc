@@ -2,6 +2,9 @@
 en-GB:
   project_module_bscplugin: BSC
 
+  permission_bsc_settings: BSC settings
+  permission_bsc_manage_dates: BSC manage dates
+
   field_actual_start_date: Actual start date
   field_scheduled_start_date: Scheduled start_date
   field_scheduled_finish_date: Scheduled finish date
@@ -123,3 +126,15 @@ en-GB:
       label_plugin_currency: Plugin Currency
       label_delivery_date: Field - Delivery date
       label_delivery_status: Status - Delivered
+
+    # project - settings
+    label_bsc: BSC
+    label_bsc_manage_dates: Manage dates only allowed users
+
+  activerecord:
+    errors:
+      models:
+        bsc_checkpoint: 
+          attributes:
+            scheduled_finish_date:
+              not_a_date: not a date

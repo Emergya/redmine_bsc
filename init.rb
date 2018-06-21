@@ -4,6 +4,8 @@ require 'bsc/previews_controller_patch'
 require 'bsc/settings_controller_patch'
 require 'bsc/hooks'
 require 'bsc/integration'
+require 'bsc/projects_controller_patch'
+require 'bsc/projects_helpers_patch'
 
 Redmine::Plugin.register :redmine_bsc do
   Rails.configuration.after_initialize do
@@ -26,6 +28,8 @@ Redmine::Plugin.register :redmine_bsc do
     permission :bsc_management, { :bsc_management => [:index] }
     permission :bsc_checkpoints, { :bsc_checkpoints => [:index, :new, :show, :edit, :destroy, :update, :create] }
     permission :bsc_metrics, { :bsc_metrics => [:index, :change_metric] }
+    permission :bsc_manage_dates, {:bsc_checkpoints => [:create, :update], :bsc_management => [:index]}
+    permission :bsc_settings, {:projects => [:settings]}
   end
 
   menu :project_menu, :bsc, { :controller => 'bsc_management', :action => 'index' },
