@@ -1,6 +1,6 @@
 class BscCheckpointsController < ApplicationController
 	before_filter :find_project_by_project_id, :authorize
-  before_filter :get_profiles, :only => [:new, :edit, :show]
+  before_filter :get_profiles, :only => [:new, :new_without_annualization, :edit, :show]
   before_filter :get_hourly_cost, :only => [:new, :edit, :update, :create]
   before_filter :find_checkpoint, :only => [:show, :edit, :update, :destroy]
   before_filter :has_bsc_project_info
@@ -38,6 +38,22 @@ class BscCheckpointsController < ApplicationController
     @last_checkpoint = @project.last_checkpoint
   end
 
+  def new_without_annualization
+    @checkpoint = BscCheckpoint.new @project
+
+    if @project.first_checkpoint.blank?
+      @first_checkpoint = true
+      @checkpoint.base_line = true
+      @checkpoint.scheduled_finish_date = @project.bsc_info.scheduled_finish_date
+    end
+    
+    @profiles.each do |profile|
+      @checkpoint.bsc_checkpoint_efforts.build :hr_profile_id => profile.id
+    end
+
+    @last_checkpoint = @project.last_checkpoint
+  end
+
   def create
     @checkpoint = BscCheckpoint.new checkpoint_params
     @checkpoint.project = @project
@@ -48,6 +64,33 @@ class BscCheckpointsController < ApplicationController
     else
       get_profiles
       render :action => 'new'
+    end
+  end
+
+  def create_without_annualization
+    efforts = []
+    checkpoint_params['bsc_checkpoint_efforts_attributes'].each do |eff|
+      scheduled_effort_day = (eff[:scheduled_effort].to_f / (checkpoint_params[:scheduled_finish_date].to_date - @project.bsc_start_date + 1)).to_f
+      (@project.bsc_start_date.year..checkpoint_params[:scheduled_finish_date].to_date.year).each do |year|
+        effort = BscCheckpointEffort.new(eff)
+        effort[:scheduled_effort] = scheduled_effort_day * ([checkpoint_params[:scheduled_finish_date].to_date, "31-12-#{year}".to_date].min - [@project.bsc_start_date, "01-01-#{year}".to_date].max)
+        effort[:year] = year
+        efforts << effort
+      end
+    end
+
+    params[:checkpoint]['bsc_checkpoint_efforts_attributes'] = efforts.map(&:attributes)
+
+    @checkpoint = BscCheckpoint.new checkpoint_params
+    @checkpoint.project = @project
+    @checkpoint.author = User.current
+
+    if @checkpoint.save
+      flash[:notice] = l(:notice_successful_update)
+      redirect_to :action => :index
+    else
+      get_profiles
+      render :action => 'new_without_annualization'
     end
   end
 
@@ -106,10 +149,10 @@ class BscCheckpointsController < ApplicationController
   end
 
   def checkpoint_params
-    if User.current.allowed_to?(:bsc_manage_date, @project) and @project.bsc_manage_dates
-      params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :scheduled_finish_date, :held_qa_meetings, :base_line, :target_expenses, :target_incomes, :achievement_percentage, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number, :year])
-    else
+    if !User.current.allowed_to?(:bsc_manage_date, @project) and @project.bsc_manage_dates
       params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :held_qa_meetings, :base_line, :achievement_percentage, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number, :year])
+    else
+      params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :scheduled_finish_date, :held_qa_meetings, :base_line, :target_expenses, :target_incomes, :achievement_percentage, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number, :year])
     end
   end
 

@@ -35,6 +35,7 @@ es:
 
     # checkpoints
     label_new_checkpoint: Nuevo punto de control
+    label_new_without_annualization: Nuevo con distribución automática
     label_effort: Esfuerzo
     label_scheduled_profile_effort: "Esfuerzo previsto %{profile}"
     label_profile_plural: Perfiles
