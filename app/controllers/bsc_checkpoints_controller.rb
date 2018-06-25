@@ -73,7 +73,7 @@ class BscCheckpointsController < ApplicationController
       scheduled_effort_day = (eff[:scheduled_effort].to_f / (checkpoint_params[:scheduled_finish_date].to_date - @project.bsc_start_date + 1)).to_f
       (@project.bsc_start_date.year..checkpoint_params[:scheduled_finish_date].to_date.year).each do |year|
         effort = BscCheckpointEffort.new(eff)
-        effort[:scheduled_effort] = scheduled_effort_day * ([checkpoint_params[:scheduled_finish_date].to_date, "31-12-#{year}".to_date].min - [@project.bsc_start_date, "01-01-#{year}".to_date].max)
+        effort[:scheduled_effort] = scheduled_effort_day * ([checkpoint_params[:scheduled_finish_date].to_date, "31-12-#{year}".to_date].min - [@project.bsc_start_date, "01-01-#{year}".to_date].max + 1)
         effort[:year] = year
         efforts << effort
       end
