@@ -42,6 +42,8 @@ en-GB:
     label_total: Total
     label_previous: Previous
     label_difference: Difference
+    label_cost: Cost
+    label_hours: Hours
     text_checkpoint_confirm: "Are you sure you want to save the checkpoint? There is a variation of {amount} ({percentage}) respect the last checkpoint"
 
     # metrics

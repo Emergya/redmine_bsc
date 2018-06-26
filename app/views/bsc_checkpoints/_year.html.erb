@@ -1,7 +1,4 @@
-<%= l(:"bsc.label_effort").html_safe + '<span class="required"> *</span>'.html_safe %>
 <%= hidden_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][id]", checkpoint.scheduled_profile_effort_id(profile.id)[year] %>
 <%= hidden_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][hr_profile_id]", profile.id %>
 <%= hidden_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][year]", year %>
 <%= text_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][scheduled_effort]", checkpoint.scheduled_profile_effort(profile.id)[year], :size => 6, :data => {:year => year, :profile => profile.id} %>
-<%= l(:"bsc.label_profile_plural") %>
-<%= text_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][number]", checkpoint.scheduled_profile_number(profile.id)[year], :size => 1 %>

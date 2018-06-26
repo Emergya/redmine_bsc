@@ -13,6 +13,12 @@
 #checkpoint_efforts_form th.total{
 	background-color: #CCC;
 }
+#checkpoint_efforts_form th.total_hours{
+	background-color: #CCC;
+}
+#checkpoint_efforts_form th.total_cost{
+	background-color: #CCC;
+}
 
 #checkpoint_efforts_form td{
 	text-align: right;
@@ -20,11 +26,34 @@
 #checkpoint_efforts_form td.total{
 	background-color: #EEF;
 }
+#checkpoint_efforts_form td.total.total_hours{
+	background-color: #EEF;
+}
+#checkpoint_efforts_form td.total.total_cost{
+	background-color: #DDF;
+}
 #checkpoint_efforts_form td.total_total{
 	background-color: #BBF;
+	color: black;
+}
+#checkpoint_efforts_form td.total_total.total_hours{
+	background-color: #BBF;
+	color: black;
+}
+#checkpoint_efforts_form td.total_total.total_cost{
+	background-color: #99F;
 	color: black;
 }
 
 #checkpoint_efforts_form input{
 	font-size: 12px !important;
+}
+
+
+
+
+
+td.crossOut
+{
+	background: linear-gradient(to right bottom, #ffffff 0%,#ffffff 49.9%,#000000 50%,#000000 51%,#ffffff 51.1%,#ffffff 100%);
 }
