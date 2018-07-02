@@ -1,5 +1,4 @@
 $(document).ready(function(){
-  console.log(hourly_cost);
   recalculate_totals('hours');
   recalculate_totals('cost');
 
