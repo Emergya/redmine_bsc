@@ -1,4 +1,4 @@
 <%= hidden_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][id]", checkpoint.scheduled_profile_effort_id(profile.id)[year] %>
 <%= hidden_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][hr_profile_id]", profile.id %>
 <%= hidden_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][year]", year %>
-<%= text_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][scheduled_effort]", checkpoint.scheduled_profile_effort(profile.id)[year], :size => 6, :data => {:year => year, :profile => profile.id} %>
+<%= text_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][scheduled_effort]", checkpoint.scheduled_profile_effort(profile.id)[year], :size => 5, :data => {:year => year, :profile => profile.id} %>

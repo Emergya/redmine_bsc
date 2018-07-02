@@ -22,51 +22,56 @@ var text_checkpoint_confirm = "<%= l(:'bsc.text_checkpoint_confirm') %>";
 </div>
 <div style="clear:both;"></div>
 <% if @profiles.length > 0 %>
+<div id="content_checkpoints_efforts_form">
   <table id="checkpoint_efforts_form">
     <tr>
-      <th rowspan="2" colspan="2"></th>
+      <th class="spacing" rowspan="2"></th>
+      <th rowspan="2" class="border_top_left first_column"></th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-      <th colspan="2"><%=year%></th>
+      <th colspan="2" class="table_top <%='border_top_right' if year == @project.bsc_end_date.year%>"><%=year%></th>
       <% end %>
-      <th colspan="2" class="total"><%=l(:"bsc.label_total")%></th>
-      <th colspan="2" class="total"><%=l(:"bsc.label_previous")%></th>
-      <th colspan="2" class="total"><%=l(:"bsc.label_difference")%></th>
+      <th rowspan="2" class="spacing"></th>
+      <th colspan="2" class="total border_top_left table_top"><%=l(:"bsc.label_total")%></th>
+      <th colspan="2" class="total table_top"><%=l(:"bsc.label_previous")%></th>
+      <th colspan="2" class="total border_top_right table_top"><%=l(:"bsc.label_difference")%></th>
     </tr>
     <tr>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-      <th><%=l(:"bsc.label_effort")%></th>
-      <th><%=l(:"bsc.label_profile_plural")%></th>
+      <th class="table_subtop subtitle even"><%=l(:"bsc.label_effort")%></th>
+      <th class="table_subtop subtitle odd"><%=l(:"bsc.label_profile_plural")%></th>
       <% end %>
-      <th class="total_hours"><%=l(:"bsc.label_hours")%></th>
-      <th class="total_cost"><%=l(:"bsc.label_cost")%> (€)</th>
-      <th class="total_hours"><%=l(:"bsc.label_hours")%></th>
-      <th class="total_cost"><%=l(:"bsc.label_cost")%> (€)</th>
-      <th class="total_hours"><%=l(:"bsc.label_hours")%></th>
-      <th class="total_cost"><%=l(:"bsc.label_cost")%> (€)</th>
+      <th class="total_hours table_subtop subtitle even"><%=l(:"bsc.label_hours")%></th>
+      <th class="total_cost table_subtop subtitle odd"><%=l(:"bsc.label_cost")%> (€)</th>
+      <th class="total_hours table_subtop subtitle even"><%=l(:"bsc.label_hours")%></th>
+      <th class="total_cost table_subtop subtitle odd"><%=l(:"bsc.label_cost")%> (€)</th>
+      <th class="total_hours table_subtop subtitle even"><%=l(:"bsc.label_hours")%></th>
+      <th class="total_cost table_subtop subtitle odd"><%=l(:"bsc.label_cost")%> (€)</th>
     </tr>
-    <% @profiles.each do |profile| %>
+    <% @profiles.each_with_index do |profile, iprofile| %>
     <tr>
-      <th colspan="2"><%=profile.name%></th>
+      <th class="spacing"></th>
+      <th class="first_column profile <%='border_bottom_left' if iprofile==@profiles.length-1%>"><%=profile.name%></th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-      <td class="checkpoint_cell">
+      <td class="checkpoint_cell even">
         <%= render :partial => 'year', :locals => {:checkpoint => @checkpoint, :profile => profile, :year => year} %>
       </td>
-      <td>
-        <%= text_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][number]", @checkpoint.scheduled_profile_number(profile.id)[year], :size => 3 %>  
+      <td class="odd <%='border_bottom_right' if year == @project.bsc_end_date.year and iprofile==@profiles.length-1%>">
+        <%= text_field_tag "checkpoint[bsc_checkpoint_efforts_attributes][][number]", @checkpoint.scheduled_profile_number(profile.id)[year], :size => 5 %>  
       </td>
       <% end %>
+      <td class="spacing"></td>
       <!-- Total column -->
-      <td class="checkpoint_cell total total_hours" data-total="profile" data-profile="<%=profile.id%>" data-type="hours"></td>
-      <td class="checkpoint_cell total total_cost" data-total="profile" data-profile="<%=profile.id%>" data-type="cost"></td>
+      <td class="checkpoint_cell total total_hours even <%='border_bottom_left' if iprofile==@profiles.length-1%>" data-total="profile" data-profile="<%=profile.id%>" data-type="hours"></td>
+      <td class="checkpoint_cell total total_cost odd" data-total="profile" data-profile="<%=profile.id%>" data-type="cost"></td>
       <!-- Total previous column -->
-      <td class="checkpoint_cell total total_hours" data-total="previous" data-profile="<%=profile.id%>" data-type="hours">
+      <td class="checkpoint_cell total total_hours even" data-total="previous" data-profile="<%=profile.id%>" data-type="hours">
         <% if @last_checkpoint.present? %>
         <%=@last_checkpoint.scheduled_profile_effort(profile.id).values.sum.round(2)%>
         <% else %>
         0.00
         <% end %>
       </td>
-      <td class="checkpoint_cell total total_cost" data-total="previous" data-profile="<%=profile.id%>" data-type="cost">
+      <td class="checkpoint_cell total total_cost odd" data-total="previous" data-profile="<%=profile.id%>" data-type="cost">
         <% if @last_checkpoint.present? %>
         <%=@last_checkpoint.scheduled_profile_effort_cost(profile.id).values.sum.round(2)%>
         <% else %>
@@ -74,24 +79,26 @@ var text_checkpoint_confirm = "<%= l(:'bsc.text_checkpoint_confirm') %>";
         <% end %>
       </td>
       <!-- Difference column -->
-      <td class="checkpoint_cell total total_hours" data-total="diff" data-profile="<%=profile.id%>" data-type="hours"></td>
-      <td class="checkpoint_cell total total_cost" data-total="diff" data-profile="<%=profile.id%>" data-type="cost"></td>
+      <td class="checkpoint_cell total total_hours even" data-total="diff" data-profile="<%=profile.id%>" data-type="hours"></td>
+      <td class="checkpoint_cell total total_cost odd <%='border_bottom_right' if iprofile==@profiles.length-1%>" data-total="diff" data-profile="<%=profile.id%>" data-type="cost"></td>
     </tr>
     <% end %>
+    <tr class="spacing"></tr>
     <!-- Total row -->
     <tr>
-      <th rowspan="2" class="checkpoint_cell total"><%=l(:"bsc.label_total")%></th>
-      <th class="total_hours"><%=l(:"bsc.label_hours")%></th>
+      <th rowspan="2" class="checkpoint_cell total vertical"><div><%=l(:"bsc.label_total")%></div></th>
+      <th class="total_hours border_top_left first_column subtitle"><%=l(:"bsc.label_hours")%></th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-        <td colspan="2" class="checkpoint_cell total total_hours" data-total="year" data-year="<%=year%>" data-type="hours">
+        <td colspan="2" class="checkpoint_cell total total_hours border_top <%='border_top_right' if year == @project.bsc_end_date.year%> <%= cycle('even', 'odd') %>" data-total="year" data-year="<%=year%>" data-type="hours">
       <% end %>
-      <td rowspan="2" class="checkpoint_cell total_total total_hours" data-total="total" data-type="hours">
+      <td class="spacing"></td>
+      <td rowspan="2" class="checkpoint_cell total_total total_hours border_top_left border_bottom_left even border_top" data-total="total" data-type="hours">
         <span class="value"></span> h
       </td>
-      <td rowspan="2" class="checkpoint_cell total_total total_cost" data-total="total" data-type="cost">
+      <td rowspan="2" class="checkpoint_cell total_total total_cost odd border_top" data-total="total" data-type="cost">
         <span class="value"></span> €
       </td>
-      <td rowspan="2" class="checkpoint_cell total_total total_hours" data-total="total_previous" data-type="hours">
+      <td rowspan="2" class="checkpoint_cell total_total total_hours even border_top" data-total="total_previous" data-type="hours">
         <span class="value">
           <% if @last_checkpoint.present? %>
           <%=@last_checkpoint.scheduled_effort.round(2)%>
@@ -101,7 +108,7 @@ var text_checkpoint_confirm = "<%= l(:'bsc.text_checkpoint_confirm') %>";
         </span>
         h
       </td>
-      <td rowspan="2" class="checkpoint_cell total_total total_cost" data-total="total_previous" data-type="cost">
+      <td rowspan="2" class="checkpoint_cell total_total total_cost odd border_top" data-total="total_previous" data-type="cost">
         <span class="value">
           <% if @last_checkpoint.present? %>
           <%=@last_checkpoint.scheduled_effort_cost.round(2)%>
@@ -111,25 +118,25 @@ var text_checkpoint_confirm = "<%= l(:'bsc.text_checkpoint_confirm') %>";
         </span>
         €
       </td>
-      <td rowspan="2" class="checkpoint_cell total_total total_hours" data-total="total_diff" data-type="hours">
+      <td rowspan="2" class="checkpoint_cell total_total total_hours even border_top" data-total="total_diff" data-type="hours">
         <span class="value"></span> h
       </td>
-      <td rowspan="2" class="checkpoint_cell total_total total_cost" data-total="total_diff" data-type="cost">
+      <td rowspan="2" class="checkpoint_cell total_total total_cost border_top_right border_bottom_right odd border_top" data-total="total_diff" data-type="cost">
         <span class="value"></span> €
       </td>
     </tr>
     <tr>
-      <th class="total_cost"><%=l(:"bsc.label_cost")%> (€)</th>
+      <th class="total_cost first_column subtitle"><%=l(:"bsc.label_cost")%> (€)</th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-        <td colspan="2" class="checkpoint_cell total total_cost" data-total="year" data-year="<%=year%>" data-type="cost">
+        <td colspan="2" class="checkpoint_cell total total_cost <%='border_top-right' if year ==@project.bsc_end_date.year%> <%= cycle('even', 'odd') %>" data-total="year" data-year="<%=year%>" data-type="cost">
       <% end %>
     </tr>
     <!-- Total previous row -->
     <tr>
-      <th rowspan="2" class="checkpoint_cell total"><%=l(:"bsc.label_previous")%></th>
-      <th class="total_hours"><%=l(:"bsc.label_hours")%></th>
+      <th rowspan="2" class="checkpoint_cell total vertical"><div><%=l(:"bsc.label_previous")%></div></th>
+      <th class="total_hours first_column subtitle"><%=l(:"bsc.label_hours")%></th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-        <td colspan="2" class="checkpoint_cell total total_hours" data-total="previous" data-year="<%=year%>" data-type="hours">
+        <td colspan="2" class="checkpoint_cell total total_hours <%= cycle('even', 'odd') %>" data-total="previous" data-year="<%=year%>" data-type="hours">
         <% if @last_checkpoint.present? %>
         <%=@last_checkpoint.scheduled_profile_effort_year(year).values.sum.round(2)%>
         <% else %>
@@ -137,11 +144,12 @@ var text_checkpoint_confirm = "<%= l(:'bsc.text_checkpoint_confirm') %>";
         <% end %>
         </td>
       <% end %>
+      <td rowspan="2" class="spacing"></td>
     </tr>
     <tr>
-      <th class="total_cost"><%=l(:"bsc.label_cost")%> (€)</th>
+      <th class="total_cost first_column subtitle"><%=l(:"bsc.label_cost")%> (€)</th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-        <td colspan="2" class="checkpoint_cell total total_cost" data-total="previous" data-year="<%=year%>" data-type="cost">
+        <td colspan="2" class="checkpoint_cell total total_cost <%= cycle('even', 'odd') %>" data-total="previous" data-year="<%=year%>" data-type="cost">
         <% if @last_checkpoint.present? %>
         <%=@last_checkpoint.scheduled_profile_effort_year_cost(year).values.sum.round(2)%>
         <% else %>
@@ -152,19 +160,21 @@ var text_checkpoint_confirm = "<%= l(:'bsc.text_checkpoint_confirm') %>";
     </tr>
     <!-- Difference row -->
     <tr>
-      <th rowspan="2" class="checkpoint_cell total"><%=l(:"bsc.label_difference")%></th>
-      <th class="total_hours"><%=l(:"bsc.label_hours")%></th>
+      <th rowspan="2" class="checkpoint_cell total vertical"><div><%=l(:"bsc.label_difference")%></div></th>
+      <th class="total_hours first_column subtitle"><%=l(:"bsc.label_hours")%></th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-      <td colspan="2" class="checkpoint_cell total total_hours" data-total="diff" data-year="<%=year%>" data-type="hours"></td>
+      <td colspan="2" class="checkpoint_cell total total_hours <%= cycle('even', 'odd') %>" data-total="diff" data-year="<%=year%>" data-type="hours"></td>
       <% end %>
+      <td rowspan="2" class="spacing"></td>
     </tr>
     <tr>
-      <th class="total_cost"><%=l(:"bsc.label_cost")%> (€)</th>
+      <th class="total_cost border_bottom_left first_column subtitle"><%=l(:"bsc.label_cost")%> (€)</th>
       <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
-      <td colspan="2" class="checkpoint_cell total total_cost" data-total="diff" data-year="<%=year%>" data-type="cost"></td>
+      <td colspan="2" class="checkpoint_cell total total_cost <%='border_bottom_right' if year == @project.bsc_end_date.year%> <%= cycle('even', 'odd') %>" data-total="diff" data-year="<%=year%>" data-type="cost"></td>
       <% end %>
     </tr>
   </table>
+</div>
 <% end %>
 <div style="clear:both;"></div>
 <p><%= f.text_area :description,
