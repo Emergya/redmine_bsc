@@ -17,6 +17,7 @@
         <%= content_tag('th', t(:field_target_expenses)) %>
         <%= content_tag('th', t(:field_achievement_percentage)) %>
         <%= content_tag('th', t(:field_base_line)) %>
+        <%= content_tag('th', t(:field_author)) %>
       </tr>
     </thead>
     <tbody>
@@ -33,6 +34,7 @@
                                 image_tag 'toggle_check.png' 
                               end
                           %>
+        <%= content_tag 'td', checkpoint.author %>
       </tr>
     <% end -%>
     </tbody>
