@@ -3,7 +3,7 @@ es:
   project_module_bscplugin: BSC
 
   permission_bsc_settings: Configurar BSC
-  permission_bsc_manage_dates: Configurar fechas BSC
+  permission_bsc_manage_dates: Prohibir modificación de campos
 
   field_actual_start_date: Fecha de comienzo real
   field_scheduled_start_date: Fecha de comienzo planificada
