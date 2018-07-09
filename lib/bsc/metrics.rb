@@ -448,7 +448,7 @@ module BSC
 			(if @projects.count == 1
 				# if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
 				if (last_checkpoint = @projects.first.real_last_checkpoint).present?
-					last_checkpoint.target_expenses
+					last_checkpoint.target_expenses.round(2)
 				else
 					0.0
 				end
@@ -458,7 +458,7 @@ module BSC
 					aux_metric = Metrics.new(p, @date, {:descendants => false})
 					result += aux_metric.expenses_target
 				end
-				result
+				result.round(2)
 			end)
 		end
 
@@ -467,7 +467,7 @@ module BSC
 			(if @projects.count == 1
 				# if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
 				if (last_checkpoint = @projects.first.real_last_checkpoint).present?
-					last_checkpoint.target_incomes
+					last_checkpoint.target_incomes.round(2)
 				else
 					0.0
 				end
@@ -477,7 +477,7 @@ module BSC
 					aux_metric = Metrics.new(p, @date, {:descendants => false})
 					result += aux_metric.incomes_target
 				end
-				result
+				result.round(2)
 			end)
 		end
 	end
