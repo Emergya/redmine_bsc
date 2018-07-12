@@ -10,6 +10,7 @@
     <thead>
       <tr>
         <%= sort_header_tag('checkpoint_date', :caption => t(:label_date), :default_order => 'desc') %>
+        <%= content_tag('th', t(:"bsc.label_title")) %>
         <%= content_tag('th', t(:"bsc.label_effort")) %>
         <%= content_tag('th', t(:field_scheduled_finish_date)) %>
         <%= content_tag('th', t(:field_held_qa_meetings)) %>
@@ -24,6 +25,7 @@
     <% @checkpoints.each do |checkpoint| -%>
       <tr id="checkpoint-<%= checkpoint.id %>" class="<%= cycle('odd', 'even') %> issue">
         <td><%= link_to checkpoint.checkpoint_date, checkpoint_path(@project, checkpoint) %></td>
+        <td><%= link_to (checkpoint.title.present? ? checkpoint.title : '-'), checkpoint_path(@project, checkpoint) %></td>
         <%= content_tag 'td', hours(checkpoint.bsc_checkpoint_efforts.reduce(0.0){ |sum, effort| sum += effort.scheduled_effort }) %>
         <%= content_tag 'td', checkpoint.scheduled_finish_date %>
         <%= content_tag 'td', checkpoint.held_qa_meetings %>

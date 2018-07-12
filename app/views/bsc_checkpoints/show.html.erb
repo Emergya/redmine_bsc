@@ -11,7 +11,7 @@
   <%= avatar(@checkpoint.author, :size => "50") %>
 
   <div class="subject">
-    <h3><%= @checkpoint.checkpoint_date %></h3>
+    <h3><%= @checkpoint.title.present? ? @checkpoint.title+" ("+@checkpoint.checkpoint_date.to_s+")" : @checkpoint.checkpoint_date %></h3>
   </div>
 
   <p class="author">
