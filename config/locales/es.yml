@@ -44,6 +44,7 @@ es:
     label_difference: Diferencia
     label_cost: Coste
     label_hours: Horas
+    label_title: Título
     text_checkpoint_confirm: "¿Está seguro que desea guardar el punto de control? Se ha producido una variación de {amount} ({percentage}) respecto al punto de control anterior"
 
     # metrics
