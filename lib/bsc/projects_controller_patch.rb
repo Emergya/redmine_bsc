@@ -19,7 +19,7 @@ module BSC
 
         end
 
-        redirect_to settings_project_path(@project, :tab => 'bsc_manage_dates')
+        redirect_to settings_project_path(@project, :tab => 'bsc')
       end
     end
 

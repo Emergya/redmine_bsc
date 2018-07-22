@@ -15,9 +15,10 @@ class BscManagementController < ApplicationController
 	private
 	def project_info_params
 		if !User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates
-			params.require(:bsc_project_info).permit(:scheduled_start_date, :scheduled_qa_meetings, :project_id)
-		else
-			params.require(:bsc_project_info).permit(:actual_start_date, :scheduled_start_date, :scheduled_finish_date, :scheduled_qa_meetings, :project_id)
+			# params.require(:bsc_project_info).permit(:scheduled_start_date, :scheduled_qa_meetings, :project_id)
+		    params[:scheduled_finish_date] = (@project.bsc_info.present? and @project.bsc_info.scheduled_finish_date.present?) ? @project.bsc_info.scheduled_finish_date : ''
+		    params[:actual_start_date] = (@project.bsc_info.present? and @project.bsc_info.actual_start_date.present?) ? @project.bsc_info.actual_start_date : ''
 		end
+		params.require(:bsc_project_info).permit(:actual_start_date, :scheduled_start_date, :scheduled_finish_date, :scheduled_qa_meetings, :project_id)
 	end
 end

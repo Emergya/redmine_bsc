@@ -150,10 +150,19 @@ class BscCheckpointsController < ApplicationController
 
   def checkpoint_params
     if !User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates
-      params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :held_qa_meetings, :base_line, :achievement_percentage, :title, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number, :year])
-    else
-      params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :scheduled_finish_date, :held_qa_meetings, :base_line, :target_expenses, :target_incomes, :achievement_percentage, :title, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number, :year])
+      # params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :held_qa_meetings, :base_line, :achievement_percentage, :title, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number, :year])
+      last_checkpoint = @project.real_last_checkpoint
+      if last_checkpoint.present?
+        params[:scheduled_finish_date] = last_checkpoint.scheduled_finish_date
+        params[:target_expenses] = last_checkpoint.target_expenses
+        params[:target_incomes] = last_checkpoint.target_incomes
+      else
+        params[:scheduled_finish_date] = @project.bsc_info.scheduled_finish_date
+        params[:target_expenses] = ""
+        params[:target_incomes] = ""
+      end
     end
+    params.require(:checkpoint).permit(:project_id, :author_id, :description, :checkpoint_date, :scheduled_finish_date, :held_qa_meetings, :base_line, :target_expenses, :target_incomes, :achievement_percentage, :title, bsc_checkpoint_efforts_attributes: [:id, :hr_profile_id, :scheduled_effort, :number, :year])
   end
 
   def has_bsc_project_info
