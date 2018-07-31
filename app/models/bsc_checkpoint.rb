@@ -12,6 +12,7 @@ class BscCheckpoint < ActiveRecord::Base
   validates_format_of :scheduled_finish_date, :with => /\d{4}-\d{2}-\d{2}/, :message => :not_a_date, :allow_nil => false
   validates_numericality_of :held_qa_meetings, :only_integer => true
   validates :target_margin, numericality: { only_integer: true }, :inclusion => (0..100), :allow_nil => false
+  validate :checkpoint_date_cannot_be_later_than_today
 
   attr_protected :project_id, :author_id
   attr_reader :current_journal
@@ -122,5 +123,9 @@ class BscCheckpoint < ActiveRecord::Base
       first_checkpoint.base_line = true
       first_checkpoint.save
     end
+  end
+
+  def checkpoint_date_cannot_be_later_than_today
+     errors.add :checkpoint_date, :not_later_than_today if checkpoint_date > Date.today
   end
 end

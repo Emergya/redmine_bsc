@@ -96,3 +96,12 @@ en-GB:
       label_plugin_currency: Plugin Currency
       label_delivery_date: Field - Delivery date
       label_delivery_status: Status - Delivered
+
+  #validation
+  activerecord:
+    errors:
+      models:
+        bsc_checkpoint:
+          attributes:
+            checkpoint_date:
+              not_later_than_today: cannot be greater than the current date
