@@ -22,7 +22,7 @@ class BscCheckpoint < ActiveRecord::Base
   def initialize(copy_from_project=nil)
     if copy_from_project.is_a? Project
       previous = BscCheckpoint.where('project_id = ?', copy_from_project).
-                              order('checkpoint_date DESC').
+                              order('checkpoint_date DESC, created_at DESC').
                               first
       super((previous.nil? ? {} : previous.attributes).merge(:checkpoint_date => Date.today))
 

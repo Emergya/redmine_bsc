@@ -103,7 +103,7 @@ class BscCheckpointsController < ApplicationController
   def edit
     @journal = @checkpoint.current_journal
     @first_checkpoint = (@project.first_checkpoint == @checkpoint)
-    @last_checkpoint = BscCheckpoint.where("project_id = ? AND checkpoint_date < ?", @project.id, @checkpoint.checkpoint_date).order("checkpoint_date DESC").first
+    @last_checkpoint = BscCheckpoint.where("project_id = ? AND checkpoint_date <= ? AND id != ?", @project.id, @checkpoint.checkpoint_date, @checkpoint.id).order("checkpoint_date DESC, created_at DESC").first
   end
 
   def update

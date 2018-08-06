@@ -113,7 +113,7 @@ namespace :bsc2 do
 		projects = Project.active
 
 		projects.each do |project|
-			checkpoints = project.bsc_checkpoints
+			checkpoints = project.bsc_checkpoints.order('checkpoint_date DESC, created_at DESC')
 
 			checkpoints.each do |checkpoint|
 				result = []
