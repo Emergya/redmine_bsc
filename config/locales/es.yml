@@ -130,7 +130,7 @@ es:
     label_mc_header_metric_both_alert: "El <b>margen</b> está %{margin_text} del objetivo y el <b>coste</b> %{expenses_text}"
     label_mc_header_metric_margin_alert: "El <b>margen previsto</b> actual es de <b>%{percentage}</b>, que está %{margin_text} del objetivo."
     label_mc_header_metric_expenses_alert: "El <b>coste previsto</b> actual es de <b>%{amount}</b>, que está %{expenses_text} del objetivo"
-    label_mc_reduced_header_metric_success: "Margen %{margin_text} del objetivo y coste #{expenses_text}"
+    label_mc_reduced_header_metric_success: "Margen %{margin_text} del objetivo y coste %{expenses_text}"
     label_mc_reduced_header_metric_margin_alert: "El margen está %{margin_text} del objetivo."
     label_mc_reduced_header_metric_expenses_alert: "El coste está %{expenses_text} del objetivo"
     label_effort_header_success: "Con la estimación actual, todos los perfiles deberían poder completar su dedicación"
