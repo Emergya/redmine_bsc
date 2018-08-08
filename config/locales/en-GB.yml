@@ -77,6 +77,8 @@ en-GB:
     label_incoming_incomes: Incoming incomes
     label_incoming_expenses: Incoming expenses
     label_income_expenses_calendar: Income&Expenses calendar
+    label_collections: Incomes
+    label_payments: Expenses
     # effort
     title_effort: Effort
     label_remaining_days: Remaining days
@@ -120,6 +122,31 @@ en-GB:
     label_incurred: Incurred
     label_remaining: Remaining
     label_income_expenses_evolution: Incomes and expenses evolution
+    #metrics headers
+    label_mc_header_bad_margin: "<b>%{points}</b> points <b>below</b>"
+    label_mc_header_good_margin: "<b>%{points}</b> points <b>above</b>"
+    label_mc_header_higher_expenses: "<b>%{amount}</b> <b>above</b>"
+    label_mc_header_lower_expenses: "<b>%{amount}</b> <b>below</b>"
+    label_mc_header_metric_both_alert: "<b>Margin</b> is %{margin_text} target and <b>expenses</b> are %{expenses_text} target"
+    label_mc_header_metric_margin_alert: "The current <b>scheduled margin</b> is <b>%{percentage}</b>, that is %{margin_text} target."
+    label_mc_header_metric_expenses_alert: "The current <b>scheduled expenses</b> are <b>%{amount}</b>, that is %{expenses_text} target"
+    label_mc_reduced_header_metric_success: "Margin %{margin_text} target and expenses %{expenses_text} target"
+    label_mc_reduced_header_metric_margin_alert: "Margin is %{margin_text} target."
+    label_mc_reduced_header_metric_expenses_alert: "Expenses are %{expenses_text} target"
+    label_effort_header_success: "With the current estimation, every profile should be able to complete their capacity"
+    label_effort_header_alert: "There are <b>%{number}</b> profiles that may <b>not</b> complete their capacity with the current estimation"
+    label_effort_reduced_header_success: "Every profile may complete their capacity"
+    label_effort_reduced_header_alert: "<b>%{number}</b> profiles may <b>not</b> complete their capacity"
+    label_income_expenses_header_success: "There are <b>not</b> pending incomes or expenses for this week"
+    label_income_expenses_header_warning: "<b>%{number}</b> pending incomes or expenses for this week"
+    label_income_expenses_header_alert: "There are <b>%{number}</b> overdue incomes or expenses"
+    label_deliverables_header_success: "There are <b>not</b> pending deliverables for this week"
+    label_deliverables_header_warning: "There are <b>%{number}</b> pending deliverables for this week"
+    label_deliverables_header_alert: "There are <b>%{number}</b> overdue deliverables"
+    label_time_entries_header_success: "Every project member is logging time entries regularly"
+    label_time_entries_header_warning: "<b>%{number}</b> members have not logged time entries to the project over <b>7 days</b> ago"
+    label_time_entries_header_alert: "<b>%{number}</b> members have not logged time entries to the project over <b>14 days</b> ago"
+    label_balance_header: "Cashflow is <b>%{amount}</b>"
 
     # settings
     title_plugins_integration: Other plugins integration

@@ -28,15 +28,15 @@ module BscMetricsHelper
   def render_mc_header_text_reduced(status, mc, mt, cc, ct)
     alert_margin = (mt > mc)
     alert_expenses = (cc > ct)
-    margin_text = alert_margin ? "<b>#{decimal(mt-mc)}</b> puntos por <b>debajo</b>" : "<b>#{decimal(mc-mt)}</b> puntos por <b>encima</b>" 
-    expenses_text = alert_expenses ? "<b>#{currency(cc-ct)}</b> por <b>encima</b>" : "<b>#{currency(ct-cc)}</b> por <b>debajo</b>"
+    margin_text = alert_margin ? I18n.t('bsc.label_mc_header_bad_margin', points: decimal(mt-mc)) : I18n.t('bsc.label_mc_header_good_margin', points: decimal(mc-mt)) 
+    expenses_text = alert_expenses ? I18n.t('bsc.label_mc_header_higher_expenses', amount: currency(cc-ct)) : I18n.t('bsc.label_mc_header_lower_expenses', amount: currency(ct-cc))
 
     if status == 'metric_success' or (alert_margin and alert_expenses)
-      text = "Margen #{margin_text} del objetivo y coste #{expenses_text}"
+      text = I18n.t('bsc.label_mc_reduced_header_metric_success', margin_text: margin_text, expenses_text: expenses_text)
     elsif alert_expenses
-      text = "El coste está #{expenses_text} del objetivo"
+      text = I18n.t('bsc.label_mc_reduced_header_metric_expenses_alert', expenses_text: expenses_text)
     else
-      text = "El margen está #{margin_text} del objetivo."
+      text = I18n.t('bsc.label_mc_reduced_header_metric_margin_alert', margin_text: margin_text)
     end
 
     text.html_safe
@@ -44,9 +44,9 @@ module BscMetricsHelper
 
   def render_effort_header_text_reduced(status, number)
     if number > 0
-      text = "<b>#{number}</b> perfiles <b>no</b> podrán completar su dedicación"
+      text = I18n.t('bsc.label_effort_reduced_header_alert', number: number)
     else
-      text = "Todos los perfiles pueden completar su dedicación"
+      text = I18n.t('bsc.label_effort_reduced_header_success')
     end
     text.html_safe
   end
@@ -54,11 +54,11 @@ module BscMetricsHelper
   def render_income_expenses_header_text_reduced(status, number)
     case status 
     when 'metric_alert'
-      text = "<b>#{number}</b> pagos o cobros atrasados"
+      text = I18n.t('bsc.label_income_expenses_header_alert', number: number)
     when 'metric_warning'
-      text = "<b>#{number}</b> pagos o cobros pendientes para esta semana"
+      text = I18n.t('bsc.label_income_expenses_header_warning', number: number)
     else
-      text = "<b>No</b> hay pagos o cobros pendientes para esta semana"
+      text = I18n.t('bsc.label_income_expenses_header_success')
     end
     text.html_safe
   end
@@ -66,11 +66,11 @@ module BscMetricsHelper
   def render_deliverables_header_text_reduced(status, number)
     case status 
     when 'metric_alert'
-      text = "<b>#{number}</b> entregables atrasados"
+      text = I18n.t('bsc.label_deliverables_header_alert', number: number)
     when 'metric_warning'
-      text = "<b>#{number}</b> entregables pendientes para esta semana"
+      text = I18n.t('bsc.label_deliverables_header_warning', number: number)
     else
-      text = "<b>No</b> hay entregables pendientes para esta semana"
+      text = I18n.t('bsc.label_deliverables_header_success')
     end
     text.html_safe
   end
@@ -78,17 +78,17 @@ module BscMetricsHelper
   def render_time_entries_header_text_reduced(status, number)
     case status
     when 'metric_alert'
-      text = "<b>#{number}</b> usuarios no cargan horas desde hace más de <b>14 días</b>"
+      text = I18n.t('bsc.label_time_entries_header_alert', number: number)
     when 'metric_warning'
-      text = "Hay <b>#{number}</b> usuarios no cargan horas desde hace más de <b>7 días</b>"
+      text = I18n.t('bsc.label_time_entries_header_warning', number: number)
     else
-      text = "Todos los usuarios tienen las horas al día"
+      text = I18n.t('bsc.label_time_entries_header_success')
     end
     text.html_safe
   end
 
   def render_balance_header_text_reduced(status, number)
-    text = "El cashflow es de <b>#{currency(number)}</b>"
+    text = I18n.t('bsc.label_balance_header', amount: currency(number))
     text.html_safe
   end
 
@@ -97,15 +97,15 @@ module BscMetricsHelper
   def render_mc_header_text(status, mc, mt, cc, ct)
     alert_margin = (mt > mc)
     alert_expenses = (cc > ct)
-    margin_text = alert_margin ? "<b>#{decimal(mt-mc)}</b> puntos por <b>debajo</b>" : "<b>#{decimal(mc-mt)}</b> puntos por <b>encima</b>" 
-  	expenses_text = alert_expenses ? "<b>#{currency(cc-ct)}</b> por <b>encima</b>" : "<b>#{currency(ct-cc)}</b> por <b>debajo</b>"
+    margin_text = alert_margin ? I18n.t('bsc.label_mc_header_bad_margin', points: decimal(mt-mc)) : I18n.t('bsc.label_mc_header_good_margin', points: decimal(mc-mt)) 
+    expenses_text = alert_expenses ? I18n.t('bsc.label_mc_header_higher_expenses', amount: currency(cc-ct)) : I18n.t('bsc.label_mc_header_lower_expenses', amount: currency(ct-cc))
 
     if alert_margin and alert_expenses
-      text = "El <b>margen</b> está #{margin_text} del objetivo y el <b>coste</b> #{expenses_text}"
+      text = I18n.t('bsc.label_mc_header_metric_both_alert', margin_text: margin_text, expenses_text: expenses_text)
     elsif alert_expenses
-      text = "El <b>coste previsto</b> actual es de <b>#{currency(cc)}</b>, que está #{expenses_text} del objetivo"
+      text = I18n.t('bsc.label_mc_header_metric_expenses_alert', amount: currency(cc), expenses_text: expenses_text)
     else
-      text = "El <b>margen previsto</b> actual es de <b>#{percent(mc)}</b>, que está #{margin_text} del objetivo."
+      text = I18n.t('bsc.label_mc_header_metric_margin_alert', percentage: percent(mc), margin_text: margin_text)
     end
   	
   	text.html_safe
@@ -113,9 +113,9 @@ module BscMetricsHelper
 
   def render_effort_header_text(status, number)
   	if number > 0
-  		text = "Hay <b>#{number}</b> perfiles que, con la estimación actual, <b>no</b> podrán completar su dedicación"
+  		text = I18n.t('bsc.label_effort_header_alert', number: number)
   	else
-  		text = "Con la estimación actual, todos los perfiles deberían poder completar su dedicación"
+  		text = I18n.t('bsc.label_effort_header_success')
   	end
   	text.html_safe
   end
@@ -123,11 +123,11 @@ module BscMetricsHelper
   def render_income_expenses_header_text(status, number)
   	case status 
   	when 'metric_alert'
-  		text = "Hay <b>#{number}</b> pagos o cobros atrasados"
+  		text = I18n.t('bsc.label_income_expenses_header_alert', number: number)
   	when 'metric_warning'
-  		text = "Hay <b>#{number}</b> pagos o cobros pendientes para esta semana"
+  		text = I18n.t('bsc.label_income_expenses_header_warning', number: number)
   	else
-  		text = "<b>No</b> hay pagos o cobros pendientes para esta semana"
+  		text = I18n.t('bsc.label_income_expenses_header_success')
   	end
   	text.html_safe
   end
@@ -135,11 +135,11 @@ module BscMetricsHelper
   def render_deliverables_header_text(status, number)
     case status 
     when 'metric_alert'
-      text = "Hay <b>#{number}</b> entregables atrasados"
+      text = I18n.t('bsc.label_deliverables_header_alert', number: number)
     when 'metric_warning'
-      text = "Hay <b>#{number}</b> entregables pendientes para esta semana"
+      text = I18n.t('bsc.label_deliverables_header_warning', number: number)
     else
-      text = "<b>No</b> hay entregables pendientes para esta semana"
+      text = I18n.t('bsc.label_deliverables_header_success')
     end
     text.html_safe
   end
@@ -147,17 +147,17 @@ module BscMetricsHelper
   def render_time_entries_header_text(status, number)
     case status
     when 'metric_alert'
-      text = "Hay <b>#{number}</b> miembros en el proyecto que no cargan horas desde hace más de <b>14 días</b>"
+      text = I18n.t('bsc.label_time_entries_header_alert', number: number)
     when 'metric_warning'
-      text = "Hay <b>#{number}</b> miembros en el proyecto que no cargan horas desde hace más de <b>7 días</b>"
+      text = I18n.t('bsc.label_time_entries_header_warning', number: number)
     else
-      text = "Todos los miembros del proyecto realizan regularmente las imputaciones"
+      text = I18n.t('bsc.label_time_entries_header_success')
     end
     text.html_safe
   end
 
   def render_balance_header_text(status, number)
-    text = "El cashflow es de <b>#{currency(number)}</b>"
+    text = I18n.t('bsc.label_balance_header', amount: currency(number))
     text.html_safe
   end
 

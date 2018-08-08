@@ -77,6 +77,8 @@ es:
     label_incoming_incomes: Próximos cobros
     label_incoming_expenses: Próximos pagos
     label_income_expenses_calendar: Calendario de cobros y pagos
+    label_collections: Cobros
+    label_payments: Pagos
     # effort
     title_effort: Esfuerzo
     label_remaining_days: Días restantes
@@ -120,6 +122,33 @@ es:
     label_incurred: Incurrido
     label_remaining: Restante
     label_income_expenses_evolution: Evolución de ingresos y costes
+    #metrics reduced headers
+    label_mc_header_bad_margin: "<b>%{points}</b> puntos por <b>debajo</b>"
+    label_mc_header_good_margin: "<b>%{points}</b> puntos por <b>encima</b>"
+    label_mc_header_higher_expenses: "<b>%{amount}</b> por <b>encima</b>"
+    label_mc_header_lower_expenses: "<b>%{amount}</b> por <b>debajo</b>"
+    label_mc_header_metric_both_alert: "El <b>margen</b> está %{margin_text} del objetivo y el <b>coste</b> %{expenses_text}"
+    label_mc_header_metric_margin_alert: "El <b>margen previsto</b> actual es de <b>%{percentage}</b>, que está %{margin_text} del objetivo."
+    label_mc_header_metric_expenses_alert: "El <b>coste previsto</b> actual es de <b>%{amount}</b>, que está %{expenses_text} del objetivo"
+    label_mc_reduced_header_metric_success: "Margen %{margin_text} del objetivo y coste #{expenses_text}"
+    label_mc_reduced_header_metric_margin_alert: "El margen está %{margin_text} del objetivo."
+    label_mc_reduced_header_metric_expenses_alert: "El coste está %{expenses_text} del objetivo"
+    label_effort_header_success: "Con la estimación actual, todos los perfiles deberían poder completar su dedicación"
+    label_effort_header_alert: "Hay <b>%{number}</b> perfiles que, con la estimación actual, <b>no</b> podrán completar su dedicación"
+    label_effort_reduced_header_success: "Todos los perfiles pueden completar su dedicación"
+    label_effort_reduced_header_alert: "<b>%{number}</b> perfiles <b>no</b> podrán completar su dedicación"
+    label_income_expenses_header_success: "<b>No</b> hay pagos o cobros pendientes para esta semana"
+    label_income_expenses_header_warning: "<b>%{number}</b> pagos o cobros pendientes para esta semana"
+    label_income_expenses_header_alert: "Hay <b>%{number}</b> pagos o cobros atrasados"
+    label_deliverables_header_success: "<b>No</b> hay entregables pendientes para esta semana"
+    label_deliverables_header_warning: "Hay <b>%{number}</b> entregables pendientes para esta semana"
+    label_deliverables_header_alert: "Hay <b>%{number}</b> entregables atrasados"
+    label_time_entries_header_success: "Todos los miembros del proyecto realizan regularmente las imputaciones"
+    label_time_entries_header_warning: "Hay <b>%{number}</b> miembros en el proyecto que no cargan horas desde hace más de <b>7 días</b>"
+    label_time_entries_header_alert: "Hay <b>%{number}</b> miembros en el proyecto que no cargan horas desde hace más de <b>14 días</b>"
+    label_balance_header: "El cashflow es de <b>%{amount}</b>"
+
+
 
     # settings
     title_plugins_integration: Integración con otros plugins
