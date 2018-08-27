@@ -36,7 +36,7 @@ module BSC
 
       def bsc_start_date
         begin
-          bsc_info.scheduled_start_date
+          bsc_info.actual_start_date || bsc_info.scheduled_start_date
         rescue
          nil
         end
