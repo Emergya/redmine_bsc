@@ -24,7 +24,7 @@ class BscCheckpoint < ActiveRecord::Base
       previous = BscCheckpoint.where('project_id = ?', copy_from_project).
                               order('checkpoint_date DESC, created_at DESC').
                               first
-      super((previous.nil? ? {} : previous.attributes).merge(:checkpoint_date => Date.today))
+      super((previous.nil? ? {} : previous.attributes).merge(:checkpoint_date => Date.today, :base_line => false, :title => nil))
 
       if previous.present?
         # Copy previous checkpoint efforts
