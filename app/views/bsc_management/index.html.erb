@@ -20,7 +20,11 @@
     <legend><%=t :"cmi.label_initial_schedule" %></legend>
     <p><%= f.text_field :scheduled_start_date, :size => 10, :required => true %><%= calendar_for('bsc_project_info_scheduled_start_date') %></p>
     <div class="splitcontentleft">
-      <p><%= f.text_field :scheduled_finish_date, :size => 10, :required => true, :readonly => (!User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates) %><%= calendar_for('bsc_project_info_scheduled_finish_date') %></p>
+      <% if (@project.last_checkpoint.present?) %>
+        <p><%= f.text_field :scheduled_finish_date, :size => 10, :value => @project.last_checkpoint.scheduled_finish_date, :disabled => true %></p>
+      <% else %>
+        <p><%= f.text_field :scheduled_finish_date, :size => 10, :required => true, :readonly => (!User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates) %><%= calendar_for('bsc_project_info_scheduled_finish_date') %></p>
+      <% end %>
     </div>
     <div class="splitcontentright">
       <p><%= f.text_field :scheduled_qa_meetings, :size => 10, :required => true %></p>
