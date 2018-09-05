@@ -59,6 +59,10 @@ class BscMetricsController < ApplicationController
 			@target_expenses = data[:target_expenses]
 			@scheduled_incomes = data[:scheduled_incomes]
 			@target_incomes = data[:target_incomes]
+			@incurred_margin = data[:incurred_margin]
+			@scheduled_margin_amount = data[:scheduled_margin_amount]
+			@target_margin_amount = data[:target_margin_amount]
+			@margin_standard_deviation = data[:margin_standard_deviation]
 			@incomes_trackers = BSC::Integration.get_income_trackers
 			@expenses_trackers = BSC::Integration.get_expense_trackers
 		when 'effort'
@@ -90,6 +94,7 @@ class BscMetricsController < ApplicationController
 			@table_data = data[:table]
 			@chart_data = data[:chart]
 			@scheduled_margin = data[:scheduled_margin]
+			@incurred_margin = data[:incurred_margin]
 		end
 
 		if request.xhr?

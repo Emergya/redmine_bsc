@@ -57,6 +57,8 @@ es:
     label_hhrr: RRHH
     label_scheduled_margin: Margen previsto
     label_target_margin: Margen objetivo
+    label_incurred_margin: Margen incurrido
+    label_margin_standard_deviation: Desviación típica del margen
     label_scheduled_expenses: Costes previstos
     label_target_expenses: Costes objetivo
     label_scheduled_incomes: Ingresos previstos
@@ -68,6 +70,8 @@ es:
     label_margins: Márgenes
     label_total_incomes: Ingresos totales
     label_total_expenses: Costes totales
+    scheduled_margin_amount: Cantidad (en €)
+    target_margin_amount: Cantidad (en €)
     # income_expenses
     title_income_expenses: Cobros y pagos
     label_subject: Asunto

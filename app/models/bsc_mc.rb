@@ -87,6 +87,10 @@ class BscMc < ActiveRecord::Base
 		data[:scheduled_expenses] = data[:chart].first[:total_expenses]
 		data[:target_incomes] = metrics.incomes_target
 		data[:scheduled_incomes] = data[:chart].first[:total_income]
+		data[:incurred_margin] = metrics.incurred_margin
+		data[:scheduled_margin_amount] = metrics.scheduled_margin_amount
+		data[:target_margin_amount] = metrics.target_margin_amount
+		data[:margin_standard_deviation] = metrics.margin_standard_deviation
 
 		data
 	end

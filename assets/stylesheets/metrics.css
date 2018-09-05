@@ -137,6 +137,14 @@ h1{
     line-height:1.2;
     color: #555555;
   }
+  .highlight_metric .legend{
+    font-size: 13px;
+    color: #000000;
+    opacity: 0.5;
+  }
+  .highlight_metric .legend > strong{
+    opacity: 1.0;
+  }
 
 
 

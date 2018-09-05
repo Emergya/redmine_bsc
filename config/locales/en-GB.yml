@@ -57,6 +57,8 @@ en-GB:
     label_hhrr: HHRR
     label_scheduled_margin: Scheduled margin
     label_target_margin: Target margin
+    label_incurred_margin: Incurred margin
+    label_margin_standard_deviation: Margin standard deviation
     label_scheduled_expenses: Scheduled expenses
     label_target_expenses: Target expenses
     label_scheduled_incomes: Scheduled incomes
@@ -68,6 +70,8 @@ en-GB:
     label_margins: Margins
     label_total_incomes: Total incomes
     label_total_expenses: Total expenses
+    label_scheduled_margin_amount: Amount (in €)
+    label_target_margin_amount: Amount (in €)
     # income_expenses
     title_income_expenses: Income and expenses
     label_subject: Subject

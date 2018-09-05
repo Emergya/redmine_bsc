@@ -9,11 +9,23 @@
         <div class="highlight_metric">
           <div class="name"><%=l(:"bsc.label_scheduled_margin")%></div>
           <div class="value"><%=percent(@scheduled_margin)%></div>
+          <div class="legend"><%=l(:"bsc.label_scheduled_margin_amount")%>: <strong><%=@scheduled_margin_amount%></strong></div>
         </div>
         <hr>
         <div class="highlight_metric">
           <div class="name"><%=l(:"bsc.label_target_margin")%></div>
           <div class="value"><%=percent(@target_margin)%></div>
+          <div class="legend"><%=l(:"bsc.label_target_margin_amount")%>: <strong><%=@target_margin_amount%></strong></div>
+        </div>
+        <hr>
+        <div class="highlight_metric">
+          <div class="name"><%=l(:"bsc.label_margin_standard_deviation")%></div>
+          <div class="value"><%=percent(@margin_standard_deviation)%></div>
+        </div>
+        <hr>
+        <div class="highlight_metric">
+          <div class="name"><%=l(:"bsc.label_incurred_margin")%></div>
+          <div class="value"><%=percent(@incurred_margin)%></div>
         </div>
       </div>
   	</div>

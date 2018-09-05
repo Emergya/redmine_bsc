@@ -105,7 +105,8 @@ class BscBalance < ActiveRecord::Base
 		{
 			:table => get_table_data(metrics),
 			:chart => get_chart_data(project, start_date, end_date, metrics),
-			:scheduled_margin => metrics.scheduled_margin
+			:scheduled_margin => metrics.scheduled_margin,
+			:incurred_margin => metrics.incurred_margin
 		}
 	end
 

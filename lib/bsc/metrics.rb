@@ -359,7 +359,7 @@ module BSC
 		
 # Others
 		def scheduled_margin
-			@scheduled_target ||= 100.0 * (total_income_scheduled - total_expense_scheduled) / total_income_scheduled.abs
+			@scheduled_target ||= nan_to_two_hyphens(100.0 * (total_income_scheduled - total_expense_scheduled) / total_income_scheduled.abs)
 		end
 
 		def margin_target
@@ -479,6 +479,33 @@ module BSC
 				end
 				result.round(2)
 			end)
+		end
+
+		def incurred_margin
+			@incurred_margin ||= nan_to_two_hyphens(100.0 * (total_income_incurred - total_expense_incurred) / total_income_incurred.abs)
+		end
+
+		def scheduled_margin_amount
+			@scheduled_margin_amount ||= (total_income_scheduled - total_expense_scheduled).round(2)
+		end
+
+		def target_margin_amount
+			@target_margin_amount ||= (margin_target/100.0 * total_income_scheduled).round(2)
+		end
+
+		def margin_standard_deviation
+			margins = [scheduled_margin, margin_target]
+			mean = margins.inject(0){|accum, i| accum + i}/margins.length.to_f
+			sum = margins.inject(0){|accum, i| accum +(i-mean)**2 }
+			@margin_standard_deviation ||= Math.sqrt(sum/(margins.length - 1).to_f)
+		end
+
+		def nan_to_two_hyphens(percentage)
+			unless percentage.nan?
+				percentage
+			else
+				'--'
+			end
 		end
 	end
 end
