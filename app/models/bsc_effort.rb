@@ -161,7 +161,7 @@ class BscEffort < ActiveRecord::Base
 
 		num_profiles = Hash.new(0.0)
 		last_checkpoints.map{|ckp| ckp.bsc_checkpoint_efforts}.flatten.each do |eff|
-			num_profiles[eff.hr_profile_id] += eff.number
+			num_profiles[eff.hr_profile_id] = eff.number if eff.year == Date.today.year
 		end
 		num_profiles
 	end
