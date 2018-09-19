@@ -14,7 +14,7 @@ module BSC
 				result = 0.0
 				(@start_date.year..@end_date.year).each do |year|
 					@projects.each do |project|
-						if (last_checkpoint = project.last_checkpoint(@date)).present?
+						if (last_checkpoint = project.real_last_checkpoint).present?
 							result += last_checkpoint.scheduled_profile_effort_year(year).values.sum * (([@end_date, scheduled_finish_date, "#{year}-12-31".to_date].min - [@start_date, scheduled_start_date, "#{year}-01-01".to_date].max) / ([scheduled_finish_date, "#{year}-12-31".to_date].min - [scheduled_start_date, "#{year}-01-01".to_date].max))
 						end
 					end
@@ -31,7 +31,7 @@ module BSC
 				result = Hash.new(0.0)
 				(@start_date.year..@end_date.year).each do |year|
 					@projects.each do |project|
-						if (last_checkpoint = project.last_checkpoint(@date)).present?
+						if (last_checkpoint = project.real_last_checkpoint).present?
 							last_checkpoint.scheduled_profile_effort_year(year).each do |profile, hours|
 								result[profile] += hours * (([@end_date, scheduled_finish_date, "#{year}-12-31".to_date].min - [@start_date, scheduled_start_date, "#{year}-01-01".to_date].max) / ([scheduled_finish_date, "#{year}-12-31".to_date].min - [scheduled_start_date, "#{year}-01-01".to_date].max))
 							end
