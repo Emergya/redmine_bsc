@@ -2,6 +2,9 @@
 en-GB:
   project_module_bscplugin: BSC
 
+  permission_bsc_settings: BSC settings
+  permission_bsc_manage_dates: Avoid fields edit
+
   field_actual_start_date: Actual start date
   field_scheduled_start_date: Scheduled start_date
   field_scheduled_finish_date: Scheduled finish date
@@ -18,6 +21,9 @@ en-GB:
 
   field_scheduled_effort: Scheduled effort
 
+  field_updated_at: Updated
+  field_scheduled_profile_effort: Scheduled profile effort
+
   bsc:
     plugin_name: Balanced Score Card
     plugin_description: Balanced score card for Redmine
@@ -29,9 +35,17 @@ en-GB:
 
     # checkpoints
     label_new_checkpoint: New checkpoint
+    label_new_without_annualization: New with automatic distribution
     label_effort: Effort
     label_scheduled_profile_effort: "%{profile} scheduled effort"
     label_profile_plural: Profiles
+    label_total: Total
+    label_previous: Previous
+    label_difference: Difference
+    label_cost: Cost
+    label_hours: Hours
+    label_title: Title
+    text_checkpoint_confirm: "Are you sure you want to save the checkpoint? There is a variation of {amount} ({percentage}) respect the last checkpoint"
 
     # metrics
     label_show_more: Show more
@@ -116,3 +130,15 @@ en-GB:
       label_plugin_currency: Plugin Currency
       label_delivery_date: Field - Delivery date
       label_delivery_status: Status - Delivered
+
+    # project - settings
+    label_bsc: BSC
+    label_bsc_manage_dates: Manage dates only allowed users
+
+  activerecord:
+    errors:
+      models:
+        bsc_checkpoint: 
+          attributes:
+            scheduled_finish_date:
+              not_a_date: not a date

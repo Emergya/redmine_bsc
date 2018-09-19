@@ -1,0 +1,10 @@
+<%= form_tag(projects_setting_bsc_manage_dates_path(@project), :method => :put, :class => "tabular") do %>
+<div class="box tabular">
+<p>
+	<%= check_box_tag :bsc_manage_dates, 1, @project.bsc_manage_dates %>
+	<%= l(:"bsc.label_bsc_manage_dates") %>
+</p>
+</div>
+
+<%= submit_tag l(:button_save) %>
+<% end %>

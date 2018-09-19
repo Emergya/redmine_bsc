@@ -103,6 +103,17 @@ module BSC
 			total) 
 		end
 
+		def hhrr_cost_scheduled_remaining_by_profile
+			(hourly_cost_by_profile = Hash.new(0.0).merge(BSC::Integration.get_hourly_cost_array(@date.year))
+			hours_incurred_by_profile = Hash.new(0.0).merge(all_hhrr_hours_incurred_by_profile)
+			result = Hash.new(0.0)
+			all_hhrr_hours_scheduled_by_profile.each do |profile, effort|
+				# Si hay más horas incurridas que estimadas para un perfil, se considera estimadas = incurridas para ese perfil
+				result[profile] += (effort - hours_incurred_by_profile[profile]) * hourly_cost_by_profile[profile]
+			end
+			result) 
+		end
+
 		def hhrr_cost_scheduled
 			@hhrr_cost_scheduled ||= 
 			(total = hhrr_cost_incurred
@@ -115,8 +126,22 @@ module BSC
 			total)
 		end
 
-		# def hhrr_cost_scheduled_by_profile
-		# end
+		def hhrr_cost_scheduled_by_profile
+			@hhrr_cost_scheduled_by_profile ||= 
+			(if @hr_plugin
+				result = hhrr_cost_incurred_by_profile
+				scheduled_remaining = hhrr_cost_scheduled_remaining_by_profile
+
+				scheduled_remaining.each do |profile, effort|
+					if effort > 0
+						result[profile] += effort
+					end
+				end
+				result
+			else
+				{}
+			end)
+		end
 
 		def hhrr_cost_incurred
 			@hhrr_cost_incurred ||= 
@@ -373,12 +398,19 @@ module BSC
         	@real_finish_date ||= 
         	(end_date_by_planned_end_date = []
         	(BSC::Integration.get_expense_trackers + BSC::Integration.get_income_trackers).each do |tracker|
-				planned_end_date = tracker.ie_income_expense.planned_end_date_field.to_i
-				@projects.each do |p|
-					end_date_by_planned_end_date += p.issues.where(tracker_id: tracker.id).map{|i| i.custom_value_for(planned_end_date).present? ? i.custom_value_for(planned_end_date).value : nil}
+        		if tracker.ie_income_expense.planned_end_field_type == "attr"
+	        		planned_end_date = tracker.ie_income_expense.planned_end_date_field.to_s
+        			@projects.each do |p|
+						end_date_by_planned_end_date += p.issues.where(tracker_id: tracker.id).map{|i| i[planned_end_date].present? ? i[planned_end_date] : nil}
+					end 
+        		else
+					planned_end_date = tracker.ie_income_expense.planned_end_date_field.to_i
+					@projects.each do |p|
+						end_date_by_planned_end_date += p.issues.where(tracker_id: tracker.id).map{|i| i.custom_value_for(planned_end_date).present? ? i.custom_value_for(planned_end_date).value : nil}
+					end
 				end
 			end
-			end_date_by_planned_end_date = end_date_by_planned_end_date.compact.present? ? end_date_by_planned_end_date.compact.max.to_date : nil
+			end_date_by_planned_end_date = end_date_by_planned_end_date.compact.present? ? end_date_by_planned_end_date.compact.map(&:to_date).max : nil
 
 			end_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:spent_on)}.compact.max
 			end_date_by_issues = @projects.map{|p| p.issues.minimum(:created_on)}.compact.max
@@ -388,20 +420,27 @@ module BSC
 
 		def real_start_date
 			@real_start_date ||= 
-			(start_date_by_planned_end_date = []
+			(start_date_by_planned_start_date = []
 			(BSC::Integration.get_expense_trackers + BSC::Integration.get_income_trackers).each do |tracker|
-				planned_end_date = tracker.ie_income_expense.planned_end_date_field.to_i
-				@projects.each do |p|
-					start_date_by_planned_end_date += p.issues.where(tracker_id: tracker.id).map{|i| i.custom_value_for(planned_end_date).present? ? i.custom_value_for(planned_end_date).value : nil}
+				if tracker.ie_income_expense.start_field_type == "attr"
+	        		start_date_field = tracker.ie_income_expense.start_date_field.to_s
+        			@projects.each do |p|
+						start_date_by_planned_start_date += p.issues.where(tracker_id: tracker.id).map{|i| i[start_date_field].present? ? i[start_date_field] : nil}
+					end 
+        		else
+					start_date_field = tracker.ie_income_expense.start_date_field.to_i
+					@projects.each do |p|
+						start_date_by_planned_start_date += p.issues.where(tracker_id: tracker.id).map{|i| i.custom_value_for(start_date_field).present? ? i.custom_value_for(start_date_field).value : nil}
+					end
 				end
 			end
-			start_date_by_planned_end_date = start_date_by_planned_end_date.compact.present? ? start_date_by_planned_end_date.compact.min.to_date : nil
+			start_date_by_planned_start_date = start_date_by_planned_start_date.compact.present? ? start_date_by_planned_start_date.compact.map(&:to_date).min : nil
 
 			start_date_by_time_entries = @projects.map{|p| p.time_entries.minimum(:spent_on)}.compact.min
 			start_date_by_time_entries = start_date_by_time_entries.present? ? start_date_by_time_entries - 1.day : start_date_by_time_entries
 			start_date_by_issues = @projects.map{|p| p.issues.minimum(:created_on)}.compact.min
 
-     		[start_date_by_time_entries, start_date_by_issues, start_date_by_planned_end_date, scheduled_start_date].compact.min.to_date rescue @projects.map(&:created_on).min.to_date)
+     		[start_date_by_time_entries, start_date_by_issues, start_date_by_planned_start_date, scheduled_start_date].compact.min.to_date rescue @projects.map(&:created_on).min.to_date)
 		end
 
 		def expenses_target
@@ -409,7 +448,7 @@ module BSC
 			(if @projects.count == 1
 				# if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
 				if (last_checkpoint = @projects.first.real_last_checkpoint).present?
-					last_checkpoint.target_expenses
+					last_checkpoint.target_expenses.round(2)
 				else
 					0.0
 				end
@@ -419,7 +458,7 @@ module BSC
 					aux_metric = Metrics.new(p, @date, {:descendants => false})
 					result += aux_metric.expenses_target
 				end
-				result
+				result.round(2)
 			end)
 		end
 
@@ -428,7 +467,7 @@ module BSC
 			(if @projects.count == 1
 				# if (last_checkpoint = @projects.first.last_checkpoint(@date)).present?
 				if (last_checkpoint = @projects.first.real_last_checkpoint).present?
-					last_checkpoint.target_incomes
+					last_checkpoint.target_incomes.round(2)
 				else
 					0.0
 				end
@@ -438,7 +477,7 @@ module BSC
 					aux_metric = Metrics.new(p, @date, {:descendants => false})
 					result += aux_metric.incomes_target
 				end
-				result
+				result.round(2)
 			end)
 		end
 	end

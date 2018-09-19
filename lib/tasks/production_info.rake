@@ -113,7 +113,7 @@ namespace :bsc2 do
 		projects = Project.active
 
 		projects.each do |project|
-			checkpoints = project.bsc_checkpoints
+			checkpoints = project.bsc_checkpoints.order('checkpoint_date DESC, created_at DESC')
 
 			checkpoints.each do |checkpoint|
 				result = []
@@ -371,6 +371,8 @@ namespace :bsc2 do
                                         result << scheduled_incomes_ajustes - incurred_incomes_ajustes
                                         headers << "Ajustes contables de gastos restantes"
                                         result << scheduled_expenses_ajustes - incurred_expenses_ajustes
+                    headers << "Padre ID"
+                    result << p.parent_id
 
 						# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result

@@ -1,0 +1,75 @@
+<table id="checkpoint_efforts_form">
+  <tr>
+    <th></th>
+    <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
+    <th><%=year%></th>
+    <% end %>
+    <th class="total"><%=l(:"bsc.label_total")%> (€)</th>
+    <th class="total"><%=l(:"bsc.label_previous")%> (€)</th>
+    <th class="total"><%=l(:"bsc.label_difference")%> (€)</th>
+  </tr>
+  <% @profiles.each do |profile| %>
+  <tr>
+    <th><%=profile.name%></th>
+    <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
+    <td class="checkpoint_cell">
+      <%= render :partial => 'year', :locals => {:checkpoint => @checkpoint, :profile => profile, :year => year} %>
+    </td>
+    <% end %>
+    <!-- Total column -->
+    <td class="checkpoint_cell total" data-total="profile" data-profile="<%=profile.id%>"></td>
+    <!-- Total previous column -->
+    <td class="checkpoint_cell total" data-total="previous" data-profile="<%=profile.id%>">
+      <% if @last_checkpoint.present? %>
+      <%=@last_checkpoint.scheduled_profile_effort_cost(profile.id).values.sum.round(2)%>
+      <% else %>
+      0.00
+      <% end %>
+    </td>
+    <!-- Difference column -->
+    <td class="checkpoint_cell total" data-total="diff" data-profile="<%=profile.id%>"></td>
+  </tr>
+  <% end %>
+  <!-- Total row -->
+  <tr>
+    <th class="checkpoint_cell total"><b><%=l(:"bsc.label_total")%> (€)</b></th>
+    <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
+      <td class="checkpoint_cell total" data-total="year" data-year="<%=year%>">
+    <% end %>
+    <td class="checkpoint_cell total_total" data-total="total"></td>
+    <td class="checkpoint_cell total_total" data-total="total_previous">
+      <% if @last_checkpoint.present? %>
+      <%=@last_checkpoint.scheduled_effort_cost.round(2)%>
+      <% else %>
+      0.00
+      <% end %>
+    </td>
+    <td class="checkpoint_cell total_total" data-total="total_diff"></td>
+  </tr>
+  <!-- Total previous row -->
+    <th class="checkpoint_cell total"><b><%=l(:"bsc.label_previous")%> (€)</b></th>
+    <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
+      <td class="checkpoint_cell total" data-total="previous" data-year="<%=year%>">
+      <% if @last_checkpoint.present? %>
+      <%=@last_checkpoint.scheduled_profile_effort_year_cost(year).values.sum.round(2)%>
+      <% else %>
+      0.00
+      <% end %>
+      </td>
+    <% end %>
+    <td></td>
+    <td></td>
+    <td></td>
+  <tr>
+  </tr>
+  <!-- Difference row -->
+  <tr>
+    <th class="checkpoint_cell total"><b><%=l(:"bsc.label_difference")%> (€)</b></th>
+    <% (@project.bsc_start_date.year..@project.bsc_end_date.year).each do |year| %>
+    <td class="checkpoint_cell total" data-total="diff" data-year="<%=year%>"></td>
+    <% end %>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>

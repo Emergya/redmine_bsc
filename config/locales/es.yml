@@ -2,6 +2,9 @@
 es:
   project_module_bscplugin: BSC
 
+  permission_bsc_settings: Configurar BSC
+  permission_bsc_manage_dates: Prohibir modificación de campos
+
   field_actual_start_date: Fecha de comienzo real
   field_scheduled_start_date: Fecha de comienzo planificada
   field_scheduled_finish_date: Fecha de fin planificada
@@ -32,9 +35,17 @@ es:
 
     # checkpoints
     label_new_checkpoint: Nuevo punto de control
+    label_new_without_annualization: Nuevo con distribución automática
     label_effort: Esfuerzo
     label_scheduled_profile_effort: "Esfuerzo previsto %{profile}"
     label_profile_plural: Perfiles
+    label_total: Total
+    label_previous: Anterior
+    label_difference: Diferencia
+    label_cost: Coste
+    label_hours: Horas
+    label_title: Título
+    text_checkpoint_confirm: "¿Está seguro que desea guardar el punto de control? Se ha producido una variación de {amount} ({percentage}) respecto al punto de control anterior"
 
     # metrics
     label_show_more: Ver más
@@ -119,3 +130,15 @@ es:
       label_plugin_currency: Plugin Currency
       label_delivery_date: Campo - Fecha de entrega
       label_delivery_status: Estado - Entregado
+
+    # project - settings
+    label_bsc: BSC
+    label_bsc_manage_dates: Gestionar fechas solo usuarios con permisos
+
+  activerecord:
+    errors:
+      models:
+        bsc_checkpoint: 
+          attributes:
+            scheduled_finish_date:
+              not_a_date: no es una fecha

@@ -10,6 +10,7 @@
     <thead>
       <tr>
         <%= sort_header_tag('checkpoint_date', :caption => t(:label_date), :default_order => 'desc') %>
+        <%= content_tag('th', t(:"bsc.label_title")) %>
         <%= content_tag('th', t(:"bsc.label_effort")) %>
         <%= content_tag('th', t(:field_scheduled_finish_date)) %>
         <%= content_tag('th', t(:field_held_qa_meetings)) %>
@@ -17,22 +18,25 @@
         <%= content_tag('th', t(:field_target_expenses)) %>
         <%= content_tag('th', t(:field_achievement_percentage)) %>
         <%= content_tag('th', t(:field_base_line)) %>
+        <%= content_tag('th', t(:field_author)) %>
       </tr>
     </thead>
     <tbody>
     <% @checkpoints.each do |checkpoint| -%>
       <tr id="checkpoint-<%= checkpoint.id %>" class="<%= cycle('odd', 'even') %> issue">
         <td><%= link_to checkpoint.checkpoint_date, checkpoint_path(@project, checkpoint) %></td>
+        <td><%= link_to (checkpoint.title.present? ? checkpoint.title : '-'), checkpoint_path(@project, checkpoint) %></td>
         <%= content_tag 'td', hours(checkpoint.bsc_checkpoint_efforts.reduce(0.0){ |sum, effort| sum += effort.scheduled_effort }) %>
         <%= content_tag 'td', checkpoint.scheduled_finish_date %>
         <%= content_tag 'td', checkpoint.held_qa_meetings %>
-        <%= content_tag 'td', checkpoint.target_incomes %>
-        <%= content_tag 'td', checkpoint.target_expenses %>
+        <%= content_tag 'td', checkpoint.target_incomes.round(2) %>
+        <%= content_tag 'td', checkpoint.target_expenses.round(2) %>
         <%= content_tag 'td', checkpoint.achievement_percentage.to_s+'%' %>
         <%= content_tag 'td', if checkpoint.base_line 
                                 image_tag 'toggle_check.png' 
                               end
                           %>
+        <%= content_tag 'td', checkpoint.author %>
       </tr>
     <% end -%>
     </tbody>
@@ -43,4 +47,5 @@
 
 <div class="contextual">
   <%= link_to_if_authorized l(:label_new), {:action => 'new'}, :class => 'icon icon-add' %>
+  <%= link_to_if_authorized l(:"bsc.label_new_without_annualization"), {:action => 'new_without_annualization'}, :class => 'icon icon-add' if @checkpoints.empty? %>
 </div>

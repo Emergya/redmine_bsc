@@ -1,0 +1,134 @@
+#content_checkpoints_efforts_form{
+	overflow-x: auto;
+}
+
+#checkpoint_efforts_form{
+	font-size: 12px;
+	margin-bottom: 40px;
+	border-collapse: separate;
+}
+
+#checkpoint_efforts_form tr, #checkpoint_efforts_form td, #checkpoint_efforts_form th{
+	border: 1px solid #EEEFEF;
+}
+
+#checkpoint_efforts_form th.spacing, 
+#checkpoint_efforts_form td.spacing,
+#checkpoint_efforts_form td.spacing {
+	border: hidden !important;
+	background-color: inherit;
+}
+
+#checkpoint_efforts_form tr.spacing{
+	height:15px;
+}
+
+#checkpoint_efforts_form th.border_top_left,
+#checkpoint_efforts_form td.border_top_left {
+	border-top-left-radius: 8px;
+	border-top: inherit !important;
+	border-left: inherit !important;
+}
+#checkpoint_efforts_form th.border_top_right,
+#checkpoint_efforts_form td.border_top_right {
+	border-top-right-radius: 8px;
+	border-top: inherit !important;
+	border-right: inherit !important;
+}
+#checkpoint_efforts_form th.border_bottom_left,
+#checkpoint_efforts_form td.border_bottom_left {
+	border-bottom-left-radius: 8px;
+	border-bottom: inherit !important;
+	border-left: inherit !important;
+}
+#checkpoint_efforts_form th.border_bottom_right,
+#checkpoint_efforts_form td.border_bottom_right {
+	border-bottom-right-radius: 8px;
+	border-bottom: inherit !important;
+	border-right: inherit !important;
+}
+#checkpoint_efforts_form .border_top {
+	border-top: inherit !important;
+}
+
+#checkpoint_efforts_form .even{
+	border-right: hidden !important;
+}
+#checkpoint_efforts_form .even, #checkpoint_efforts_form .even input{
+	background-color:#F9FAFA;
+}
+
+#checkpoint_efforts_form .odd{
+	border-left: hidden !important;
+}
+#checkpoint_efforts_form .odd, #checkpoint_efforts_form .odd input{
+	background-color:#FFFFFF;
+}
+
+#checkpoint_efforts_form td {
+	border-top: hidden;
+}
+
+#checkpoint_efforts_form td{
+	text-align: center;
+}
+#checkpoint_efforts_form td input{
+	font-size: 12px !important;
+	text-align: center;
+	border-radius: 3px;
+	height: 24px;
+	min-width: 57px;
+	max-width: 57px;
+	padding: 0;
+}
+
+
+#checkpoint_efforts_form th.table_top{
+	border-left: hidden;
+	border-right: hidden;
+	color: #B1B4B7;
+	font-size: 16px;
+	font-weight: 400;
+	height: 43.5px;
+	padding: 0;
+}
+
+#checkpoint_efforts_form th.table_subtop{
+	border-top: hidden;
+	min-width: 68px;
+	max-width: 68px;
+	height: 35.5px;
+	padding: 0;
+}
+
+#checkpoint_efforts_form th.subtitle{
+	color: #B1B4B7;
+	font-size: 13px;
+	font-weight: 700px;
+}
+
+
+#checkpoint_efforts_form th.first_column{
+	border-top: hidden;
+	min-width: 68px;
+	max-width: 68px;
+	height: 49px;
+	padding: 0;
+}
+#checkpoint_efforts_form th.profile{
+	color: #757575;
+	font-size: 16px;
+	font-weight: 400;
+}
+
+.vertical{
+	border: hidden !important;
+	height: 24px;
+}
+.vertical div{
+	transform: rotate(270deg);
+	color: #B1B4B7;
+	margin-right: -20px;
+	font-size: 16px;
+	font-weight: 400;
+}

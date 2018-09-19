@@ -5,6 +5,11 @@ class BscCheckpointEffort < ActiveRecord::Base
   validates_presence_of :bsc_checkpoint, :hr_profile_id, :scheduled_effort
   validates_numericality_of :scheduled_effort
 
+  def scheduled_cost
+    hourly_cost = BSC::Integration.get_hourly_cost(hr_profile_id, year)
+    scheduled_effort * hourly_cost
+  end
+
   # def incurred_effort
   # 	TimeEntry.where('project_id = ? AND spent_on <= ?', bsc_checkpoint.project_id, bsc_checkpoint.checkpoint_date).sum(:hours)
   # end

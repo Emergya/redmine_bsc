@@ -22,9 +22,9 @@ class BscCheckpoint < ActiveRecord::Base
   def initialize(copy_from_project=nil)
     if copy_from_project.is_a? Project
       previous = BscCheckpoint.where('project_id = ?', copy_from_project).
-                              order('checkpoint_date DESC').
+                              order('checkpoint_date DESC, created_at DESC').
                               first
-      super((previous.nil? ? {} : previous.attributes).merge(:checkpoint_date => Date.today))
+      super((previous.nil? ? {} : previous.attributes).merge(:checkpoint_date => Date.today, :base_line => false, :title => nil))
 
       if previous.present?
         # Copy previous checkpoint efforts
@@ -66,24 +66,52 @@ class BscCheckpoint < ActiveRecord::Base
   end
 
   def scheduled_profile_number(profile_id)
-    effort = bsc_checkpoint_efforts.detect{ |effort| effort.hr_profile_id == profile_id }
-    effort.nil? ? 0.0 : effort.number
+    efforts = bsc_checkpoint_efforts.select{ |effort| effort.hr_profile_id == profile_id }
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.year => e.number}}.reduce(:merge)) : Hash.new(0.0)
+  end
+
+  def scheduled_profile_number_year(year)
+    efforts = bsc_checkpoint_efforts.select{ |effort| effort.year == year }
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.hr_profile_id => e.number}}.reduce(:merge)) : Hash.new(0.0)
   end
 
   def scheduled_profile_effort(profile_id)
-    effort = bsc_checkpoint_efforts.detect{ |effort| effort.hr_profile_id == profile_id }
-    effort.nil? ? 0.0 : effort.scheduled_effort
+    efforts = bsc_checkpoint_efforts.select{ |effort| effort.hr_profile_id == profile_id }
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.year => e.scheduled_effort}}.reduce(:merge)) : Hash.new(0.0)
+  end
+
+  def scheduled_profile_effort_cost(profile_id)
+    efforts = bsc_checkpoint_efforts.select{ |effort| effort.hr_profile_id == profile_id }
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.year => e.scheduled_cost}}.reduce(:merge)) : Hash.new(0.0)
+  end
+
+  def scheduled_profile_effort_year(year)
+    efforts = bsc_checkpoint_efforts.select{ |effort| effort.year == year }
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.hr_profile_id => e.scheduled_effort}}.reduce(:merge)) : Hash.new(0.0)
+  end
+
+  def scheduled_profile_effort_year_cost(year)
+    efforts = bsc_checkpoint_efforts.select{ |effort| effort.year == year }
+    efforts.present? ? Hash.new(0.0).merge(efforts.map{|e| {e.hr_profile_id => e.scheduled_cost}}.reduce(:merge)) : Hash.new(0.0)
   end
 
   def scheduled_profile_effort_id(profile_id)
-    effort = bsc_checkpoint_efforts.detect{ |effort| effort.hr_profile_id == profile_id }
-    effort.nil? ? nil : effort.id
+    efforts = bsc_checkpoint_efforts.select{ |effort| effort.hr_profile_id == profile_id }
+    efforts.present? ? efforts.map{|e| {e.year => e.id}}.reduce(:merge) : Hash.new(nil)
   end
 
   def scheduled_profile_effort_hash
-    bsc_checkpoint_efforts.reduce({}) do |hash, effort|
-      hash.merge! effort.hr_profile_id => effort.scheduled_effort
+    bsc_checkpoint_efforts.reduce(Hash.new(0.0)) do |hash, effort|
+      hash.merge! effort.hr_profile_id => hash[effort.hr_profile_id]+effort.scheduled_effort
     end
+  end
+
+  def scheduled_effort
+    bsc_checkpoint_efforts.sum(:scheduled_effort)
+  end
+
+  def scheduled_effort_cost
+    bsc_checkpoint_efforts.reduce(0.0){|sum, e| sum + e.scheduled_cost}
   end
 
   private
@@ -92,6 +120,7 @@ class BscCheckpoint < ActiveRecord::Base
   # Called after_save
   def create_journal
     if @current_journal
+      profiles = BSC::Integration.get_profiles
       # attributes changes
       # self.changes.each do |c, value|
       #   @current_journal.details << JournalDetail.new(:property => 'attr',
@@ -103,9 +132,9 @@ class BscCheckpoint < ActiveRecord::Base
       # scheduled profile effort
       unless scheduled_profile_effort_hash == @scheduled_profile_effort_hash_before_change
         @current_journal.details << JournalDetail.new(:property => 'attr',
-                                                      :prop_key => 'scheduled_profile_effort',
-                                                      :old_value => @scheduled_profile_effort_hash_before_change,
-                                                      :value => scheduled_profile_effort_hash)
+                                                      :prop_key => 'scheduled_effort',
+                                                      :old_value => @scheduled_profile_effort_hash_before_change.present? ? @scheduled_profile_effort_hash_before_change.transform_keys{|key| profiles.find{|p| p.id == key }.name } : nil,
+                                                      :value => scheduled_profile_effort_hash.present? ? scheduled_profile_effort_hash.transform_keys{|key| profiles.find{|p| p.id == key }.name } : nil)
       end
       # custom fields changes
       @current_journal.save

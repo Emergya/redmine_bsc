@@ -14,7 +14,7 @@ module BSC
 			end
 
 			def get_profiles
-				self.hr_plugin_enabled? ? HrProfile.all : [] #.map(&:name) : []
+				self.hr_plugin_enabled? ? HrProfile.all.order(:position) : [] #.map(&:name) : []
 		  	end
 
 		  	def get_variable_incomes
