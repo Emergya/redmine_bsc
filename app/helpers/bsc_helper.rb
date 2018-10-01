@@ -12,9 +12,10 @@ module BscHelper
     render :partial => 'bsc_management/tabs', :locals => {:tabs => tabs, :selected => selected}
   end
 
-  def currency(n)
+  def currency(n, year = nil)
     if @currency.present?
-      value = n.to_f * @currency.exchange
+      exchange = year.present? ? @currency.get_exchange(year) : @currency.get_current_exchange
+      value = n.to_f * exchange
       number_to_currency value, :unit => @currency.symbol, :separator => @currency.decimal_separator, :delimiter => @currency.thousands_separator, :precision => 2
     else
       number_to_currency n, :locale => Setting.default_language

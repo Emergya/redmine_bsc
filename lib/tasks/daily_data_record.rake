@@ -4,6 +4,7 @@ namespace :bsc do
 
 		BscMc.where("project_id IN (?) AND date = ?", projects, Date.yesterday).destroy_all
 		BscEffort.where("project_id IN (?) AND date = ?", projects, Date.yesterday).destroy_all
+		BscBalance.where("project_id IN (?) AND date = ?", projects, Date.yesterday).destroy_all
 
 		projects.each do |project|
 			puts "Enable module"

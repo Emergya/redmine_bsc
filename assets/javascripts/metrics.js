@@ -214,12 +214,12 @@ function change_metric(metric_option, currency, date_option){
 
 
 // Number formats
-function currency(number, currency_json){
+function currency(number, exchange, currency_json){
 	currency_obj = $.parseJSON(currency_json);
 	if ($.isEmptyObject(currency_obj)){
 		return parseFloat(number).toLocaleString('es-ES', {style: 'currency', currency: 'EUR', minimumFractionsDigits: 2, maximumFractionsDigits: 2})
 	}else{
-		return FormatMoney(number * currency_obj['exchange'], '', currency_obj['symbol'], currency_obj['decimal_separator'], currency_obj['thousands_separator'], 2, 2);
+		return FormatMoney(number * exchange, '', currency_obj['symbol'], currency_obj['decimal_separator'], currency_obj['thousands_separator'], 2, 2);
 	}
 }
 

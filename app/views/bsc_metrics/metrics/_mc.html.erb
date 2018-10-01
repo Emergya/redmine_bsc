@@ -140,20 +140,23 @@
 
         date = "<div class='chart_data_title'>"+options.data[index]['date']+"</div>";
 
+        currency_exchange = <%=@currency.present? ? @currency.get_current_exchange : 1.0 %>;
+        currency_json = '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>';
+
         mc = '<div class="chart_data mc"><span class="chart_value">'+percent(options.data[index]['mc'])+'</span><span class="chart_label">MC:</span></div>';
-        total_incomes = '<div class="chart_data income_amount"><span class="chart_value">'+currency(options.data[index]['total_income'], '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>')+'</span><span class="chart_label"><%=l(:"bsc.label_total_incomes")%>:</span></div>';
-        total_expenses = '<div class="chart_data expense_amount"><span class="chart_value">'+currency(options.data[index]['total_expenses'], '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>')+'</span><span class="chart_label"><%=l(:"bsc.label_total_expenses")%>:</span></div>';
+        total_incomes = '<div class="chart_data income_amount"><span class="chart_value">'+currency(options.data[index]['total_income'], currency_exchange, currency_json)+'</span><span class="chart_label"><%=l(:"bsc.label_total_incomes")%>:</span></div>';
+        total_expenses = '<div class="chart_data expense_amount"><span class="chart_value">'+currency(options.data[index]['total_expenses'], currency_exchange, currency_json)+'</span><span class="chart_label"><%=l(:"bsc.label_total_expenses")%>:</span></div>';
 
         // text = "<span class='chart_data_subtitle'>Variaciones:</span>";
 	  		text = "<div class='variations'>";
 	  		for (key in options.data[index]['income_details']){
 	  			if (options.data[index]['income_details'][key] > 1 || options.data[index]['income_details'][key] < -1){
-	  				text += "<div class='chart_data'><span class='chart_value'>"+currency(options.data[index]['income_details'][key], '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>')+"</span><span class='chart_label'>"+key+":</span></div>";
+	  				text += "<div class='chart_data'><span class='chart_value'>"+currency(options.data[index]['income_details'][key], currency_exchange, currency_json)+"</span><span class='chart_label'>"+key+":</span></div>";
 	  			}
 	  		}
 	  		for (key in options.data[index]['expenses_details']){
 	  			if (options.data[index]['expenses_details'][key] > 1 || options.data[index]['expenses_details'][key] < -1){
-            text += "<div class='chart_data'><span class='chart_value'>"+currency(options.data[index]['expenses_details'][key], '<%=@currency.present? ? @currency.attributes.to_json.html_safe : "{}"%>')+"</span><span class='chart_label'>"+key+":</span></div>";
+            text += "<div class='chart_data'><span class='chart_value'>"+currency(options.data[index]['expenses_details'][key], currency_exchange, currency_json)+"</span><span class='chart_label'>"+key+":</span></div>";
 	  			}
 	  		}
         text += "</div>"     
