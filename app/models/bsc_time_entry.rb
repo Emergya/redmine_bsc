@@ -55,7 +55,7 @@ class BscTimeEntry < ActiveRecord::Base
 	end
 
 	def self.get_members_time_entry_info(projects)
-		members = Member.where("project_id IN (?)", projects).map(&:user_id).uniq
+		members = Member.joins(:user).where("members.project_id IN (?) AND users.status = 1", projects).map(&:user_id).uniq
 		TimeEntry.joins(:user).where("project_id IN (?) AND user_id IN (?)", projects, members).select("time_entries.user_id AS id, users.login AS user, MAX(time_entries.spent_on) AS last_entry, SUM(time_entries.hours) AS hours").group("time_entries.user_id").order("last_entry ASC").map{|te|
 			{
 				:id => te[:id],
