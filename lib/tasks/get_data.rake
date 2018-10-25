@@ -20,6 +20,7 @@ CF_IMPORTE_LOCAL_IVA = 272
 CF_TIPO_FACTURA = 207
 CF_TIPO_INGRESO = 273
 CF_TIPO_GASTO = 274
+CF_TIPO_GASTO_RRHH = 282
 CF_CLIENTE = 28
 CF_TERCEROS = 271
 CF_NUM_FACTURA = 204
@@ -75,7 +76,7 @@ namespace :bsc2 do
 				headers << "cliente/terceros"
 				result << (cf = issue.custom_values.where(custom_field_id: CF_CLIENTE).first || issue.custom_values.where(custom_field_id: CF_TERCEROS).first) ? (cf.present? ? cf.value : '') : ''
 				headers << "tipo factura/ingreso/gasto"
-				result << (cf = issue.custom_values.where(custom_field_id: CF_TIPO_FACTURA).first || issue.custom_values.where(custom_field_id: CF_TIPO_INGRESO).first || issue.custom_values.where(custom_field_id: CF_TIPO_GASTO).first) ? (cf.present? ? cf.value : '') : ''
+				result << (cf = issue.custom_values.where(custom_field_id: CF_TIPO_FACTURA).first || issue.custom_values.where(custom_field_id: CF_TIPO_INGRESO).first || issue.custom_values.where(custom_field_id: CF_TIPO_GASTO).first || issue.custom_values.where(custom_field_id: CF_TIPO_GASTO_RRHH).first) ? (cf.present? ? cf.value : '') : ''
 				headers << "num factura"
 				result << (cf = issue.custom_values.where(custom_field_id: CF_NUM_FACTURA).first) ? (cf.present? ? cf.value : '') : ''
 				headers << "fecha creación"
