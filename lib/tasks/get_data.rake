@@ -30,6 +30,8 @@ CF_JP_ID = 276
 CF_GCUENTAS_ID = 277
 
 
+BILL_TRACKER = 23
+
 
 namespace :bsc2 do
 	task :get_data => :environment do
@@ -110,6 +112,103 @@ namespace :bsc2 do
 		end
 
 		
+	end
+
+	task :get_bill_changes => :environment do
+		year = 2018
+		zone = ActiveSupport::TimeZone.new("Madrid")
+		headers = ["id", "subject", "unidad negocio", "project", "responsable producción", "moneda", "importe", "fecha facturación", "fecha actualización", "autor"]
+		results = [[]]
+
+		projects = Project.active
+		projects.each do |project|
+			result_project = []
+
+			# Unidad negocio
+			result_project << (cf = project.custom_values.where(custom_field_id: CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : ''
+			# Project
+			result_project << project.identifier
+			# Responsable producción
+			cf = project.custom_values.find_by(custom_field_id: CF_JP_ID)
+			if cf.present? and cf.value.present?
+				result_project << User.find(cf.value).login
+			else
+				result_project << ''
+			end
+
+			# bills = project.issues.where(tracker_id: BILL_TRACKER)
+			bills = project.issues.joins(:custom_values).where("tracker_id = ? AND custom_values.custom_field_id = ? AND custom_values.value >= ?", BILL_TRACKER, CF_FECHA_FACTURACION, "#{year}-01-01")
+			bills.each do |bill|
+				result_bill = []
+
+				moneda_inicial = JournalDetail.joins(:journal).order('journals.created_on ASC').find_by("journals.journalized_type = ? AND journals.journalized_id = ? AND property = ? AND prop_key = ?", 'Issue', bill.id, 'cf', CF_MONEDA)
+				moneda_inicial = moneda_inicial.present? ? moneda_inicial.old_value : ((cf = bill.custom_values.find_by(custom_field_id: CF_MONEDA)).present? ? cf.value : '')
+				ultima_moneda = moneda_inicial
+				importe_inicial = JournalDetail.joins(:journal).order('journals.created_on ASC').find_by("journals.journalized_type = ? AND journals.journalized_id = ? AND property = ? AND prop_key = ?", 'Issue', bill.id, 'cf', CF_IMPORTE_LOCAL)
+				importe_inicial = importe_inicial.present? ? importe_inicial.old_value : ((cf = bill.custom_values.find_by(custom_field_id: CF_IMPORTE_LOCAL)).present? ? cf.value : '')
+				ultimo_importe = importe_inicial
+				ffacturacion_inicial = JournalDetail.joins(:journal).order('journals.created_on ASC').find_by("journals.journalized_type = ? AND journals.journalized_id = ? AND property = ? AND prop_key = ?", 'Issue', bill.id, 'cf', CF_FECHA_FACTURACION)
+				ffacturacion_inicial = ffacturacion_inicial.present? ? ffacturacion_inicial.old_value : ((cf = bill.custom_values.find_by(custom_field_id: CF_FECHA_FACTURACION)).present? ? cf.value : '')
+				ultima_ffacturacion = ffacturacion_inicial
+
+				# Id
+				result_bill << bill.id
+				# Subject
+				result_bill << bill.subject
+
+				result_bill += result_project
+
+				result = result_bill.clone
+
+				# Moneda
+				result << (moneda_inicial.present? ? ((cfe = CustomFieldEnumeration.find(moneda_inicial)).present? ? cfe.name : '') : '')
+				# Importe
+				result << importe_inicial
+				# Fecha facturacion
+				result << ffacturacion_inicial
+				# Fecha actualizacion
+				result << bill.created_on.in_time_zone(zone)
+				# Autor
+				result << ((user = bill.author).present? ? user.login : '')
+
+				results << result
+
+				journals = bill.journals.joins(:details).where("property = ? AND prop_key IN (?)", "cf", [CF_IMPORTE_LOCAL, CF_FECHA_FACTURACION]).group('journals.id').order('journals.created_on ASC')
+				journals.each do |journal|
+					result = result_bill.clone
+
+					# Moneda
+					moneda = journal.details.find_by("property = ? AND prop_key = ?", "cf", CF_MONEDA)
+					ultima_moneda = moneda.value if moneda.present?
+					result << (ultima_moneda.present? ? ((cfe = CustomFieldEnumeration.find(ultima_moneda)).present? ? cfe.name : '') : '')
+
+
+					# Importe
+					importe = journal.details.find_by("property = ? AND prop_key = ?", "cf", CF_IMPORTE_LOCAL)
+					ultimo_importe = importe.value if importe.present?
+					result << ultimo_importe
+
+					# Fecha facturacion
+					ffacturacion = journal.details.find_by("property = ? AND prop_key = ?", "cf", CF_FECHA_FACTURACION)
+					ultima_ffacturacion = ffacturacion.value if ffacturacion.present?
+					result << ultima_ffacturacion
+
+					# Fecha actualizacion
+					result << journal.created_on.in_time_zone(zone)
+					# Autor
+					result << ((user = journal.user).present? ? user.login : '')
+
+					results << result
+				end
+			end
+		end
+		results[0] = headers
+
+		CSV.open("public/bill_changes.csv","w",:col_sep => ';',:encoding=>'UTF-8') do |file|
+			results.each do |result|
+				file << result
+			end
+		end
 	end
 
 	def effort_scheduled(checkpoint, profile)
