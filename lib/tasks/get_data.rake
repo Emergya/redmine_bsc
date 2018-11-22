@@ -117,7 +117,7 @@ namespace :bsc2 do
 	task :get_bill_changes => :environment do
 		year = 2018
 		zone = ActiveSupport::TimeZone.new("Madrid")
-		headers = ["id", "subject", "unidad negocio", "project", "responsable producción", "moneda", "importe", "fecha facturación", "fecha actualización", "autor"]
+		headers = ["id", "subject", "unidad negocio", "project", "responsable producción", "moneda", "importe (moneda local)", "fecha facturación", "fecha actualización", "hora actualización", "autor"]
 		results = [[]]
 
 		projects = Project.active
@@ -167,7 +167,9 @@ namespace :bsc2 do
 				# Fecha facturacion
 				result << ffacturacion_inicial
 				# Fecha actualizacion
-				result << bill.created_on.in_time_zone(zone)
+				result << bill.created_on.in_time_zone(zone).strftime("%Y-%m-%d")
+				# Hora actualizacion
+				result << bill.created_on.in_time_zone(zone).strftime("%H:%M:%S")
 				# Autor
 				result << ((user = bill.author).present? ? user.login : '')
 
@@ -194,7 +196,11 @@ namespace :bsc2 do
 					result << ultima_ffacturacion
 
 					# Fecha actualizacion
-					result << journal.created_on.in_time_zone(zone)
+					result << journal.created_on.in_time_zone(zone).strftime("%Y-%m-%d")
+
+					# Fecha actualizacion
+					result << journal.created_on.in_time_zone(zone).strftime("%H:%M:%S")
+
 					# Autor
 					result << ((user = journal.user).present? ? user.login : '')
 
