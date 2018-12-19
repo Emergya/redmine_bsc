@@ -115,9 +115,9 @@ namespace :bsc2 do
 	end
 
 	task :get_bill_changes => :environment do
-		year = 2018
+		year = Date.today.year
 		zone = ActiveSupport::TimeZone.new("Madrid")
-		headers = ["id", "subject", "unidad negocio", "project", "responsable producción", "moneda", "importe (moneda local)", "fecha facturación", "fecha actualización", "hora actualización", "autor"]
+		headers = ["id", "subject", "unidad negocio", "project", "responsable producción", "moneda", "importe (moneda local)", "fecha facturación", "estado", "fecha actualización", "hora actualización", "autor"]
 		results = [[]]
 
 		projects = Project.active
@@ -150,6 +150,9 @@ namespace :bsc2 do
 				ffacturacion_inicial = JournalDetail.joins(:journal).order('journals.created_on ASC').find_by("journals.journalized_type = ? AND journals.journalized_id = ? AND property = ? AND prop_key = ?", 'Issue', bill.id, 'cf', CF_FECHA_FACTURACION)
 				ffacturacion_inicial = ffacturacion_inicial.present? ? ffacturacion_inicial.old_value : ((cf = bill.custom_values.find_by(custom_field_id: CF_FECHA_FACTURACION)).present? ? cf.value : '')
 				ultima_ffacturacion = ffacturacion_inicial
+				estado_inicial = JournalDetail.joins(:journal).order('journals.created_on ASC').find_by("journals.journalized_type = ? AND journals.journalized_id = ? AND property = ? AND prop_key = ?", 'Issue', bill.id, 'attr', 'status_id')
+				estado_inicial = estado_inicial.present? ? ((status = IssueStatus.find(estado_inicial.old_value)).present? ? status.name : '') : bill.status.name
+				ultimo_estado = estado_inicial
 
 				# Id
 				result_bill << bill.id
@@ -165,7 +168,9 @@ namespace :bsc2 do
 				# Importe
 				result << importe_inicial
 				# Fecha facturacion
-				result << ffacturacion_inicial
+				result << ffacturacion_inicial.to_date
+				# Estado
+				result << estado_inicial #(estado_inicial.present? ? ((status = IssueStatus.find(estado_inicial)).present? ? status.name : '') : '')
 				# Fecha actualizacion
 				result << bill.created_on.in_time_zone(zone).strftime("%Y-%m-%d")
 				# Hora actualizacion
@@ -175,7 +180,7 @@ namespace :bsc2 do
 
 				results << result
 
-				journals = bill.journals.joins(:details).where("property = ? AND prop_key IN (?)", "cf", [CF_IMPORTE_LOCAL, CF_FECHA_FACTURACION]).group('journals.id').order('journals.created_on ASC')
+				journals = bill.journals.joins(:details).where("(property = ? AND prop_key IN (?)) OR (property = ? AND prop_key = ?)", "cf", [CF_IMPORTE_LOCAL, CF_FECHA_FACTURACION], 'attr', 'status_id').group('journals.id').order('journals.created_on ASC')
 				journals.each do |journal|
 					result = result_bill.clone
 
@@ -188,12 +193,17 @@ namespace :bsc2 do
 					# Importe
 					importe = journal.details.find_by("property = ? AND prop_key = ?", "cf", CF_IMPORTE_LOCAL)
 					ultimo_importe = importe.value if importe.present?
-					result << ultimo_importe
+					result << ultimo_importe.to_f
 
 					# Fecha facturacion
 					ffacturacion = journal.details.find_by("property = ? AND prop_key = ?", "cf", CF_FECHA_FACTURACION)
 					ultima_ffacturacion = ffacturacion.value if ffacturacion.present?
-					result << ultima_ffacturacion
+					result << ultima_ffacturacion.to_date
+
+					# Estado
+					estado = journal.details.find_by("property = ? AND prop_key = ?", "attr", 'status_id')
+					ultimo_estado = ((status = IssueStatus.find(estado.value)).present? ? status.name : '') if estado.present?
+					result << ultimo_estado #(ultimo_estado.present? ? ((status = IssueStatus.find(ultimo_estado)).present? ? status.name : '') : '')
 
 					# Fecha actualizacion
 					result << journal.created_on.in_time_zone(zone).strftime("%Y-%m-%d")
