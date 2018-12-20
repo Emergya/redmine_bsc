@@ -20,6 +20,7 @@ T_OTHER_EXPENSES_RRHH = 68
 
 CF_IMPORTE = 152
 CF_TIPO_GASTO_RRHH = 282
+CF_FECHA_FACTURACION = 153
 
 namespace :bsc2 do
 	task :production_info => :environment do
@@ -378,7 +379,12 @@ namespace :bsc2 do
                     headers << "Padre ID"
                     result << p.parent_id
                     headers << "Indemnización"
-                    result << Issue.joins("LEFT JOIN custom_values AS type ON type.customized_type = 'Issue' AND type.customized_id = issues.id AND type.custom_field_id = #{CF_TIPO_GASTO_RRHH}").joins("LEFT JOIN custom_values AS amount ON amount.customized_type = 'Issue' AND amount.customized_id = issues.id AND amount.custom_field_id = #{CF_IMPORTE}").where("issues.tracker_id = ? AND issues.project_id IN (?) AND type.value = ?", T_OTHER_EXPENSES_RRHH, metric_projects,'Indemnización').sum('amount.value')
+                    if year=="total"
+                    	compensations = Issue.joins("LEFT JOIN custom_values AS type ON type.customized_type = 'Issue' AND type.customized_id = issues.id AND type.custom_field_id = #{CF_TIPO_GASTO_RRHH}").joins("LEFT JOIN custom_values AS amount ON amount.customized_type = 'Issue' AND amount.customized_id = issues.id AND amount.custom_field_id = #{CF_IMPORTE}").where("issues.tracker_id = ? AND issues.project_id IN (?) AND type.value = ?", T_OTHER_EXPENSES_RRHH, metric_projects,'Indemnización').sum('amount.value')
+                    else
+                    	compensations = Issue.joins("LEFT JOIN custom_values AS type ON type.customized_type = 'Issue' AND type.customized_id = issues.id AND type.custom_field_id = #{CF_TIPO_GASTO_RRHH}").joins("LEFT JOIN custom_values AS amount ON amount.customized_type = 'Issue' AND amount.customized_id = issues.id AND amount.custom_field_id = #{CF_IMPORTE}").joins("LEFT JOIN custom_values AS billing_date ON billing_date.customized_type = 'Issue' AND billing_date.customized_id = issues.id AND billing_date.custom_field_id = #{CF_FECHA_FACTURACION}").where("issues.tracker_id = ? AND issues.project_id IN (?) AND type.value = ? AND billing_date.value BETWEEN ? AND ?", T_OTHER_EXPENSES_RRHH, metric_projects,'Indemnización', "#{year}-01-01", "#{year}-12-31").sum('amount.value')
+                    end
+                    result << compensations
 
 					# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result
