@@ -24,7 +24,7 @@ namespace :bsc2 do
 
 		projects.each do |p|
 			puts "#{p.identifier}"
-			maux = BSC::MetricsInterval.new(p.id, Date.parse(Date.today.year.to_s+"-01-01"), Date.parse(Date.today.year.to_s+"-12-31"), {:descendants => false})
+			maux = BSC::MetricsInterval.new(p.id, Date.parse((Date.today.year-1).to_s+"-01-01"), Date.parse(Date.today.year.to_s+"-12-31"), {:descendants => false})
 			include_descendants = (p.bsc_end_date.present? and (p.parent_id != ARCHIVADOS_PROJECT_ID or maux.hhrr_hours_incurred_by_profile.reject{|k,v| k==nil}.present?) )
 
 			start_year = maux.real_start_date.year
