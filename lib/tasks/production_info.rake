@@ -24,12 +24,13 @@ CF_FECHA_FACTURACION = 153
 
 namespace :bsc2 do
 	task :production_info => :environment do
-		user_profiles
-		time_entries
-		checkpoints
-		profiles_cost
-		time_entries_years
-		generate_projects_data
+		#user_profiles
+		#time_entries
+		#checkpoints
+		#profiles_cost
+		#time_entries_years
+		#generate_projects_data
+		time_entries_last_year
 	end
 
 	def user_profiles
@@ -394,6 +395,53 @@ namespace :bsc2 do
 		end
 
 		generate_csv("projects_data", results)
+	end
+
+	def time_entries_last_year
+		year = Date.today.year-1
+		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"]
+
+		results = [headers]
+		# users = User.active
+		users = User.find(TimeEntry.where(tyear: year).distinct(:user_id).map(&:user_id))
+
+		users.each do |u|
+			projects = Project.find(TimeEntry.where(user_id: u.id, tyear: year).distinct(:project_id).map(&:project_id)) #u.projects.active
+
+			projects.each do |p|
+				te = TimeEntry.where(user_id: u.id, project_id: p.id, tyear: year)
+
+				if te.present?
+					result = []
+
+					result << u.login
+					result << p.name
+					result << p.identifier
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_LOCALIZACION_ID).first) ? (cf.present? ? cf.value : '') : 0
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SERVICIO_ID).first) ? (cf.present? ? cf.value : '') : 0
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : 0
+					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RESP_PRODUCCION).first
+					if cf.present? and cf.value.present?
+						result << User.find(cf.value).login
+					else
+						result << ''
+					end
+					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RESP_NEGOCIO).first
+					if cf.present? and cf.value.present?
+						result << User.find(cf.value).login
+					else
+						result << ''
+					end
+					(1..12).each do |i|
+						result << te.where(tmonth: i).sum(:hours)
+					end
+
+					results << result
+				end
+			end
+		end
+
+		generate_csv("time_entries_last_year", results)
 	end
 
 	def generate_csv(filename, data)
