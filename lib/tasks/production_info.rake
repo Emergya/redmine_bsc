@@ -24,12 +24,12 @@ CF_FECHA_FACTURACION = 153
 
 namespace :bsc2 do
 	task :production_info => :environment do
-		#user_profiles
-		#time_entries
-		#checkpoints
-		#profiles_cost
-		#time_entries_years
-		#generate_projects_data
+		user_profiles
+		time_entries
+		checkpoints
+		profiles_cost
+		time_entries_years
+		generate_projects_data
 		time_entries_last_year
 	end
 
