@@ -203,4 +203,34 @@ class BscBalance < ActiveRecord::Base
 			:result => result
 		}
 	end	
+
+	# Get warning for exceeded incurred expenses
+	def self.get_exceeded_incurred_expenses(project)
+		metrics = @metrics || BSC::Metrics.new(project, Date.today)
+
+		start_year = metrics.real_start_date.year
+		current_year = Date.today.year
+		expense_exceeded = {}
+		partial_status = {}
+
+		(start_year..current_year).each do |myear|
+			partial_start_date = Date.parse(myear.to_s+"-01-01")
+			partial_end_date = Date.parse(myear.to_s+"-12-31")
+			aux_metrics = BSC::MetricsInterval.new(project, partial_start_date, partial_end_date)
+
+			expense_exceeded[myear] = aux_metrics.total_expense_incurred - (aux_metrics.hhrr_cost_scheduled_checkpoint + aux_metrics.variable_expense_scheduled + aux_metrics.fixed_expense_scheduled)
+			partial_status[myear] = (expense_exceeded[myear] <= 0) ? 'metric_success' : 'metric_warning'
+
+		end
+
+		status = partial_status.has_value?('metric_warning') ? 'metric_warning' : 'metric_success'
+
+		data = {
+			:expense_exceeded => expense_exceeded,
+			:status => status,
+			:partial_status => partial_status,
+			:start_year => start_year,
+			:current_year => current_year
+		}
+	end
 end

@@ -90,6 +90,7 @@ class BscMetricsController < ApplicationController
 			@table_data = data[:table]
 			@chart_data = data[:chart]
 			@scheduled_margin = data[:scheduled_margin]
+			@exceeded_incurred_expenses_header ||= BscBalance.get_exceeded_incurred_expenses(@project)
 		end
 
 		if request.xhr?
