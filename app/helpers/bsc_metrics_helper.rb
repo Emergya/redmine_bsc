@@ -19,9 +19,6 @@ module BscMetricsHelper
     when 'balance'
       data = @balance_header
       text = render_balance_header_text(data[:status], data[:result])
-    when 'exceeded_incurred_expenses'
-      data = @exceeded_incurred_expenses_header
-      text = render_incurred_excess_text(data[:partial_status], data[:expense_exceeded], data[:start_year], data[:current_year])
     end
 
     ['metric_alert', 'metric_warning'].include?(data[:status]) ? ("<div class='status_message "+data[:status]+"'><span>"+text+"</span></div>").html_safe : ''
@@ -163,15 +160,17 @@ module BscMetricsHelper
     text.html_safe
   end
 
-  def render_incurred_excess_text(partial_status, expense_exceeded, start_year, end_year)
-    text = ""
-    (start_year..end_year).each do |year|
-      if (expense_exceeded[year] > 0)
-        text << "<br />" if year > start_year
-        text << "Los gastos incurridos superan en <b>#{currency(expense_exceeded[year])}</b> a los gastos estimados en el último punto de control para el año <b>#{year}</b>"
+  def render_incurred_excess_text
+    data = @exceeded_incurred_expenses_header
+    if data[:status] == 'metric_warning'
+      status = data[:status]
+      expense_exceeded = data[:expense_exceeded]
+      text = ""
+      (data[:start_year]..data[:current_year]).each do |year|
+          text << "<div class='status_message #{status}'><span>Los gastos incurridos superan en <b>#{currency(expense_exceeded[year])}</b> a los gastos estimados en el último punto de control para el año <b>#{year}</b></span></div>" if expense_exceeded[year] >= 0.01
       end
+      text.html_safe
     end
-    text.html_safe
   end
 
 
