@@ -136,12 +136,12 @@ class BscEffort < ActiveRecord::Base
 		result = 0
 		details = []
 
-		if effort == 0
+		if effort.round(2) == 0
 			result = 0
-		elsif effort < 0
+		elsif effort.round(2) < 0
 			result = -1
 			details << l(:"bsc.text_increase_scheduled_time")
-		elsif effort > 0
+		elsif effort.round(2) > 0
 			if profiles > 0 and days > 0
 				result = effort / (profiles * days)
 				details << [l(:"bsc.text_add_profiles"), l(:"bsc.text_decrease_scheduled_time"), l(:"bsc.text_delay_project_end_date")].join(l(:"bsc.text_or"))  if result > WORKDAY_HOURS
