@@ -53,7 +53,8 @@ class BscDeliverable < ActiveRecord::Base
 				joins("LEFT JOIN custom_values AS cv ON cv.customized_type = 'Issue' AND cv.customized_id = issues.id AND cv.custom_field_id = "+Setting.plugin_redmine_bsc[:delivery_date]).
 				where("issues.project_id IN (?) AND issues.status_id <> ?", projects, Setting.plugin_redmine_bsc[:delivery_status]).
 				select("issues.id, issues.subject, issue_statuses.name AS status, cv.value AS delivery_date, issues.assigned_to_id, issues.done_ratio").
-				order("delivery_date ASC")
+				order("delivery_date ASC").
+				reject{|i| i.delivery_date.blank?}
 		else
 			[]
 		end
