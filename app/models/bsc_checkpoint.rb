@@ -13,6 +13,7 @@ class BscCheckpoint < ActiveRecord::Base
   validates_numericality_of :held_qa_meetings, :only_integer => true
   validates_numericality_of :target_expenses, :allow_nil => false
   validates_numericality_of :target_incomes, :allow_nil => false
+  validates_numericality_of :achievement_percentage, :only_integer => true
 
   attr_protected :project_id, :author_id
   attr_reader :current_journal
