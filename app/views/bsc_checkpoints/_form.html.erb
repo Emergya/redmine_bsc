@@ -11,7 +11,7 @@ var text_checkpoint_confirm = "<%= l(:'bsc.text_checkpoint_confirm') %>";
 
 <div class="splitcontentleft">
   <p><%= f.text_field :checkpoint_date, :size => 10, :required => true %><%= calendar_for('checkpoint_checkpoint_date') %></p>
-  <p><%= f.text_field :scheduled_finish_date, :size => 10, :required => true, :readonly => (!User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates) %><%= calendar_for('checkpoint_scheduled_finish_date') %></p>
+  <p><%= f.text_field :scheduled_finish_date, :size => 10, :required => true, :readonly => (!User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates) %><%= calendar_for('checkpoint_scheduled_finish_date') if User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates %></p>
   <p><%= f.text_field :title %></p>
   <p><%= f.check_box :base_line, :disabled => @first_checkpoint, :readonly => (!User.current.allowed_to?(:bsc_manage_dates, @project) and @project.bsc_manage_dates) %></p>
 </div>
