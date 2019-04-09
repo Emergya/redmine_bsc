@@ -143,6 +143,9 @@ namespace :bsc2 do
 					result << metrics.real_start_date
 					headers << "Cliente"
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_CLIENTE_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "gastos estimados reales"
+					real_scheduled_expenses = (metrics.hhrr_cost_scheduled_checkpoint + metrics.variable_expense_scheduled + metrics.fixed_expense_scheduled)
+					result << (metrics.total_expense_incurred > real_scheduled_expenses ? real_scheduled_expenses : "-")
 
 						# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result

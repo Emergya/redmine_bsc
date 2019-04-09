@@ -91,7 +91,6 @@ module BSC
 
 		def hhrr_cost_scheduled_checkpoint
 			(hourly_cost_by_profile = Hash.new(0.0).merge(BSC::Integration.get_hourly_cost_array(@date.year))
-			hours_incurred_by_profile = Hash.new(0.0).merge(hhrr_hours_incurred_by_profile)
 			total = 0.0
 			hhrr_hours_scheduled_by_profile.each do |profile, effort|
 				total += effort * hourly_cost_by_profile[profile]
