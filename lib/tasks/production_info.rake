@@ -32,6 +32,8 @@ namespace :bsc2 do
 		generate_projects_data
 		time_entries_last_year
 		get_projects_with_cost_overrun_last_year
+		time_entries_daily
+		time_entries_last_months
 	end
 
 	def user_profiles
@@ -580,6 +582,112 @@ namespace :bsc2 do
 		end
 
 		generate_csv("projects_with_cost_overrun_last_year", results)
+	end
+
+	def time_entries_daily
+		start_date = Date.today - 60.days
+		end_date = Date.today
+		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio"]
+
+		(start_date..end_date).each do |date|
+			headers << date.strftime('%d/%m/%Y')
+		end
+
+		results = [headers]
+		# users = User.active
+		users = User.find(TimeEntry.where(spent_on: start_date..end_date).distinct(:user_id).map(&:user_id))
+
+		users.each do |u|
+			projects = Project.find(TimeEntry.where(user_id: u.id, spent_on: start_date..end_date).distinct(:project_id).map(&:project_id)) #u.projects.active
+
+			projects.each do |p|
+				te = TimeEntry.where(user_id: u.id, project_id: p.id, spent_on: start_date..end_date)
+
+				if te.present?
+					result = []
+
+					result << u.login
+					result << p.name
+					result << p.identifier
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_LOCALIZACION_ID).first) ? (cf.present? ? cf.value : '') : 0
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SERVICIO_ID).first) ? (cf.present? ? cf.value : '') : 0
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : 0
+					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RESP_PRODUCCION).first
+					if cf.present? and cf.value.present?
+						result << User.find(cf.value).login
+					else
+						result << ''
+					end
+					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RESP_NEGOCIO).first
+					if cf.present? and cf.value.present?
+						result << User.find(cf.value).login
+					else
+						result << ''
+					end
+					(start_date..end_date).each do |date|
+						result << te.where(spent_on: date).sum(:hours)
+					end
+
+					results << result
+				end
+			end
+		end
+
+		generate_csv("time_entries_last_60_days", results)
+	end
+
+	def time_entries_last_months
+		start_date = (Date.today - 3.months).at_beginning_of_month
+		end_date = Date.today
+		number_of_months = (end_date.year*12+end_date.month)-(start_date.year*12+start_date.month)
+
+		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio"]
+
+		(0..number_of_months).each do |n|
+			headers << (start_date + n.months).strftime('%m/%Y')
+		end
+
+		results = [headers]
+		# users = User.active
+		users = User.find(TimeEntry.where(spent_on: start_date..end_date).distinct(:user_id).map(&:user_id))
+
+		users.each do |u|
+			projects = Project.find(TimeEntry.where(user_id: u.id, spent_on: start_date..end_date).distinct(:project_id).map(&:project_id)) #u.projects.active
+
+			projects.each do |p|
+				te = TimeEntry.where(user_id: u.id, project_id: p.id, spent_on: start_date..end_date)
+
+				if te.present?
+					result = []
+
+					result << u.login
+					result << p.name
+					result << p.identifier
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_LOCALIZACION_ID).first) ? (cf.present? ? cf.value : '') : 0
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SERVICIO_ID).first) ? (cf.present? ? cf.value : '') : 0
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : 0
+					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RESP_PRODUCCION).first
+					if cf.present? and cf.value.present?
+						result << User.find(cf.value).login
+					else
+						result << ''
+					end
+					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RESP_NEGOCIO).first
+					if cf.present? and cf.value.present?
+						result << User.find(cf.value).login
+					else
+						result << ''
+					end
+					(0..number_of_months).each do |n|
+						result << te.where(tmonth: (start_date + n.months).month).sum(:hours)
+					end
+
+					results << result
+				end
+			end
+		end
+
+		generate_csv("time_entries_last_4_months", results)
 	end
 
 	def generate_csv(filename, data)
