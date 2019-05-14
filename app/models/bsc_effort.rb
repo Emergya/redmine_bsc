@@ -16,9 +16,15 @@ class BscEffort < ActiveRecord::Base
 	end
 
 	# Get effort data for specific date
-	def self.get_date(project, date)
+	def self.get_date(project, date, current = false)
 		#projects = Project.find(project).self_and_descendants.map(&:id)
-		metrics = @metrics || BSC::Metrics.new(project, date)
+		#metrics = @metrics || BSC::Metrics.new(project, date)
+		if current
+			aux_metrics = BSC::Metrics.new(project, Date.today)
+			metrics = BSC::MetricsInterval.new(project, aux_metrics.real_start_date, date)
+		else
+			metrics = BSC::Metrics.new(project, date)
+		end
 
 		BscEffort.new({
 			:project_id => project,
@@ -32,20 +38,30 @@ class BscEffort < ActiveRecord::Base
 	end
 
 	# Get effort content data
-	def self.get_data(project, date)
-		metrics = @metrics || BSC::Metrics.new(project, date)
+	def self.get_data(project, date_option)
+		#metrics = @metrics || BSC::Metrics.new(project, date)
+		if date_option == '0'
+			end_date = Date.today
+			metrics = @metrics || BSC::Metrics.new(project, end_date)
+			start_date = metrics.real_start_date
+		else
+			start_date = Date.parse(date_option+"-01-01")
+			end_date = Date.parse(date_option+"-12-31")
+			metrics = BSC::MetricsInterval.new(project, start_date, end_date)
+		end
 
 		data = {
-			:chart => get_chart_data(project, date),
-			:table => get_table_data(project, date),
+			:chart => get_chart_data(project, start_date, end_date),
+			:table => get_table_data(project, end_date, metrics),
 			:scheduled_finish_date => metrics.scheduled_finish_date
 		}
 	end
 
 	# Get chart effort data
-	def self.get_chart_data(project, end_date)
-		data = BscEffort.where("project_id = ? AND date <= ?", project, end_date).order("date DESC")
-		data = [get_date(project, end_date)] + data if data.detect{|d| d[:date] == end_date}.blank?
+	def self.get_chart_data(project, start_date, end_date)
+		#data = BscEffort.where("project_id = ? AND date <= ?", project, end_date).order("date DESC")
+		data = BscEffort.where("project_id = ? AND date BETWEEN ? AND ?", project, start_date, end_date).order("date DESC")
+		data = [get_date(project, end_date, true)] + data if data.detect{|d| d[:date] == end_date}.blank?
 
 		data.map{|e| 
 			{
@@ -61,8 +77,8 @@ class BscEffort < ActiveRecord::Base
 	end
 
 	# Get table effort data
-	def self.get_table_data(project, date)
-		metrics = @metrics || BSC::Metrics.new(project, date)
+	def self.get_table_data(project, date, metrics)
+		#metrics = @metrics || BSC::Metrics.new(project, date)
 		profiles_name = BSC::Integration.get_profiles.map{|p| {p.id => p.name}}.reduce(&:merge)
 
 		start_date = metrics.scheduled_start_date.present? ? [metrics.scheduled_start_date, Date.today].max : Date.today

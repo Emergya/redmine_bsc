@@ -63,7 +63,7 @@ class BscMetricsController < ApplicationController
 			@expenses_trackers = BSC::Integration.get_expense_trackers
 		when 'effort'
 			@effort_header ||= BscEffort.get_header(@project)
-			data = BscEffort.get_data(@project.id, Date.today)
+			data = BscEffort.get_data(@project.id, params[:selected_date])
 			@chart_data = data[:chart].reverse
 			@table_data = data[:table]
 			@scheduled_finish_date = data[:scheduled_finish_date]
