@@ -119,6 +119,9 @@ namespace :bsc2 do
 			headers << profile.name
 		end
 
+		headers << "base_line"
+		headers << "author"
+
 		results = [headers]
 		projects = Project.active
 
@@ -136,6 +139,9 @@ namespace :bsc2 do
 				HrProfile.all.each do |profile|
 					result << efforts[profile.id]
 				end
+
+				result << (checkpoint.base_line ? "Sí" : "No")
+				result << checkpoint.author.login
 
 				results << result
 			end
