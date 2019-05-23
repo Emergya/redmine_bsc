@@ -4,6 +4,12 @@
 
 <%= error_messages_for 'bsc_project_info' %>
 
+<% if User.current.admin and @bsc_project_info.id.present? and !@has_checkpoints %>
+  <div class="contextual">
+    <%= link_to l(:button_delete), { action: :destroy }, data: { confirm: l(:text_are_you_sure) }, :method => :delete, :class => 'icon icon-del' %>
+  </div>
+  <div style="clear:both;"></div>
+<% end %>
 <%= labelled_form_for :bsc_project_info, @bsc_project_info,
                    :url => { :controller => 'bsc_management', :action => 'index', :project_id => @project },
                    :lang => current_language do |f| %>

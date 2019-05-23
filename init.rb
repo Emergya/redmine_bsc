@@ -25,7 +25,7 @@ Redmine::Plugin.register :redmine_bsc do
   settings :default => {}, :partial => 'settings/bsc_settings'
 
   project_module :bscplugin do
-    permission :bsc_management, { :bsc_management => [:index] }
+    permission :bsc_management, { :bsc_management => [:index, :destroy] }
     permission :bsc_checkpoints, { :bsc_checkpoints => [:index, :new, :new_without_annualization, :show, :edit, :destroy, :update, :create, :create_without_annualization] }
     permission :bsc_metrics, { :bsc_metrics => [:index, :change_metric] }
     permission :bsc_manage_dates, {:bsc_checkpoints => [:create, :create_without_annualization, :update], :bsc_management => [:index]}
