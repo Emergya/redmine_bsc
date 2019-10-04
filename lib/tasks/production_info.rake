@@ -4,6 +4,7 @@ CF_LOCALIZACION_ID = 166
 CF_UNEGOCIO_ID = 275 
 CF_RESP_PRODUCCION = 276
 CF_RESP_NEGOCIO = 277
+CF_SUBUNIDADNEG_ID = 288
 
 VARIABLE_EXPENSES = ['Providers', 'Other expenses', 'Subsistence allowance', 'Other expenses HHRR']
 VARIABLE_INCOMES = ['Clients', 'Other incomes']
@@ -263,6 +264,8 @@ namespace :bsc2 do
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SERVICIO_ID).first) ? (cf.present? ? cf.value : '') : 0
 					headers << "unidad de negocio"
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "subunidad"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SUBUNIDADNEG_ID).first) ? (cf.present? ? cf.value : '') : 0
 					headers << "responsable producción"
 					cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RESP_PRODUCCION).first
 					if cf.present? and cf.value.present?
