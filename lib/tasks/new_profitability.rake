@@ -14,7 +14,8 @@ CF_GCUENTAS_ID = 277
 CF_EXPEDIENTE_ID = 26
 CF_INICO_GARANTIA_ID = 264
 CF_FIN_GARANTIA_ID = 265
-CF_CLIENTE_ID = 288
+CF_CLIENTE_ID = 289
+CF_SUBUNIDAD_ID = 288
 
 namespace :bsc2 do
 	task :generate_csv => :environment do
@@ -146,6 +147,8 @@ namespace :bsc2 do
 					headers << "gastos estimados reales"
 					real_scheduled_expenses = (metrics.hhrr_cost_scheduled_checkpoint + metrics.variable_expense_scheduled + metrics.fixed_expense_scheduled)
 					result << (metrics.total_expense_incurred > real_scheduled_expenses ? real_scheduled_expenses : "-")
+					headers << "Subunidad"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SUBUNIDAD_ID).first) ? (cf.present? ? cf.value : '') : 0
 
 						# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result
