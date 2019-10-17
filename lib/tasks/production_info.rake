@@ -20,6 +20,8 @@ T_OTHER_EXPENSES = 66
 T_OTHER_EXPENSES_RRHH = 68
 
 CF_IMPORTE = 152
+CF_TIPO_INGRESO = 273
+CF_TIPO_GASTO = 274
 CF_TIPO_GASTO_RRHH = 282
 CF_FECHA_FACTURACION = 153
 
@@ -399,6 +401,13 @@ namespace :bsc2 do
                     	compensations = Issue.joins("LEFT JOIN custom_values AS type ON type.customized_type = 'Issue' AND type.customized_id = issues.id AND type.custom_field_id = #{CF_TIPO_GASTO_RRHH}").joins("LEFT JOIN custom_values AS amount ON amount.customized_type = 'Issue' AND amount.customized_id = issues.id AND amount.custom_field_id = #{CF_IMPORTE}").joins("LEFT JOIN custom_values AS billing_date ON billing_date.customized_type = 'Issue' AND billing_date.customized_id = issues.id AND billing_date.custom_field_id = #{CF_FECHA_FACTURACION}").where("issues.tracker_id = ? AND issues.project_id IN (?) AND type.value = ? AND billing_date.value BETWEEN ? AND ?", T_OTHER_EXPENSES_RRHH, metric_projects,'Indemnización', "#{year}-01-01", "#{year}-12-31").sum('amount.value')
                     end
                     result << compensations
+                    headers << "Ajuste interanual"
+                    if year=="total"
+                    	adjustments = Issue.joins("LEFT JOIN custom_values AS type ON type.customized_type = 'Issue' AND type.customized_id = issues.id AND type.custom_field_id = #{CF_TIPO_INGRESO}").joins("LEFT JOIN custom_values AS amount ON amount.customized_type = 'Issue' AND amount.customized_id = issues.id AND amount.custom_field_id = #{CF_IMPORTE}").where("issues.tracker_id = ? AND issues.project_id IN (?) AND type.value = ?", T_OTHER_INCOMES, metric_projects,'Ajuste Interanual').sum('amount.value') - Issue.joins("LEFT JOIN custom_values AS type ON type.customized_type = 'Issue' AND type.customized_id = issues.id AND type.custom_field_id = #{CF_TIPO_GASTO}").joins("LEFT JOIN custom_values AS amount ON amount.customized_type = 'Issue' AND amount.customized_id = issues.id AND amount.custom_field_id = #{CF_IMPORTE}").where("issues.tracker_id = ? AND issues.project_id IN (?) AND type.value = ?", T_OTHER_EXPENSES, metric_projects,'Ajuste Interanual').sum('amount.value')
+                    else
+                    	adjustments = Issue.joins("LEFT JOIN custom_values AS type ON type.customized_type = 'Issue' AND type.customized_id = issues.id AND type.custom_field_id = #{CF_TIPO_INGRESO}").joins("LEFT JOIN custom_values AS amount ON amount.customized_type = 'Issue' AND amount.customized_id = issues.id AND amount.custom_field_id = #{CF_IMPORTE}").joins("LEFT JOIN custom_values AS billing_date ON billing_date.customized_type = 'Issue' AND billing_date.customized_id = issues.id AND billing_date.custom_field_id = #{CF_FECHA_FACTURACION}").where("issues.tracker_id = ? AND issues.project_id IN (?) AND type.value = ? AND billing_date.value BETWEEN ? AND ?", T_OTHER_INCOMES, metric_projects,'Ajuste Interanual', "#{year}-01-01", "#{year}-12-31").sum('amount.value') - Issue.joins("LEFT JOIN custom_values AS type ON type.customized_type = 'Issue' AND type.customized_id = issues.id AND type.custom_field_id = #{CF_TIPO_GASTO}").joins("LEFT JOIN custom_values AS amount ON amount.customized_type = 'Issue' AND amount.customized_id = issues.id AND amount.custom_field_id = #{CF_IMPORTE}").joins("LEFT JOIN custom_values AS billing_date ON billing_date.customized_type = 'Issue' AND billing_date.customized_id = issues.id AND billing_date.custom_field_id = #{CF_FECHA_FACTURACION}").where("issues.tracker_id = ? AND issues.project_id IN (?) AND type.value = ? AND billing_date.value BETWEEN ? AND ?", T_OTHER_EXPENSES, metric_projects,'Ajuste Interanual', "#{year}-01-01", "#{year}-12-31").sum('amount.value')
+                    end
+                    result << adjustments
 
 					# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result
