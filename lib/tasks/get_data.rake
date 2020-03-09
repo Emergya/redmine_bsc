@@ -1,6 +1,6 @@
 require 'csv'
 
-TRACKERS_ID = [23,43,65,66,67,68]
+TRACKERS_ID = [23,43,44,65,66,67,68]
 CF_SERVICIO_ID = 102
 CF_LOCALIZACON_ID =  166
 CF_UNEGOCIO_ID = 275
@@ -168,7 +168,7 @@ namespace :bsc2 do
 				# Importe
 				result << importe_inicial
 				# Fecha facturacion
-				result << ffacturacion_inicial.to_date
+				result << (ffacturacion_inicial.present? ? ffacturacion_inicial.to_date : ((cf = bill.custom_values.find_by(custom_field_id: CF_FECHA_FACTURACION)).present? ? cf.value.to_date : ''))
 				# Estado
 				result << estado_inicial #(estado_inicial.present? ? ((status = IssueStatus.find(estado_inicial)).present? ? status.name : '') : '')
 				# Fecha actualizacion
@@ -198,7 +198,7 @@ namespace :bsc2 do
 					# Fecha facturacion
 					ffacturacion = journal.details.find_by("property = ? AND prop_key = ?", "cf", CF_FECHA_FACTURACION)
 					ultima_ffacturacion = ffacturacion.value if ffacturacion.present?
-					result << ultima_ffacturacion.to_date
+					result << ultima_ffacturacion.to_date if ultima_ffacturacion.present?
 
 					# Estado
 					estado = journal.details.find_by("property = ? AND prop_key = ?", "attr", 'status_id')
