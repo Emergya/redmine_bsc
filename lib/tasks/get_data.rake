@@ -12,6 +12,7 @@ CF_IMPORTE = 152
 CF_FECHA_FACTURACION = 153
 CF_RESP_PRODUCCION = 276
 CF_RESP_NEGOCIO = 277
+CF_LINEA_NEGOCIO = 288
 
 CF_IVA = 155
 CF_IMPORTE_IVA = 159
@@ -99,6 +100,8 @@ namespace :bsc2 do
 				result << (cf = issue.custom_values.where(custom_field_id: CF_IMPORTE_LOCAL_IVA).first) ? (cf.present? ? cf.value : '') : ''
 				headers << "importe(con iva)"
 				result << (cf = issue.custom_values.where(custom_field_id: CF_IMPORTE_IVA).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "linea negocio"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_LINEA_NEGOCIO).first) ? (cf.present? ? cf.value : '') : ''
 
 				results << result
 			end

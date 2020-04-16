@@ -70,7 +70,7 @@ namespace :bsc2 do
 
 	def time_entries
 		year = Date.today.year
-		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"]
+		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec", "linea negocio"]
 
 		results = [headers]
 		# users = User.active
@@ -106,6 +106,8 @@ namespace :bsc2 do
 					(1..12).each do |i|
 						result << te.where(tmonth: i).sum(:hours)
 					end
+
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SUBUNIDADNEG_ID).first) ? (cf.present? ? cf.value : '') : 0
 
 					results << result
 				end
@@ -449,7 +451,7 @@ namespace :bsc2 do
 
 	def time_entries_last_year
 		year = Date.today.year-1
-		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec"]
+		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec", "linea negocio"]
 
 		results = [headers]
 		# users = User.active
@@ -485,6 +487,8 @@ namespace :bsc2 do
 					(1..12).each do |i|
 						result << te.where(tmonth: i).sum(:hours)
 					end
+
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SUBUNIDADNEG_ID).first) ? (cf.present? ? cf.value : '') : 0
 
 					results << result
 				end
