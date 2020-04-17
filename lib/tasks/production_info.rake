@@ -5,6 +5,7 @@ CF_UNEGOCIO_ID = 275
 CF_RESP_PRODUCCION = 276
 CF_RESP_NEGOCIO = 277
 CF_SUBUNIDADNEG_ID = 288
+CF_CLIENTE_FINAL_ID = 289
 
 VARIABLE_EXPENSES = ['Providers', 'Other expenses', 'Subsistence allowance', 'Other expenses HHRR']
 VARIABLE_INCOMES = ['Clients', 'Other incomes']
@@ -438,6 +439,8 @@ namespace :bsc2 do
                     	remaining_compensations = Issue.joins("LEFT JOIN custom_values AS type ON type.customized_type = 'Issue' AND type.customized_id = issues.id AND type.custom_field_id = #{CF_TIPO_GASTO_RRHH}").joins("LEFT JOIN custom_values AS amount ON amount.customized_type = 'Issue' AND amount.customized_id = issues.id AND amount.custom_field_id = #{CF_IMPORTE}").joins("LEFT JOIN custom_values AS billing_date ON billing_date.customized_type = 'Issue' AND billing_date.customized_id = issues.id AND billing_date.custom_field_id = #{CF_FECHA_FACTURACION}").where("issues.tracker_id = ? AND issues.project_id IN (?) AND issues.status_id = 1 AND type.value = ? AND billing_date.value BETWEEN ? AND ?", T_OTHER_EXPENSES_RRHH, metric_projects,'Indemnización', "#{year}-01-01", "#{year}-12-31").sum('amount.value')
                     end
                     result << remaining_compensations
+                    headers << "Cliente Final"
+                    result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_CLIENTE_FINAL_ID).first) ? (cf.present? ? cf.value : '') : 0
 
 					# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result
