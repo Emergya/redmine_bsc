@@ -102,6 +102,10 @@ namespace :bsc2 do
 				result << (cf = issue.custom_values.where(custom_field_id: CF_IMPORTE_IVA).first) ? (cf.present? ? cf.value : '') : ''
 				headers << "linea negocio"
 				result << (cf = issue.project.custom_values.where(custom_field_id: CF_LINEA_NEGOCIO).first) ? (cf.present? ? cf.value : '') : ''
+				if [65,66,67,68].include?(tracker_id)
+					headers << "categoria"
+					result << (issue.category ? issue.category.name : '')
+				end
 
 				results << result
 			end
