@@ -149,6 +149,10 @@ namespace :bsc2 do
 					result << (metrics.total_expense_incurred > real_scheduled_expenses ? real_scheduled_expenses : "-")
 					headers << "Subunidad"
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SUBUNIDAD_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "Horas estimadas"
+					result << metrics.hhrr_hours_scheduled
+					headers << "Horas incurridas"
+					result << metrics.hhrr_hours_incurred
 
 						# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result
