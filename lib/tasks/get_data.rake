@@ -1,6 +1,6 @@
 require 'csv'
 
-TRACKERS_ID = [23,43,44,65,66,67,68]
+TRACKERS_ID = [23,43,65,66,67,68]
 CF_SERVICIO_ID = 102
 CF_LOCALIZACON_ID =  166
 CF_UNEGOCIO_ID = 275
@@ -26,6 +26,13 @@ CF_CLIENTE = 28
 CF_TERCEROS = 271
 CF_NUM_FACTURA = 204
 CF_FECHA_COBRO = 154
+
+BPO_TRACKER_ID = 44
+CF_EMPLEADO = 212
+CF_COSTE_ANYO = 164
+CF_COSTE_TOTAL = 217
+CF_COSTE_LOCAL_TOTAL = 262
+CF_DEDICACION = 299
 
 CF_JP_ID = 276
 CF_GCUENTAS_ID = 277
@@ -119,6 +126,76 @@ namespace :bsc2 do
 		end
 
 		
+	end
+
+	task :get_bpos => :environment do
+		projects = Project.active
+
+		headers = []
+		results = [[]]
+		issues = Issue.joins(:project).where("tracker_id = ? AND projects.status = ? AND YEAR(issues.created_on) >= ?", BPO_TRACKER_ID, 1, Date.today.year-3)
+
+		issues.each do |issue|
+				headers = []
+				result = []
+				headers << "id"
+				result << issue.id
+				headers << "title"
+				result << issue.subject
+				headers << "project"
+				result << issue.project.identifier
+				headers << "status"
+				result << issue.status.name
+				headers << "servicio"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_SERVICIO_ID).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "localizacion"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_LOCALIZACON_ID).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "unidad negocio"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "responsable producción"
+				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", issue.project_id, CF_JP_ID).first
+				if cf.present? and cf.value.present?
+					result << User.find(cf.value).login
+				else
+					result << ''
+				end
+				headers << "responsable negocio"
+				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", issue.project_id, CF_GCUENTAS_ID).first
+				if cf.present? and cf.value.present?
+					result << User.find(cf.value).login
+				else
+					result << ''
+				end				
+				headers << "empleado"
+				result << ((cf = issue.custom_values.where(custom_field_id: CF_EMPLEADO).first) ? (cf.present? ? (cf.value.present? ? User.find(cf.value).login : '') : '') : '')
+				headers << "dedicacion"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_DEDICACION).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "fecha creación"
+				result << issue.created_on.to_date
+				headers << "fecha inicio"
+				result << issue.start_date
+				headers << "fecha fin"
+				result << issue.due_date
+				headers << "moneda"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_MONEDA).first) ? (cf.present? ? (cf.value ? Currency.find(cf.value).name : '') : '') : ''
+				headers << "iva"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_IVA).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "coste año (SB + SS)"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_COSTE_ANYO).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "coste local total"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_COSTE_LOCAL_TOTAL).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "coste total"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_COSTE_TOTAL).first) ? (cf.present? ? cf.value : '') : ''
+
+				results << result
+			end
+			results[0] = headers
+
+			CSV.open("public/"+Tracker.find(BPO_TRACKER_ID).name.parameterize.underscore+".csv","w",:col_sep => ';',:encoding=>'UTF-8') do |file|
+				results.each do |result|
+					file << result
+				end
+			end
 	end
 
 	task :get_bill_changes => :environment do
