@@ -311,6 +311,75 @@ namespace :bsc2 do
 		end
 	end
 
+	task :get_bitacora_data => :environment do
+		headers = []
+		results = [[]]
+		issues = Issue.joins(:category).where("issue_categories.name = ? AND YEAR(issues.created_on) >= ?", "Bitácora", Date.today.year-3)
+
+		issues.each do |issue|
+				headers = []
+				result = []
+				headers << "id"
+				result << issue.id
+				headers << "title"
+				result << issue.subject
+				headers << "project"
+				result << issue.project.identifier
+				headers << "status"
+				result << issue.status.name
+				headers << "servicio"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_SERVICIO_ID).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "localizacion"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_LOCALIZACON_ID).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "unidad negocio"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "linea negocio"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_LINEA_NEGOCIO).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "responsable producción"
+				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", issue.project_id, CF_JP_ID).first
+				if cf.present? and cf.value.present?
+					result << User.find(cf.value).login
+				else
+					result << ''
+				end
+				headers << "responsable negocio"
+				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", issue.project_id, CF_GCUENTAS_ID).first
+				if cf.present? and cf.value.present?
+					result << User.find(cf.value).login
+				else
+					result << ''
+				end	
+				headers << "fecha creación"
+				result << issue.created_on.to_date
+				headers << "fecha actualización"
+				result << issue.updated_on.to_date
+				headers << "fecha inicio"
+				result << issue.start_date
+				headers << "fecha fin"
+				result << issue.due_date
+				headers << "prioridad"
+				result << issue.priority.name
+				headers << "autor"
+				result << issue.author.login
+				headers << "asignado"
+				result << (issue.assigned_to.present? ? issue.assigned_to.login : '-')
+				headers << "% realizado"
+				result << issue.done_ratio
+				headers << "description"
+				result << issue.description
+
+				results << result
+		end
+
+		results[0] = headers
+
+		CSV.open("public/bitacora.csv","w",:col_sep => ';',:encoding=>'UTF-8') do |file|
+			results.each do |result|
+				file << result
+			end
+		end
+	end
+
 	def effort_scheduled(checkpoint, profile)
 	end
 
