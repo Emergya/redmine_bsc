@@ -42,10 +42,10 @@ namespace :bsc2 do
 	end
 
 	def user_profiles
-		headers = ["login", "name", "rol", "start_date", "end_date"]
+		headers = ["login", "name", "rol", "start_date", "end_date", "activo"]
 		results = [headers]
 
-		users = User.active
+		users = User.joins(:profiles)
 		users.each do |user|
 			profiles = user.profiles
 
@@ -58,6 +58,7 @@ namespace :bsc2 do
 					result << profile.profile.name
 					result << profile.start_date
 					result << profile.end_date
+					result << (user.active? ? "Sí" : "No")
 				
 					results << result
 				end
