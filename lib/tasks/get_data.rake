@@ -34,6 +34,10 @@ CF_COSTE_TOTAL = 217
 CF_COSTE_LOCAL_TOTAL = 262
 CF_DEDICACION = 299
 
+OTHER_EXPENSES_TRACKER_ID = 66
+OTHER_HHRR_EXPENSES_TRACKER_ID = 68
+CF_VALIDADO_PRODUCCION = 148
+
 CF_JP_ID = 276
 CF_GCUENTAS_ID = 277
 
@@ -311,6 +315,82 @@ namespace :bsc2 do
 		end
 	end
 
+	task :get_management_expenses_data => :environment do
+		headers = []
+		results = [[]]
+		issues = Issue.joins(:category, "LEFT JOIN custom_values AS cv ON cv.customized_type='Issue' AND cv.customized_id=issues.id AND cv.custom_field_id=#{CF_TIPO_GASTO_RRHH}").where("issue_categories.name = 'Gestión' AND (tracker_id = ? OR (tracker_id = ? AND cv.value = 'Otros')) AND YEAR(issues.created_on) >= ?", OTHER_EXPENSES_TRACKER_ID, OTHER_HHRR_EXPENSES_TRACKER_ID, Date.today.year-3)
+		
+		issues.each do |issue|
+				headers = []
+				result = []
+				headers << "id"
+				result << issue.id
+				headers << "title"
+				result << issue.subject
+				headers << "project"
+				result << issue.project.identifier
+				headers << "status"
+				result << issue.status.name
+				headers << "tracker"
+				result << issue.tracker.name
+				headers << "category"
+				result << (issue.category ? issue.category.name : '')
+				headers << "servicio"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_SERVICIO_ID).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "localizacion"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_LOCALIZACON_ID).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "unidad negocio"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_UNEGOCIO_ID).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "linea negocio"
+				result << (cf = issue.project.custom_values.where(custom_field_id: CF_LINEA_NEGOCIO).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "responsable producción"
+				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", issue.project_id, CF_JP_ID).first
+				if cf.present? and cf.value.present?
+					result << User.find(cf.value).login
+				else
+					result << ''
+				end
+				headers << "responsable negocio"
+				cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", issue.project_id, CF_GCUENTAS_ID).first
+				if cf.present? and cf.value.present?
+					result << User.find(cf.value).login
+				else
+					result << ''
+				end				
+				headers << "empresa"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_EMPRESA).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "tipo gasto"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_TIPO_GASTO).first || issue.custom_values.where(custom_field_id: CF_TIPO_GASTO_RRHH).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "fecha creación"
+				result << issue.created_on.to_date
+				headers << "fecha actualización"
+				result << issue.updated_on.to_date
+				headers << "fecha inicio"
+				result << issue.start_date
+				headers << "fecha fin"
+				result << issue.due_date
+				headers << "fecha facturacion"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_FECHA_FACTURACION).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "moneda"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_MONEDA).first) ? (cf.present? ? (cf.value ? Currency.find(cf.value).name : '') : '') : ''
+				headers << "importe(moneda local)"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_IMPORTE_LOCAL).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "importe"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_IMPORTE).first) ? (cf.present? ? cf.value : '') : ''
+				headers << "validado por producción"
+				result << (cf = issue.custom_values.where(custom_field_id: CF_VALIDADO_PRODUCCION).first) ? (cf.present? ? (cf.value.to_i == 1 ? 'Sí' : 'No') : '') : ''
+
+				results << result
+			end
+			results[0] = headers
+
+			CSV.open("public/management_expenses.csv","w",:col_sep => ';',:encoding=>'UTF-8') do |file|
+				results.each do |result|
+					file << result
+				end
+			end
+	end
+
 	task :get_bitacora_data => :environment do
 		headers = []
 		results = [[]]
@@ -367,6 +447,12 @@ namespace :bsc2 do
 				result << issue.done_ratio
 				headers << "description"
 				result << issue.description
+				last_journal = issue.journals.last if issue.journals.present?
+				headers << "autor última modificación"
+				result << (last_journal.present? ? (last_journal.user.present? ? last_journal.user.login : '-') : '-')
+				headers << "comentario"
+				result << (last_journal.present? ? last_journal.notes : '')
+
 
 				results << result
 		end
