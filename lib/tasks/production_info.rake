@@ -63,6 +63,10 @@ namespace :bsc2 do
 		get_projects_with_cost_overrun_last_year
 	end
 
+	task :projects_data => :environment do
+		generate_projects_data
+	end
+
 	def user_profiles
 		headers = ["login", "name", "rol", "start_date", "end_date", "activo"]
 		results = [headers]
