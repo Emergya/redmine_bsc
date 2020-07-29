@@ -198,7 +198,7 @@ namespace :bsc2 do
 
 	def time_entries_years
 		start_year = TimeEntry.where("project_id IN (?)", Project.active.map(&:id)).minimum(:tyear)
-		end_year = Date.today.year
+		end_year = Date.today.year - 1
 		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio", "horas"]
 
 		(start_year..end_year).each do |year|
@@ -828,7 +828,7 @@ namespace :bsc2 do
 	end
 
 	def generate_consultancy_projects_data
-		projects = Project.active.select{|p| p.ancestors.detect{|a| a.id == CONSULTORIA_PROJECT_ID and !a.bsc_end_date.present?}}
+		projects = Project.active.select{|p| p.ancestors.detect{|a| a.id == CONSULTORIA_PROJECT_ID}}.reject{|p| p.ancestors.detect{|a| a.bsc_end_date.present?}}
 		headers = []
 		results = [[]]
 
