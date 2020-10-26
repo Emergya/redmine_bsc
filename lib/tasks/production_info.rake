@@ -98,7 +98,7 @@ namespace :bsc2 do
 
 	def time_entries
 		year = Date.today.year
-		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec", "linea negocio"]
+		headers = ["user", "project_name", "project_identifier", "mercado", "servicio", "unidad de negocio", "responsable prod", "responsable negocio", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sept", "oct", "nov", "dec", "linea negocio", "proyecto bsc"]
 
 		results = [headers]
 		# users = User.active
@@ -136,6 +136,13 @@ namespace :bsc2 do
 					end
 
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SUBUNIDADNEG_ID).first) ? (cf.present? ? cf.value : '') : 0
+
+					if p.bsc_end_date.present?
+						result << p.identifier
+					else
+						bsc_project = p.ancestors.detect{|a| a.bsc_end_date.present?}
+						result << (bsc_project.present? ? bsc_project.identifier : '')
+					end
 
 					results << result
 				end
