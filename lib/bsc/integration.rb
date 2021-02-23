@@ -17,6 +17,14 @@ module BSC
 				self.hr_plugin_enabled? ? HrProfile.all.order(:position) : [] #.map(&:name) : []
 		  	end
 
+		  	def get_profiles(start_date)
+		  		if self.hr_plugin_enabled?
+		  			HrProfile.where("obsolescence_date IS NULL OR obsolescence_date > ?", start_date).order(:position)
+		  		else
+		  			[]
+		  		end
+		  	end
+
 		  	def get_variable_incomes
 		  		self.ie_plugin_enabled? ? IeVariableIncome.all : []
 		  	end

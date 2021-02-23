@@ -121,7 +121,7 @@ class BscCheckpoint < ActiveRecord::Base
   # Called after_save
   def create_journal
     if @current_journal
-      profiles = BSC::Integration.get_profiles
+      profiles = BSC::Integration.get_profiles(project.bsc_start_date)
       # attributes changes
       # self.changes.each do |c, value|
       #   @current_journal.details << JournalDetail.new(:property => 'attr',

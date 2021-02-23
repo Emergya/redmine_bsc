@@ -145,7 +145,7 @@ class BscCheckpointsController < ApplicationController
   end
 
   def get_profiles
-    @profiles = BSC::Integration.get_profiles
+    @profiles = BSC::Integration.get_profiles(@project.bsc_start_date)
   end
 
   def checkpoint_params

@@ -79,7 +79,7 @@ class BscEffort < ActiveRecord::Base
 	# Get table effort data
 	def self.get_table_data(project, date, metrics)
 		#metrics = @metrics || BSC::Metrics.new(project, date)
-		profiles_name = BSC::Integration.get_profiles.map{|p| {p.id => p.name}}.reduce(&:merge)
+		profiles_name = BSC::Integration.get_profiles(metrics.real_start_date).map{|p| {p.id => p.name}}.reduce(&:merge)
 
 		start_date = metrics.scheduled_start_date.present? ? [metrics.scheduled_start_date, Date.today].max : Date.today
 		days_remaining = get_days_remaining(start_date, metrics.scheduled_finish_date)
@@ -177,7 +177,7 @@ class BscEffort < ActiveRecord::Base
 
 		num_profiles = Hash.new(0.0)
 		last_checkpoints.map{|ckp| ckp.bsc_checkpoint_efforts}.flatten.each do |eff|
-			num_profiles[eff.hr_profile_id] = eff.number if eff.year == Date.today.year
+			num_profiles[eff.hr_profile_id] += eff.number
 		end
 		num_profiles
 	end
