@@ -6,6 +6,12 @@ CF_RESP_PRODUCCION = 276
 CF_RESP_NEGOCIO = 277
 CF_SUBUNIDADNEG_ID = 288
 CF_CLIENTE_FINAL_ID = 289
+CF_RUTA_OFICIAL_DRIVE_ID = 309
+CF_RGPD_ID = 312
+CF_CICLO_VIDA_ID = 18
+CF_TIPOLOGIA_ID = 43
+CF_TECNOLOGIAS_ID = 101
+CF_PROYECTO_COOPER_ID = 310
 
 VARIABLE_EXPENSES = ['Providers', 'Other expenses', 'Subsistence allowance', 'Other expenses HHRR']
 VARIABLE_INCOMES = ['Clients', 'Other incomes']
@@ -475,6 +481,30 @@ namespace :bsc2 do
                     result << remaining_compensations
                     headers << "Cliente Final"
                     result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_CLIENTE_FINAL_ID).first) ? (cf.present? ? cf.value : '') : 0
+
+                    headers << "Ruta Oficial Drive"
+
+                    result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RUTA_OFICIAL_DRIVE_ID).first) ? (cf.present? ? cf.value : '') : 0
+
+                    headers << "RGPD"
+
+                    result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_RGPD_ID).first) ? (cf.present? ? cf.value : '') : 0
+
+                    headers << "Ciclo de vida"
+
+                    result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_CICLO_VIDA_ID).first) ? (cf.present? ? cf.value : '') : 0
+
+                    headers << "Tipología"
+
+                    result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_TIPOLOGIA_ID).first) ? (cf.present? ? cf.value : '') : 0
+
+                    headers << "Tecnologías"
+
+                    result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_TECNOLOGIAS_ID).first) ? (cf.present? ? cf.value : '') : 0
+
+                    headers << "Proyecto Cooper"
+
+                    result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_PROYECTO_COOPER_ID).first) ? (cf.present? ? cf.value : '') : 0
 
 					# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result
