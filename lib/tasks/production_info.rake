@@ -15,7 +15,7 @@ CF_PROYECTO_COOPER_ID = 310
 CF_UNEGOCIO_NEW_ID = 304
 CF_SUBUNIDADNEG_NEW_ID = 305
 CF_SERVICIO_NEW_ID = 301
-CF_REGION_ID = 303
+CF_MARKET_ID = 303
 
 VARIABLE_EXPENSES = ['Providers', 'Other expenses', 'Subsistence allowance', 'Other expenses HHRR']
 VARIABLE_INCOMES = ['Clients', 'Other incomes']
@@ -516,8 +516,8 @@ namespace :bsc2 do
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SUBUNIDADNEG_NEW_ID).first) ? (cf.present? ? cf.value : '') : 0
 					headers << "servicio new"
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SERVICIO_NEW_ID).first) ? (cf.present? ? cf.value : '') : 0
-					headers << "Región"
-					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_REGION_ID).first) ? (cf.present? ? cf.value : '') : 0	
+					headers << "Mercado"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_MARKET_ID).first) ? (cf.present? ? cf.value : '') : 0	
 
 					# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result
