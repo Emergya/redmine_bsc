@@ -14,8 +14,14 @@ CF_GCUENTAS_ID = 277
 CF_EXPEDIENTE_ID = 26
 CF_INICO_GARANTIA_ID = 264
 CF_FIN_GARANTIA_ID = 265
-CF_CLIENTE_ID = 289
+CF_NOMBRE_CLIENTE_ID = 289
 CF_SUBUNIDAD_ID = 288
+CF_IDENTIFICADOR_CLIENTE_ID = 316
+CF_SERVICIO_NEW_ID = 301
+CF_SUBSERVICIO_ID = 311
+CF_MARKET_ID = 303
+CF_UNEGOCIO_NEW_ID = 304
+CF_SUBUNIDADNEG_NEW_ID = 305
 
 namespace :bsc2 do
 	task :generate_csv => :environment do
@@ -143,16 +149,59 @@ namespace :bsc2 do
 					headers << "fecha comienzo real"
 					result << metrics.real_start_date
 					headers << "Cliente"
-					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_CLIENTE_ID).first) ? (cf.present? ? cf.value : '') : 0
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_NOMBRE_CLIENTE_ID).first) ? (cf.present? ? cf.value : '') : 0
 					headers << "gastos estimados reales"
-					real_scheduled_expenses = (metrics.hhrr_cost_scheduled_checkpoint + metrics.variable_expense_scheduled + metrics.fixed_expense_scheduled)
-					result << (metrics.total_expense_incurred > real_scheduled_expenses ? real_scheduled_expenses : "-")
+					# real_scheduled_expenses = (metrics.hhrr_cost_scheduled_checkpoint + metrics.variable_expense_scheduled + metrics.fixed_expense_scheduled)
+					# result << (metrics.total_expense_incurred > real_scheduled_expenses ? real_scheduled_expenses : "-")
+					result << ''
 					headers << "Subunidad"
 					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SUBUNIDAD_ID).first) ? (cf.present? ? cf.value : '') : 0
-					headers << "Horas estimadas"
-					result << metrics.hhrr_hours_scheduled
-					headers << "Horas incurridas"
-					result << metrics.hhrr_hours_incurred
+					# headers << "Horas estimadas"
+					# result << metrics.hhrr_hours_scheduled
+					# headers << "Horas incurridas"
+					# result << metrics.hhrr_hours_incurred
+					headers << "Id cliente"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_IDENTIFICADOR_CLIENTE_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "id servicio new"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SERVICIO_NEW_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "nombre servicio new"
+					if cf.present? and (cfe = CustomFieldEnumeration.where("id = ? AND custom_field_id = ?", cf.value, CF_SERVICIO_NEW_ID).first)
+						result << (cfe.present? ? cfe.name : '')
+					else
+						result << ''
+					end
+					headers << "id subservicio new"
+                    result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SUBSERVICIO_ID).first) ? (cf.present? ? cf.value : '') : 0
+                    headers << "nombre subservicio new"
+					if cf.present? and (cfe = CustomFieldEnumeration.where("id = ? AND custom_field_id = ?", cf.value, CF_SUBSERVICIO_ID).first)
+						result << (cfe.present? ? cfe.name : '')
+					else
+						result << ''
+					end
+                    headers << "id Región new"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_MARKET_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "nombre Región new"
+					if cf.present? and (cfe = CustomFieldEnumeration.where("id = ? AND custom_field_id = ?", cf.value, CF_MARKET_ID).first)
+						result << (cfe.present? ? cfe.name : '')
+					else
+						result << ''
+					end
+					headers << "id unidad de negocio new"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_UNEGOCIO_NEW_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "nombre unidad de negocio new"
+					if cf.present? and (cfe = CustomFieldEnumeration.where("id = ? AND custom_field_id = ?", cf.value, CF_UNEGOCIO_NEW_ID).first)
+						result << (cfe.present? ? cfe.name : '')
+					else
+						result << ''
+					end
+					headers << "id línea de negocio new"
+					result << (cf = CustomValue.where("customized_id = ? AND customized_type = 'Project' AND custom_field_id = ?", p.id, CF_SUBUNIDADNEG_NEW_ID).first) ? (cf.present? ? cf.value : '') : 0
+					headers << "nombre línea de negocio new"
+					if cf.present? and (cfe = CustomFieldEnumeration.where("id = ? AND custom_field_id = ?", cf.value, CF_SUBUNIDADNEG_NEW_ID).first)
+						result << (cfe.present? ? cfe.name : '')
+					else
+						result << ''
+					end
 
 						# p.versions.map{|v| v.completed_percent.to_f * v.issues_count.to_f / 100.0}.sum / p.issues.count.to_f)
 					results << result
